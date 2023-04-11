@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>index</title>
+  <style>
+    .parent-13,
+    .parent-13 div {
+      box-sizing: border-box;
+    }
+
+    .parent-13 {
+      position: relative;
+      background: green;
+      height: 200px;
+      width: 60%;
+      margin: 0 auto;
+      padding: 20px;
+      resize: both;
+      overflow: auto;
+    }
+
+    .parent-13 div {
+      background: black;
+      color: white;
+      width: 200px;
+      height: 120px;
+      margin: -60px 0 0 -100px;
+      /* 宽度和高度的一半 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="parent-13">
+    <div>
+      我是一个块状元素，我有固定的宽高，通过宽高计算出偏移量可实现水平和垂直居中。
+    </div>
+  </div>
+</body>
+
+</html>

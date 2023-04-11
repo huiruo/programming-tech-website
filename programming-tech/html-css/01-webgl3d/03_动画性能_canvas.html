@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Clear "canvas"</title>
+  <style type="text/css">
+    @keyframes example {
+      0% {
+        transform: translateX(0px)
+      }
+
+      100% {
+        transform: translateX(1000px)
+      }
+    }
+
+    /* The element to apply the animation to */
+    div {
+      width: 20px;
+      height: 20px;
+      left: 0;
+      top: 0;
+      background: black;
+      position: absolute;
+      animation-name: example;
+      animation-duration: 10s;
+      animation-iteration-count: infinite;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+<script>
+  const fragment = document.createDocumentFragment()
+  const count = 10000
+  new Array(count).fill().forEach((_, index) => {
+    const div = document.createElement('div')
+    div.style.top = `${index * 25}px`
+    fragment.appendChild(div)
+  })
+
+  document.body.appendChild(fragment)
+</script>
+
+</html>

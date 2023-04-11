@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>talk</title>
+<style type="text/css">
+div {
+	position: relative;
+	width: 500px;
+	height: 300px;
+	border: 1px solid black;
+	border-radius: 50%;
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 300px;
+}
+div:before,
+div:after {
+	position: absolute;
+	content: "";
+	display: block;
+	border: 1px solid black;
+	border-radius: 50%;
+}
+div:before {
+	width: 50px;
+	height: 50px;
+	bottom: -25px;
+	right: 25px;
+}
+div:after {
+	width: 20px;
+	height: 20px;
+	bottom: -50px;
+	right: 0;
+}
+</style>
+</head>
+<body>
+	<div>大家好，欢迎</div>
+</body>
+</html>

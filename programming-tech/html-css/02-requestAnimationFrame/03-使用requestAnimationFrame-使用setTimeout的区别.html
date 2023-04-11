@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="btn" style="width:100px; height:100px; background-color:#000;">
+  </div>
+  <div id="box" style="width:100px; height:100px;background-color: grey;"></div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      // 点击按钮，开启旋转动画
+      $("#btn").click(function () {
+        console.log('test');
+        update();
+      });
+
+      // 角度
+      var degrees = 0;
+      let rId = 0;
+
+      // 动画方法
+      function update() {
+        console.log('update:');
+        if (degrees >= 360) return;
+        $("#box").css("transform", "rotate(" + (++degrees) + "deg)");
+        // 递归调用实现动画效果
+
+        // 实现1:requestAnimationFrame
+        rId = window.requestAnimationFrame(update);
+
+        // 实现2:setTimeout
+        // setTimeout(() => update(), 1)
+        console.log('rId:', rId);
+      }
+    });
+  </script>
+</body>
+
+</html>

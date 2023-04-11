@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hello World</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<style>
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    transition: opacity .5s;
+}
+
+.fade-enter-to {}
+
+.fade-leave {}
+
+.fade-leave-active {
+	/*贯穿全程动画*/
+	/*对 opacity进行监控，如果其改变，则在 2s 内过渡完成 opacity从 0 到 1*/
+	color: red;
+    transition: opacity .5s;
+}
+
+.fade-leave-to {
+    transition: opacity .5s;
+}
+</style>
+
+<body>
+    <div id="app">
+        <transition name="fade">
+            <p v-if="show">hello</p>
+        </transition>
+        <button @click="handleClick">toggle</button>
+    </div>
+    <script>
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            show: true
+        },
+        methods: {
+            handleClick: function() {
+                this.show = !this.show
+            }
+        }
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>动画</title>
+</head>
+<style>
+  /*
+  一.transition(过渡):是指从一个状态到另一个状态的变化。
+  参考：
+  https://www.w3school.com.cn/cssref/pr_transition.asp
+
+  transition 属性是一个简写属性，用于设置四个过渡属性：
+  1.transition-property:规定设置过渡效果的 CSS 属性的名称。
+  2.transition-duration:规定完成过渡效果需要多少秒或毫秒。
+    transition-duration: time;	
+  3.transition-timing-function:规定速度效果的速度曲线。
+    linear	规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。
+    ease	默认。动画以低速开始，然后加快，在结束前变慢。
+    ease-in	动画以低速开始。
+    ease-out	动画以低速结束。
+  4.transition-delay:定义过渡效果何时开始。
+
+  简写：transition: property duration timing-function delay;
+ */
+  .demo {
+    transition: background 1s linear;
+    background: blue;
+    width: 100px;
+    height: 100px;
+    transition: width 2s;
+  }
+
+  /*
+  二.animation 属性是一个简写属性，用于设置六个动画属性：
+  参考：
+  https://www.w3school.com.cn/cssref/pr_animation.asp
+
+  1.animation-name: 规定需要绑定到选择器的 keyframe 名称。。
+  2.animation-duration: 规定完成动画所花费的时间，以秒或毫秒计。
+  3.animation-timing-function:规定动画的速度曲线。
+    linear	动画从头到尾的速度是相同的。
+    ease	默认。动画以低速开始，然后加快，在结束前变慢。
+    ease-in	动画以低速开始。
+    ease-out	动画以低速结束。
+  4.animation-delay:规定在动画开始之前的延迟。
+  5.animation-iteration-count:规定动画应该播放的次数。
+  6.animation-direction:规定是否应该轮流反向播放动画。
+
+  简写：语法
+  animation: name duration timing-function delay iteration-count direction;
+ */
+  .num {
+    background: yellow;
+    /* animation: myNum 1s 1; */
+  }
+
+  @keyframes myNum {
+    0% {
+      transform: scale(1);
+      /*开始为原始大小*/
+    }
+
+    /*
+      25% {
+        transform: scale(1.1); 放大1.1倍
+      }
+      50% {
+        transform: scale(1);
+      }
+      */
+    75% {
+      transform: scale(1.1);
+    }
+  }
+
+  /*
+    -webkit-animation-name: scaleDraw; 关键帧名称
+    -webkit-animation-timing-function: ease-in-out; 动画的速度曲线
+    -webkit-animation-iteration-count: infinite;  动画播放的次数
+    -webkit-animation-duration: 5s; 动画所花费的时间
+
+	  合起来写：
+	  -webkit-animation: scaleDraw 5s ease-in-out infinite;
+  */
+  .myMove {
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: mymove 5s infinite;
+  }
+
+  @keyframes mymove {
+    from {
+      left: 0px;
+    }
+
+    to {
+      left: 400px;
+    }
+
+    transform: scale(1.1);
+  }
+
+  /*参考 start*/
+  .bounce-enter-active {
+    /*进入时间*/
+    animation: bounce-in 3s;
+  }
+
+  .bounce-leave-active {
+    /*离开时间
+	 */
+    animation: bounce-in 1s reverse;
+  }
+
+  @keyframes bounce-in {
+
+    /*开始放大倍数*/
+    0% {
+      transform: scale(0);
+    }
+
+    50% {
+      /*50%时放大倍数：x轴和y轴*/
+      transform: scale(2.2, 1.6);
+    }
+
+    100% {
+      /*最终放大倍数*/
+      transform: scale(1);
+    }
+  }
+
+  /*参考 end*/
+</style>
+<script>
+  function buttonClick() {
+    const box = document.getElementById("demoId");
+    const width = box.clientWidth;
+    const numDom = document.getElementById("demoId");
+    const numwidth = numDom.clientWidth;
+    if (width >= 300) {
+      box.style.width = "100px";
+    } else {
+      box.style.width = "300px";
+    }
+    console.log("box", box);
+    console.log("box", width);
+  }
+</script>
+
+<body>
+  <!--<transition name="bounce">-->
+  <div id="demoId" class="demo">
+    <!-- <div id="nubId" class="num">12</div> -->
+  </div>
+  <!--</transition>-->
+
+  <div>
+    <button type="button" onclick="buttonClick();">按钮,测试transition</button>
+  </div>
+
+  <!--  -->
+  <div class="myMove"></div>
+</body>
+
+</html>

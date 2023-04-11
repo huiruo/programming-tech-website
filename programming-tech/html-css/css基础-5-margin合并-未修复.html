@@ -1,0 +1,33 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style type="text/css">
+    .one {
+      background-color: pink;
+      height: 20px;
+      margin-bottom: 100px;
+    }
+
+    .two {
+      background-color: purple;
+      height: 20px;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <!--	
+    margin合并:一个设置下外边距100px，一个设置上外边距100px，让两个元素相距200px。
+    我们发现这两个元素之间，他们的margin-bottom和margin-top合并了，并且显示的是较大值。这种现象被称为margin合并。解决的方式也是通过触发bfc来解决
+-->
+  <div style="width:500px;width: 600px;background:gray;overflow: hidden;">
+    <div class="one">
+      one
+    </div>
+    <div class="two">子-未修复</div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS三角形</title>
+    <style>
+.box {
+    width: 0px;
+    height: 0px;
+    border: 15px solid #666;
+    border-left-color:transparent;
+    border-right-color:transparent;
+    border-bottom-color:transparent;
+    border-top-color:#FF6F00;
+    /*以上为三角形*/
+    transform:rotate(18deg);
+        margin-top: -5px;
+    margin-left: 40px;
+}
+.up-centent{
+        z-index: 10;
+        position: relative;
+        height: 50px;
+        width: 192px;
+        line-height: 50px;
+        border-radius: 32px;
+        text-align: center;
+        font-size: 12px;
+        color: #fff;
+        background: #ff6f00;
+}
+</style>
+</head>
+<body>
+<div class="up-centent">已经领取50%</div>
+<div class="box"></div>
+</body>
+</html>

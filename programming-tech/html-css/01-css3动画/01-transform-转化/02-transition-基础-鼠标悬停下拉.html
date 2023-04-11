@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<style type="text/css">
+		#transition-demo {
+			height: 100px;
+			background-color: yellowgreen;
+			transition: height 1s 0.5s ease-out;
+		}
+
+		#transition-demo:hover {
+			height: 200px;
+		}
+
+		/*
+transition常用属性:
+	transition-property: height; // 适用于哪个属性
+	transition-duration: 1s;
+	transition-delay: 1s;
+	transition-timing-function: ease/linear/ease-in(加速)/ease-out/cubic-bezier(自定义)；
+
+transition特性:
+	1.需要具体数值，不能用block,none等
+	2.transition需用事件触发，不能在网页加载时自动发生
+	3.一次性，不能重复发生，除非一再触发
+	4.只有两个状态：开始和结束状态
+	5.一条transition规则只能定义一个属性
+*/
+	</style>
+</head>
+
+<body>
+	<!-- transition实现长度拉伸的例子： -->
+	<div id="transition-demo">
+		transition例子，鼠标悬停试试
+	</div>
+</body>
+
+</html>

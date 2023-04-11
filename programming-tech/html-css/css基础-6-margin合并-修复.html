@@ -1,0 +1,35 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style type="text/css">
+    .one {
+      background-color: pink;
+      height: 20px;
+      /* margin-bottom: 100px; */
+    }
+
+    .two {
+      background-color: purple;
+      height: 20px;
+      /* margin-top: 100px; */
+      margin-top: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <!--	
+margin合并和margin塌陷不一样，margin塌陷只添加了CSS，margin合并除了添加CSS，
+还修改了HTML结构。我们知道一般html结构是不能乱改动的，所以我们通过数学计算来解决这各margin合并的问题。比如上面的例子，
+我们只要设置前面元素的margin-bottom为200px或者后面元素的margin-top为200px即可
+-->
+  <div style="width:500px;width: 600px;background:gray;overflow: hidden;">
+    <div class="one">
+      one
+    </div>
+    <div class="two">子-未修复</div>
+  </div>
+</body>
+
+</html>

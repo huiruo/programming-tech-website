@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Clear "canvas"</title>
+</head>
+
+<body onload="main()">
+  <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+  </canvas>
+
+</body>
+<script>
+  var c = document.getElementById('webgl')
+  console.log("dom", c)
+  const ctx = c.getContext('2d')
+  const count = 10000
+  const v = 1
+  let x = 0
+  const width = 20
+  const height = 20
+
+  const render = () => {
+    ctx.save()
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    x += v
+    if (x > 1000 || x < 0) v *= -1
+    ctx.translate(x, 0)
+    for (let i = 0; i < count; i++) {
+      ctx.fillRect(0, i * 25, width, height)
+    }
+    ctx.restore()
+    requestAnimationFrame(render)
+  }
+  render();
+</script>
+
+</html>

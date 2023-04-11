@@ -75,20 +75,26 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Main',
-          },
           // {
-          //   type: 'doc',
-          //   // docId: 'to-center',
-          //   docId: 'to-center',
+          //   type: 'docSidebar',
+          //   sidebarId: 'tutorialSidebar',
           //   position: 'left',
-          //   label: 'Atoms',
+          //   label: 'Main',
           // },
           // { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            type: 'doc',
+            position: 'left',
+            // docId: '01-react-vue异同-vue', // generate root test
+            docId: 'react-vue异同-vue',
+            label: 'Main',
+          },
+          {
+            type: 'doc',
+            position: 'left',
+            docId: 'structure-algorithm/README',
+            label: 'Structure Algorithm',
+          },
           {
             href: 'https://github.com/huiruo/programming-tech-website/',
             label: 'GitHub',

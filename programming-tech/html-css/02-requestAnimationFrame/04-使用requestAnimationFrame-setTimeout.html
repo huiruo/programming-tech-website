@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="btn" style="width:100px; height:100px; background-color:#000;">
+  </div>
+  <div style="width:500px; height:100px;background-color: grey;">
+    <div id="progressbar" style="width:0; height:50px;background-color: red;"></div>
+  </div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#btn").click(function () {
+        update();
+      });
+
+      // 当前进度
+      var progress = 0;
+
+      // 动画方法
+      function update() {
+        console.log('update--->');
+        if (progress >= 100) return;
+        $("#progressbar").css("width", ++progress * 2).text(progress + "%");
+        window.requestAnimationFrame(update); // 递归调用实现动画效果
+      }
+    });
+  </script>
+</body>
+
+</html>

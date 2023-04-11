@@ -1,0 +1,39 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		div.father {
+			width: 200px;
+			height: 200px;
+			background-color: rgb(219, 68, 101);
+			margin-left: 100px;
+			margin-top: 100px;
+
+			overflow: hidden;
+			/* 触发bfc */
+		}
+
+		div.father div.son {
+			width: 100px;
+			height: 100px;
+			background-color: rgb(56, 248, 207);
+			margin-left: 50px;
+			margin-top: 50px;
+		}
+	</style>
+</head>
+
+<body>
+	<!--	
+margin塌陷和margin重叠都是垂直方向上的，水平方向没有这些问题。
+-->
+	<div style="width:500px;width: 600px;background:gray;overflow: hidden;">
+		<div class="father">
+			<div class="son">子-修复</div>
+			父
+		</div>
+	</div>
+</body>
+
+</html>

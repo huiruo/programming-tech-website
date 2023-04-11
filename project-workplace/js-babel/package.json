@@ -1,0 +1,23 @@
+{
+  "name": "js-babel",
+  "version": "1.0.0",
+  "description": "test-babel",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "babel": "babel src --out-dir dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.0",
+    "@babel/preset-env": "^7.18.0",
+    "corejs": "^1.0.0"
+  },
+  "dependencies": {
+    "@babel/traverse": "^7.18.0"
+  }
+}

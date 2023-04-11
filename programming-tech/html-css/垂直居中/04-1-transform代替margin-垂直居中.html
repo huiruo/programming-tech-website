@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style></style>
+</head>
+
+<body>
+    <!-- CSS3解决方案：transform代替margin  transform: translate(-50%, -50%);    /* 50%为自身尺寸的一半 */ -->
+    <!--
+1.translate()函数是css3的新特性.在不知道自身宽高的情况下，可以利用它来进行水平垂直居中.。
+当使用：top: 50%;left: 50%;， 是以左上角为原点，故不处于中心位置
+translate(-50%,-50%) 作用是，往上（x轴）,左（y轴）移动自身长宽的 50%，以使其居于中心位置。
+
+参考：https://www.cnblogs.com/moqiutao/p/7095074.html
+一、旋转rotate
+二、移动translate
+三、缩放scale
+四、扭曲skew
+五、矩阵matrix,改变元素基点transform-origin
+语法：
+transform ： none | <transform-function> [ <transform-function> ]*
+    也就是：transform: rotate | scale | skew | translate |matrix;
+    none:表示不进么变换；
+    <transform-function>表示一个或多个变换函数，以空格分开；
+        换句话说就是我们同时对一个元素进行transform的多种属性操作，例如rotate、scale、translate三种，但这里需要提醒大家的，以往我们叠加效果都是用逗号（“，”）隔开，但transform中使用多个属性时却需要有空格隔开。大家记住了是空格隔开。
+        -->
+    <div style="position: relative; height: 100px; background: green">
+        <div style="
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: yellow;
+          ">
+            CSS3解决方案：transform代替margin
+        </div>
+    </div>
+</body>
+
+</html>

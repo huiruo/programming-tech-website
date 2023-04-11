@@ -1,0 +1,35 @@
+{
+  // TS 负责把 TS 文件转换成 JS 文件
+  // Babel 负责把 JS 文件，按照要求转换成兼容性更好的早期版本
+  "compilerOptions": {//编译选项
+    "target": "esnext",//目标代码 esnext指es5678都支持 因为使用了babel 会根据浏览器的需要来觉得如何适配 如果使用esc转化  需要写成es5
+    "module": "esnext",// 目标代码需要使用的模块化方案(commonjs require/module.exports/es module import/export) esnext表示使用es module
+    "strict": true,   // 严格一些严格的检查(any)
+    "jsx": "preserve",// 对jsx进行怎么样的处理 preserve保留不处理 因为我们使用了babel 它会去处理
+    "importHelpers": true,// 辅助的导入功能
+    "moduleResolution": "node", // 按照node的方式去解析模块 import "/index.node"
+    "skipLibCheck": true,// 跳过一些库的类型检测 (axios -> 类型/ lodash -> @types/lodash / 其他的第三方)
+    // export default/module.exports = {}
+    // es module 和 commonjs 能否混合使用 这两个选项一般一起
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,// 要不要生成映射文件(ts -> js)
+    "baseUrl": ".",// 文件路径在解析时, 基本url
+    "types": ["webpack-env"], // 指定具体要解析使用的类型 一般可以不填根据target来指定 也可以具体指定
+    "paths": {// 路径解析(类似于webpack alias)
+      "@/*": ["src/*"],
+      "components/*": ["src/components/*"]
+    },
+    // 可以指定在项目中可以使用哪些库里的类型(Proxy/Window/Document)
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    
+  },
+  "include": [//当前有哪些代码需要经过tscofig解析
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]//排除include中包含的引用的这个文件里的东西 但不会排除你具体引入的东西
+}

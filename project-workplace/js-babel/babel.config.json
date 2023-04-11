@@ -1,0 +1,20 @@
+{
+  "presets": [
+    /*
+    [
+      "@babel/env",
+      {
+        "debug": true
+      }
+    ],
+    */
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage", // 其他两个选项 'entry/false'
+        "corejs": 3, // 如果需要使用includes，需要安装corejs@3版本
+        "debug": true
+      }
+    ]
+  ]
+}

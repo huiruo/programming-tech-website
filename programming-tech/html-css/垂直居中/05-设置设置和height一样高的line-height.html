@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>index</title>
+  <style>
+    .parent-6,
+    .parent-6>div {
+      box-sizing: border-box;
+    }
+
+    .parent-6 {
+      background: green;
+      padding: 40px;
+    }
+
+    .parent-6 div {
+      background: black;
+      color: white;
+      height: 100px;
+      line-height: 100px;
+      /* 设置和height一样高的line-height */
+      padding: 0 20px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="parent-6">
+    <div>
+      这行文字是垂直居中的。
+    </div>
+  </div>
+</body>
+
+</html>

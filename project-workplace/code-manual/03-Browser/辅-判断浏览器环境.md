@@ -1,0 +1,85 @@
+> 方法一：
+>
+> ```js
+>  // 判断浏览器函数
+>   function isMobile(){
+>     if(window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+>       return true; // 移动端
+>     }else{
+>       return false; // PC端
+>     }
+>   }
+> ```
+>
+> 方法二：这个方法摘自：im.qq.com
+>
+> ```js
+> var os = function() { 
+>    var ua = navigator.userAgent, 
+>    isWindowsPhone = /(?:Windows Phone)/.test(ua), 
+>    isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,  
+>    isAndroid = /(?:Android)/.test(ua),  
+>    isFireFox = /(?:Firefox)/.test(ua),  
+>    isChrome = /(?:Chrome|CriOS)/.test(ua), 
+>    isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)), 
+>    isPhone = /(?:iPhone)/.test(ua) && !isTablet, 
+>    isPc = !isPhone && !isAndroid && !isSymbian; 
+>    return { 
+>      isTablet: isTablet, 
+>      isPhone: isPhone, 
+>      isAndroid : isAndroid, 
+>      isPc : isPc 
+>    }; 
+> }(); 
+>  
+> // 使用方法 
+> if(os.isAndroid || os.isPhone){
+> alert("-----");
+> }
+> ```
+>
+> 判断是否为微信客户端：
+>
+> ```js
+>  var isWechart = function () {
+>     var rst = true
+>     if(window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)){
+>       var ua = navigator.userAgent.toLowerCase();
+>       if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
+>         rst = false;
+>       }
+>     }else {
+>       rst = false;
+>     }
+>     return rst;
+>   }
+> ```
+>
+> **判断微信浏览器是PC端还是手机端，以及手机端是微信浏览器还是非微信浏览器**
+>
+> ```js
+>  //平台、设备和操作系统  
+>      var system = { 
+>        win: false, 
+>        mac: false, 
+>        xll: false, 
+>        ipad: false 
+>      }; 
+>      //检测平台  
+>      var p = navigator.platform; 
+>      system.win = p.indexOf("Win") == 0; 
+>      system.mac = p.indexOf("Mac") == 0; 
+>      system.x11 = (p == "X11") || (p.indexOf("Linux") == 0); 
+>      system.ipad = (navigator.userAgent.match(/iPad/i) != null) ? true : false; 
+>      //跳转语句，如果是手机访问就自动跳转到wap.baidu.com页面  
+>      if (system.win || system.mac || system.xll || system.ipad) { 
+>        alert("在PC端上打开的");
+>      } else { 
+>        var ua = navigator.userAgent.toLowerCase();  
+>        if(ua.match(/MicroMessenger/i)=="micromessenger") {  
+>          alert("在手机端微信上打开的"); 
+>        } else {  
+>          alert("在手机上非微信上打开的"); 
+>        }  
+>      }
+> ```

@@ -1,0 +1,52 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		.container {
+			width: 200px;
+			height: 300px;
+			background: yellow;
+		}
+
+		.desc {
+			height: 120px;
+			margin-top: 100px;
+			background-color: grey;
+		}
+
+		/*解决margin-top:塌陷问题*/
+		.clearfix:before {
+			content: "";
+			display: table;
+		}
+
+		.bg:hover .desc {
+			margin-top: 180px;
+		}
+	</style>
+</head>
+
+<body>
+	<!--	
+margin塌陷和margin重叠都是垂直方向上的，水平方向没有这些问题。
+		
+触发BFC:
+BFC：Block Formatting Context，块级格式化上下文，BFC决定了元素对其内容定位，以及当前元素与其他元素之间的关系和相互作用。
+其目的就是形成一个独立的空间，让空间中的子元素不会影响到这个独立空间之外的布局。这样我们在写页面的时候就可以根据自己的需求，
+选择一些比较合适的解决方案，主要解决方案如下：
+
+1.子元素或者父元素的float不为none
+2.子元素或者父元素的position不为relative或static
+3.父元素的overflow为auto或scroll或hidden 
+4.父元素的display的值为table-cell或inline-block
+-->
+	<div class="container clearfix bg">
+		<div class="desc bg">
+			<h2>文字标题</h2>
+			<p>tefewafweeeeeeee</p>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<html>
+<style type="text/css">
+	#animation-demo {
+		height: 200px;
+		animation: 3s type forwards alternate infinite;
+		animation-play-state: running;
+	}
+
+	#animation-demo:hover {
+		animation-play-state: paused;
+	}
+
+	@keyframes type {
+		from {
+			background: yellowgreen
+		}
+
+		50% {
+			background: yellow
+		}
+
+		to {
+			background: aquamarine
+		}
+	}
+</style>
+
+<body>
+	<!-- 
+animation常用属性:
+	animation-name: rainbow;
+	animation-duration: 1s;
+	animation-timing-function: ease-in-out;
+	animation-delay: 1s;
+	animation-fill-mode(动画停留在): none(动画没开始时)/forwards(结束)/backwards(第一帧)/both;
+	animation-direction(动画播放方向): normal(正向)/alternate(交替慎用)/reverse(反向)/alternate-reverse(反向交替慎用);
+	animation-iteration-count(播放次数): 3/infinite(无限);
+	steps(10)函数实现分步过渡
+	animation-play-state(用于让动画保持突然终止时的状态):running(例如悬停时播放)/paused(非悬停时暂停)； 注意这个属性不能简写
+	-->
+	<div>
+		<div id="animation-demo">
+			animation例子，鼠标悬停试试
+		</div>
+	</div>
+</body>
+
+</html>

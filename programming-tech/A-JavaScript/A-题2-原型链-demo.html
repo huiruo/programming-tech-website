@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>原型链</title>
+</head>
+
+<body>
+  <div>
+    <div id="appId" style="cursor: pointer">点击我</div>
+  </div>
+  <script type="text/javascript">
+    document.getElementById("appId").onclick = function () {
+      testClick();
+    };
+    function Person() { }
+    Person.prototype.name = "chen1";
+    Person.prototype.age = "22";
+
+    function testClick(argument) {
+      let person1 = new Person();
+      person1.name = "chen2";
+      let person2 = new Person();
+      console.log(person1.name); //chen2
+      console.log("A.person1.constructor:", person1.constructor); //A.person1.constructor: ƒ Person(){}
+      console.log("B.person1.__proto__:", person1.__proto__); //B.person1.__proto__: {name: "chen1", age: "22", constructor: ƒ}
+      console.log("C.person1.prototype:", person1.prototype); //C.person1.prototype: undefined    ----->prototype只有函数才有,并且通过bind()绑定的也没有
+      console.log("D.Person.prototype:", Person.prototype); //D.Person.prototype: {name: "chen1", age: "22", constructor: ƒ}
+      /*
+  1.在person1和person2实例对象下面有一个[[prototype]],其实没有标准的方式可以访问它，但是主流浏览器上在每个对象上(null除外)都支持一个属性,那就是proto，这个属性会指向该对象的原型
+  */
+      console.log(
+        "E.person1.__proto__===Person.prototype:",
+        person1.__proto__ === Person.prototype
+      ); //E.person1.__proto__===Person.prototype: true
+      //2.instancof: 处理对象(person1)和函数(带.prototype引用的Person)之间的关系
+      console.log("F.person1 instanceof Person:", person1 instanceof Person); //F.person1 instanceof Person: true
+      //3.Object.getPrototypeOf这个方法返回[[Prototype]]的值,可以获取到一个对象的原型
+      console.log(
+        "G.Object.getPrototypeOf(person1) === Person.prototype:",
+        Object.getPrototypeOf(person1) === Person.prototype
+      ); //G.Object.getPrototypeOf(person1) === Person.prototype: true
+      //4.isPrototypeOf，如果[[prototype]]指向调用此方法的对象，那么这个方法就会返回true
+      console.log(
+        "H.Person.prototype.isPrototypeOf(person1):",
+        Person.prototype.isPrototypeOf(person1)
+      ); //H.Person.prototype.isPrototypeOf(person1): true
+      //5.constructor属性
+      console.log(
+        "I.Person.prototype.constructor===Person:",
+        Person.prototype.constructor === Person
+      ); //I.Person.prototype.constructor===Person: true
+      //注意：那岂不是实例person1也有.constructor属性，其实没有，通过原型链在原型Person.prtototype上面找到的
+      console.log(
+        "J.person1.constructor===Person:",
+        person1.constructor === Person
+      ); //J.person1.constructor===Person: true
+
+      //6.使用方法hasOwnProperty,属性只有存在于实例中才会返回true
+      console.log(
+        "H.person1.has Property name:",
+        person1.hasOwnProperty("name")
+      ); //H.person1.has Property name: true
+      console.log("person1.has Property age:", person1.hasOwnProperty("age")); //person1.has Property age: false
+      //7.in操作符 前面提到hasOwnProperty方法可用于检测属性是否是实例属性，in则会遍历所有属性，不管是实例上的，还是原型上的
+      //8.Object.keys() 此方法可以获取对象的所有可枚举的属性的名字
+      console.log("L.keys:", Object.keys(person1)); //L.keys: ["name"]
+      /*
+   Person.prototype就是原型对象，也就是实例person1和person2的原型。原型对象也是对象，所以它也有proto属性，连接它的原型，
+   原型对象Person.prototype的原型就是Object.prototype这个大boss，所有原型对象都是Object构造函数生成的		
+   */
+      /*
+  正是因为所有的原型最终都会指向Object.prototype，所以对象的很多方法其实都是继承于此，比如toString()、valueOf()，前面用到的hasOwnProperty，甚至是.constructor、proto
+  */
+      //console.log("Person.__proto__====Object.prototype",Person.__proto__===Object.prototype) //false
+      console.log("M.Person.__proto__:", Person.__proto__); //M.Person.__proto__: ƒ () { [native code] }
+      console.log("N.Person.__proto__:", Person.__proto__.constructor); //N.Person.__proto__: ƒ Function() { [native code] }
+      console.log("O.Object.prototype:", Object.prototype); //O.Object.prototype:constructor,hasOwnProperty,toString,toLocaleString,valueOf,isPrototypeOf
+      console.log("P.Object:", Object); //P.Object: ƒ Object() { [native code] }
+      //Object.prototype有原型吗？
+      console.log("Q.Object.prototype没有:", Object.prototype.__proto__); //Q.Object.prototype没有: null，所以它就是前面所提到的尽头
+    }
+  </script>
+</body>
+
+</html>

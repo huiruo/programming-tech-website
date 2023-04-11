@@ -7,11 +7,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Programming tech',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'Hello World',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-test-site.com',
+  // Set the production url of your site here: https://programming-tech-website.vercel.app/sitmap.xml
+  url: 'https://programming-tech-website.vercel.app/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -38,12 +38,16 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: '/',
+          path: 'programming-tech/', // 指向 doc 的文件夹
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/huiruo/programming-tech-website',
         },
+        blog: false,
+        /*
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
@@ -51,6 +55,7 @@ const config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
+        */
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -64,7 +69,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'programming-tech',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
@@ -74,11 +79,18 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Main',
           },
+          // {
+          //   type: 'doc',
+          //   // docId: 'to-center',
+          //   docId: 'to-center',
+          //   position: 'left',
+          //   label: 'Atoms',
+          // },
           // { to: '/blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/huiruo/',
+            href: 'https://github.com/huiruo/programming-tech-website/',
             label: 'GitHub',
             position: 'right',
           },
@@ -89,6 +101,7 @@ const config = {
         defaultMode: 'dark',
         disableSwitch: false
       },
+      /*
       footer: {
         style: 'dark',
         links: [
@@ -134,6 +147,7 @@ const config = {
         ],
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
+      */
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,

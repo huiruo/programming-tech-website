@@ -1,0 +1,184 @@
+
+## 定义
+装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上。装饰器使用 @expression这种形式，expression求值后必须为一个函数，它会在运行时被调用，被装饰的声明信息做为参数传入。
+
+使用多个装饰器,在这个模型下，当复合Contorller和Contorller1时，复合的结果Contorller(Contorller1(Admin))。
+```TypeScript
+function Contorller (target) {  
+  // 可以通过target（类的构造函数）去做些事情
+}
+
+@Contorller @Contorller1
+class Admin {}
+```
+
+### 工厂函数的装饰器
+函数，它返回一个表达式，以供装饰器在运行时调用。也可以说是一个函数柯里化
+```js
+function Contorller (path) {
+  // 返回一个装饰器函数
+  return function (target) {
+    target.prototype.root = path
+  }
+}
+
+@Contorller('//www.test.com')
+class Admin {
+  getRoot () {
+    console.log(this.root)
+  }
+}
+```
+
+## 类装饰器
+类装饰器在类声明之前被声明（紧靠着类声明）。类装饰器应用于类构造函数，可以用来监视，修改或替换类定义。
+
+当Admin类被声明的时候，会执行Contorller装饰器函数，然后我们在装饰器函数内向构造函数的原型上添加了一个getName方法;
+
+当类被实例化后，当然就可以去调用我们通过装饰器注入进去的方法
+```js
+// 定义一个类装饰器
+function Contorller (target) {
+  target.prototype.getName = function () {
+    console.log('test')
+  }
+}
+
+// 使用类装饰器
+@Contorller
+class Admin {}
+
+// 实例化类
+const admin = new Admin()
+admin.getName() // 打印 test
+```
+
+## 方法装饰器
+方法装饰器声明在一个方法的声明之前（紧靠着方法声明）。它会被应用到方法的 属性描述符上，可以用来监视，修改或者替换方法定义。方法装饰器表达式会在运行时当作函数被调用，它有三个参数：
+1. 对于静态方法来说是类的构造函数，对于原型方法来说是类的原型对象。
+2. 方法的名字。
+3. 方法的属性描述符{value: any, writable: boolean, enumerable: boolean, configurable: boolean}。
+```js
+function Get (path) {
+  return function (target, methodName, descriptor) {
+    /* 这里是可以改写方法的
+     let fn = attributes.value
+     attributes.value = function () { 
+       console.log(`改写了了${methodName}方法`)
+       将path传入
+       fn.call(target, path)
+     }
+    */
+    console.log(target)
+    console.log(`method:${methodName}`)
+    console.log(`descriptor:${JSON.stringify(descriptor)}`)
+  }
+}
+
+class Admin {
+  @Get('/setname')
+  static setName () {}
+  @Get('/getName')  
+  getName () {}
+}
+
+// 输出结果
+/*
+Admin { getName: [Function] }
+method:getName
+descriptor:{"writable":true,"enumerable":true,"configurable":true}
+
+{ [Function: Admin] setName: [Function] }
+method:setName
+desc {"writable":true,"enumerable":true,"configurable":true}
+*/
+```
+根据打印的结果，可以看到，如果装饰的是静态方法，第一个参数将是一个构造函数；如果装饰的不是一个静态方法，那么第一个参数将会是一个原型对象。
+装饰器的实现使用了ES5的 Object.defineProperty 方法，这三个参数也和这个方法的参数一致。装饰器的本质就是一个函数语法糖，通过Object.defineProperty来修改类中一些属性，descriptor参数也是一个对象，是针对key属性的描述符，里面有控制目标对象的该属性是否可写的writable属性等
+
+## 访问器装饰器
+访问器装饰器声明在一个访问器的声明之前（紧靠着访问器声明）。访问器装饰器应用于访问器的属性描述符并且可以用来监视，修改或替换一个访问器的定义。
+
+装饰器表达式会在运行时当作函数被调用，它的参数与方法访问器参数一样
+```js
+class Point {
+    private _x: number;
+    private _y: number;
+    constructor(x: number, y: number) {
+        this._x = x;
+        this._y = y;
+    }
+
+    @configurable(false)
+    get x() { return this._x; }
+
+    @configurable(false)
+    get y() { return this._y; }
+}
+
+function configurable(value: boolean) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        descriptor.configurable = value;
+    };
+}
+```
+在声明x，y访问器的时候，调用了configurable装饰器，通过装饰器设置了描述符对象中configurable属性的值
+
+## 参数装饰器
+参数装饰器声明在一个参数声明之前（紧靠着参数声明）。参数装饰器应用于类构造函数或方法声明。
+参数装饰器只能用来监视一个方法的参数是否被传入。
+
+参数装饰器表达式会在运行时当作函数被调用，它有三个参数：
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 参数的名字。
+3. 参数在函数参数列表中的索引。
+```js
+function PathParam(paramName: string) {
+    return function (target, methodName: string, paramIndex: number) {
+        !target.meta && (target.meta = {});
+        target.meta[paramIndex] = paramName;
+    }
+}
+
+class HelloService {
+    constructor() { }
+    getUser( @PathParam("userId") userId: string) { }
+}
+
+console.log(HelloService.prototype.meta); // {'0':'userId'}
+```
+
+在getUser方法中使用了PathParam装饰器，在PathParam装饰器中，通过原型对象去设置了一个meta对象，然后对这个meta对象中通过参数下标和参数名称去添加键值，这样就形成了一个参数map。
+
+## 属性装饰器
+属性装饰器声明在一个属性声明之前（紧靠着属性声明）。
+
+注意：属性描述符不会做为参数传入属性装饰器，这与TypeScript是如何初始化属性装饰器的有关。因为目前没有办法在定义一个原型对象的成员时描述一个实例属性，并且没办法监视或修改一个属性的初始化方法。返回值也会被忽略。因此，属性描述符只能用来监视类中是否声明了某个名字的属性。
+
+属性装饰器表达式会在运行时当作函数被调用，它有两个参数：
+1. 对于静态属性来说是类的构造函数，对于原型属性来说是类的原型对象。
+2. 属性的名字。
+```js
+function DefaultValue(value: string) {
+    return function (target: any, propertyName: string) {
+        target[propertyName] = value;
+    }
+}
+
+class Hello {
+    @DefaultValue("world")
+    greeting: string;
+}
+console.log(new Hello().greeting); // 输出: world
+```
+
+在上面代码中，我们给greeting属性添加了一个工厂装饰器DefaultValue，装饰中通过第一参数原型对象和第二参数属性名称给greeting属性做了赋值操作，所以在最后就打印出了world。
+
+## 装饰器加载顺序
+类中不同声明上的装饰器将按以下规定的顺序应用：
+
+1. 参数装饰器，然后依次是方法装饰器，访问符装饰器，或属性装饰器应用到每个实例成员。
+2. 参数装饰器，然后依次是方法装饰器，访问符装饰器，或属性装饰器应用到每个静态成员。
+3. 参数装饰器应用到构造函数。
+4. 类装饰器应用到类。

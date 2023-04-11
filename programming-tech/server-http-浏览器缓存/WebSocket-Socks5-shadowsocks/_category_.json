@@ -1,6 +1,6 @@
 {
-  "label": "http-浏览器缓存",
-  "position": 4,
+  "label": "WebSocket-Socks5-shadowsocks",
+  "position": 101,
   "link": {
     "type": "generated-index",
     "description": "http-浏览器缓存"

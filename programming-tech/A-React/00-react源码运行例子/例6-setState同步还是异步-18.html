@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+  .btn {
+    margin-right: 10px;
+    border: 0px;
+    color: white;
+    background-color: rgb(99, 99, 242);
+  }
+</style>
+
+<body>
+  <script src="./react.development18.js"></script>
+  <script src="./react-dom.development18.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React
+
+    function Test() {
+
+      const [num1, setNum1] = useState(0);
+      const [num2, setNum2] = useState(10);
+
+      /*点击按钮：
+      update==:start
+      update==:num1
+      update==:num2
+      update==:----------------------------- 
+      根据打印可以知道这里是异步的
+
+      根据打印内容可判断，这两个 setter 不是同步执行，
+      若同步执行，在调用完 setState 后，会立刻 render，打印内容应该如下：
+      update==:start
+      update==:----------------------------- 
+      update==:num1
+      update==:----------------------------- 
+      update==:num2
+      */
+      const onClickText = () => {
+        console.log("update==:start");
+        setNum1(num1 + 1);
+        console.log("update==:num1:", num1);
+        setNum2(num2 + 1);
+        console.log("update==:num2,", num2);
+      }
+
+      /*
+      在 react18 中，都是采用的批量更新，无论是在同步的表现形式中还是异步的表现形式中。
+      update==:async update start
+      update==:async update num1: 0
+      update==:async update num2: 10
+      update==:----------------------------- 
+
+      在React17（上面的说到），在 合成事件 和 钩子函数 中是批量更新，
+      在 异步函数 和 原生DOM事件 中，都不是采用的批量更新。
+      */
+      const asyncUpdate = () => {
+        setTimeout(() => {
+          console.log("update==:async update start");
+          setNum1(num1 + 1);
+          console.log("update==:async update num1:", num1);
+          setNum2(num2 + 1);
+          console.log("update==:async update num2:", num2);
+        }, 0);
+      };
+
+      /*
+      取消批量更新:当然这种操作，还是少操作为好
+      在react17中提供了 unstable_batchedUpdates 函数，用来合并批量操作。
+      在react18中提供了 flushSync 函数，用来取消批量操作。
+      */
+      const flushSyncUpdate = () => {
+        setTimeout(() => {
+          console.log("update==:async update start");
+          ReactDOM.flushSync(() => {
+            setNum1(num1 + 1);
+            console.log("update==:async update num1:", num1);
+          });
+          ReactDOM.flushSync(() => {
+            setNum2(num2 + 1);
+            console.log("update==:async update num2:", num2);
+          });
+        }, 0);
+      };
+
+      React.useEffect(() => {
+        console.log('useEffect-->1');
+      }, [])
+
+      React.useLayoutEffect(() => {
+        console.log('useLayoutEffect-->2');
+      }, [])
+
+      console.log("update==:-----------------------------");
+
+      return (
+        <div>
+          <p>num1 = {num1}</p>
+          <p>num2 = {num2}</p>
+          <button onClick={onClickText}>update</button>
+          <button onClick={asyncUpdate}>asyncUpdate</button>
+          <button onClick={flushSyncUpdate}>flushSyncUpdate</button>
+        </div>
+      )
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'))
+    root.render(<Test />);
+  </script>
+  </script>
+</body>
+
+</html>

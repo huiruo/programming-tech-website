@@ -21,7 +21,7 @@ react中用js，运算符去实现 v-if, array.map() 去实现 v-for
 ```
 
 * 3.提供了computed,watch 副作用的钩子，在react 统一使用useEffect去实现这些功能
-```javaScript
+```js
 改变组件状态：
 vue: this.data = x;
 react: setState(x);
@@ -88,7 +88,7 @@ E1--2-->E2(nextTick)
 ```
 
 ### 1阶段函数
-```javaScript
+```js
 mount(rootContainer, isHydrate, isSVG) {
 	// 省略函数
 	// 未挂载执行
@@ -106,7 +106,7 @@ mount(rootContainer, isHydrate, isSVG) {
 }
 ```
 
-```javaScript
+```js
 const render = (vnode, container, isSVG) => {
 	if (vnode == null) {
 		// 没有传入新的虚拟节点，当存在旧虚拟节点，则卸载旧虚拟节点
@@ -130,7 +130,7 @@ const render = (vnode, container, isSVG) => {
 };
 ```
 
-```javaScript
+```js
 const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = isHmrUpdating ? false : !!n2.dynamicChildren) => {
 	// 省略函数
 	// 根据vNode类型，执行不同的算法
@@ -148,7 +148,7 @@ const patch = (n1, n2, container, anchor = null, parentComponent = null, parentS
 }
 ```
 
-```javaScript
+```js
 const processComponent = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
 	n2.slotScopeIds = slotScopeIds;
 	if (n1 == null) {
@@ -216,7 +216,7 @@ const mountComponent = (initialVNode, container, anchor, parentComponent, parent
 ```
 
 renderComponentRoot 创建好vnode -->patch
-```javaScript
+```js
 const componentUpdateFn = () => {
 	console.log('effect.run==>:调用componentUpdateFn组件的初始挂载和更新')
   if (!instance.isMounted) {
@@ -247,7 +247,7 @@ const componentUpdateFn = () => {
 }
 ```
 
-```javaScript
+```js
 const setupRenderEffect = (instance, initialVNode, container, anchor, parentSuspense, isSVG, optimized) => {
 	// 省略函数
 	console.log('依赖收集==>setupRenderEffect:3调用ReactiveEffect 创建一个副作用:', { componentUpdateFn })
@@ -259,7 +259,7 @@ const setupRenderEffect = (instance, initialVNode, container, anchor, parentSusp
 }
 ```
 
-```javaScript
+```js
 function renderComponentRoot(instance) {
     const { type: Component, vnode, proxy, withProxy, props, propsOptions: [propsOptions], slots, attrs, emit, render, renderCache, data, setupState, ctx, inheritAttrs } = instance;
     let result;
@@ -285,7 +285,7 @@ function renderComponentRoot(instance) {
 
 ### 2阶段函数
 初始化：path-->processComponent(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
-```javaScript
+```js
 const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = isHmrUpdating ? false : !!n2.dynamicChildren) => {
 	/*
 	n1,旧节点
@@ -331,7 +331,7 @@ const patch = (n1, n2, container, anchor = null, parentComponent = null, parentS
 ```
 
 mountElement-->mountChildren
-```javaScript
+```js
 const mountElement = (vnode, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
 	let el;
 	let vnodeHook;
@@ -354,7 +354,7 @@ const mountElement = (vnode, container, anchor, parentComponent, parentSuspense,
 ```
 
 mountChildren开始递归
-```javaScript
+```js
 const mountChildren = (children, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized, start = 0) => {
 	for (let i = start; i < children.length; i++) {
 		const child = (children[i] = optimized
@@ -367,7 +367,7 @@ const mountChildren = (children, container, anchor, parentComponent, parentSuspe
 ```
 
 处理生命周期
-```javaScript
+```js
 const componentUpdateFn = () => {
 
 	// 省略
@@ -399,14 +399,14 @@ const componentUpdateFn = () => {
 # vue data更新
 ## 前言
 有一个注意点： 初始化的时候instance.data
-```javaScript
+```js
 console.log('start响应式=>a:applyOptions-调用reactive,重点，响应式赋值给实例的data', 'color:magenta')
 
 instance.data = reactive(data);
 ```
 1. 第一步:所以副作用set的修改的也是instance.data的值,这样就生成的新的instance
 下面debugger可以看到instance数据结构
-```javaScript
+```js
 	debugger
 	const nextTree = renderComponentRoot(instance);
 	{
@@ -420,14 +420,14 @@ instance.data = reactive(data);
 但是我目前还不知道多个组件它是怎么处理instance.data的，得测试一下
 
 2. 第2步：执行renderComponentRoot,也就是render函数生成最新的vnode
-```javaScript
+```js
 console.log('$ceffect.run==>调用renderComponentRoot，获取组件最新的 VNode,render会读取组件的响应式数据，这会触发依赖收集', 'color:chartreuse')
 
 const nextTree = renderComponentRoot(instance);
 ```
 
 3. 第3步：执行patch 走diff流程
-```javaScript
+```js
 const componentUpdateFn = () => {
 	// 省略...
 	console.log('$ceffect.run==>调用renderComponentRoot，获取组件最新的 VNode,render会读取组件的响应式数据，这会触发依赖收集', 'color:chartreuse')
@@ -553,7 +553,7 @@ B2--有key-->B4("patchKeyedChildren(c1,c2,container")
 B2--无key-->B5("patchUnkeyedChildren(c1,c2,container")
 ```
 
-```javaScript
+```js
 const processFragment = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
 	// 省略..
 	if (n1 == null) {
@@ -584,7 +584,7 @@ const processFragment = (n1, n2, container, anchor, parentComponent, parentSuspe
 ```
 
 ### patchChildren 执行有key和无key
-```javaScript
+```js
 const patchChildren = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized = false) => {
 		const c1 = n1 && n1.children;
 		const prevShapeFlag = n1 ? n1.shapeFlag : 0;

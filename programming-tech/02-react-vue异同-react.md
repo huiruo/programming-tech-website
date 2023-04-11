@@ -66,7 +66,7 @@ React17 和 React18 批量更新的策略是不同的。
 ```
 
 在react17中提供了 `unstable_batchedUpdates` 函数，用来合并批量操作。在请求后台接口，返回数据时使用unstable_batchedUpdates函数来减少渲染次数，优化,
-```javaScript
+```js
 const btn2 = () => {
   setTimeout(() => {
     unstable_batchedUpdates(() => {
@@ -82,7 +82,7 @@ const btn2 = () => {
 在concurrent模式中，一定是异步。
 
 * 1.当直接调用时this.setState时，为异步更新；
-```javaScript
+```js
 const [count, setCount] = useState(0)
 
 如果我们在同步函数或者在异步回调中调用 setCount 后，打印 count，都是旧值。此时，setState 是异步的。
@@ -126,7 +126,7 @@ render阶段是在内存中构建一棵新的fiber树（称为workInProgress树�
 等更高优先级的更新处理完毕之后，才会处理原来被中断的更新。
 
 React fiber的构建的过程以每个fiber作为一个工作单元，进行工作循环，工作循环中每次处理一个任务（工作单元），处理完毕有一次喘息的机会：
-```javaScript
+```js
 while (nextUnitOfWork !== null && !shouldYieldToRenderer()) {
   nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
 }

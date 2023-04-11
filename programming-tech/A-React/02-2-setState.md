@@ -404,7 +404,7 @@ const onClick = useCallback(() => {
 ```
 形成的链表就是下面这样的：
 
-![](../assets/img-react/图1hooks链表.PNG)
+![](../assets/img-react/图1hooks链表.png)
 
 所以在下一次更新时，再次执行hook，就会去获取当前运行节点的hooks链表；
 ```js

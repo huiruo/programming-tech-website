@@ -7,8 +7,12 @@ const config = {
   tagline: 'Hello World',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here: https://programming-tech-website.vercel.app/sitmap.xml
-  url: 'https://programming-tech-website.vercel.app/',
+  /**
+   * https://programming-tech-website.vercel.app/sitmap.xml
+   * https://huiruo.github.io
+   * 
+  */
+  url: 'https://huiruo.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -28,6 +32,11 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
 
   presets: [
     [

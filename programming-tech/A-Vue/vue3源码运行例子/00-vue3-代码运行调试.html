@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+  .btn {
+    margin-right: 10px;
+    border: 0px;
+    color: white;
+    background-color: rgb(99, 99, 242);
+  }
+</style>
+
+<body>
+  <script src="./vue3.global.js"></script>
+  <div id="root">
+    <div>
+      <button v-on:click='onClickText' class="btn">Hello world,Click me</button>
+      <div><span>ruo-{{msg}}</span></div>
+      <div>{{info2.age}}</div>
+      <button v-on:click='onChange' class="btn">Change</button>
+    </div>
+  </div>
+  <script>
+    /*
+    注释节点也会被模板引擎编译
+    <!-- <div v-if="showDiv">
+      被你发现了
+    </div>
+    */
+    const { ref, reactive, nextTick } = Vue
+
+    Vue.createApp({
+      data() {
+        return {
+          msg: '改变我',
+          info2: {
+            age: 26
+          }
+          // showDiv: false
+        }
+      },
+      methods: {
+        onClickText() {
+          this.msg = '努力'
+          // this.showDiv = !this.showDiv
+          // this.info.msg2 = this.showDiv ? '直接点' : '其他选择'
+        },
+        onChange() {
+          this.info2.age = this.info2.age + 1
+        }
+      },
+
+      setup(props) {
+        console.log('start响应式=>setup()', 'color:chartreuse')
+        const info = reactive({
+          msg2: 'hello',
+        });
+        console.log('end响应式=>代码中setup:调用reactive返回值', 'color:chartreuse', info, info.msg2)
+
+        const ins = Vue.getCurrentInstance();
+        console.log('--0:setup-在组件被挂载之前被调用')
+
+        nextTick(() => {
+          console.log('--nextTick--');
+        })
+
+        Vue.onBeforeMount(() => {
+          console.log('--1:组件挂载前 onBeforeMount-->')
+        })
+
+        Vue.onMounted(() => {
+          console.log('--2:组件挂载后 onMounted-->')
+          console.log('this-ins:', ins, 'this:', this)
+
+          // 注意数据b和a的使用方法
+          // console.log('msg:', ins.data.msg)
+          // console.log('info:', info.msg2)
+        });
+
+        Vue.onBeforeUpdate(() => {
+          console.log('a1-组件更新前-onBeforeUpdate')
+        })
+
+        Vue.onUpdated(() => {
+          console.log('a2-组件更新后-onUpdated')
+        })
+
+        Vue.onBeforeUnmount(() => {
+          console.log('c1-组件销毁前-onBeforeUnmount')
+        })
+
+        Vue.onUnmounted(() => {
+          console.log('c2-组件销毁后-onUnmounted')
+        })
+
+        return {
+          info
+        };
+      },
+
+    }).mount('#root')
+  </script>
+  </script>
+</body>
+
+</html>

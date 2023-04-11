@@ -1,0 +1,2377 @@
+---
+title: mockData-compile调用baseParse返回ast
+sidebar_position: 2
+---
+
+```json
+{
+  "type": 0,
+  "children": [
+    {
+      "type": 1,
+      "ns": 0,
+      "tag": "div",
+      "tagType": 0,
+      "props": [],
+      "isSelfClosing": false,
+      "children": [
+        {
+          "type": 1,
+          "ns": 0,
+          "tag": "button",
+          "tagType": 0,
+          "props": [
+            {
+              "type": 7,
+              "name": "on",
+              "exp": {
+                "type": 4,
+                "content": "onClickText",
+                "isStatic": false,
+                "constType": 0,
+                "loc": {
+                  "start": {
+                    "column": 27,
+                    "line": 3,
+                    "offset": 37
+                  },
+                  "end": {
+                    "column": 38,
+                    "line": 3,
+                    "offset": 48
+                  },
+                  "source": "onClickText"
+                }
+              },
+              "arg": {
+                "type": 4,
+                "content": "click",
+                "isStatic": true,
+                "constType": 3,
+                "loc": {
+                  "start": {
+                    "column": 20,
+                    "line": 3,
+                    "offset": 30
+                  },
+                  "end": {
+                    "column": 25,
+                    "line": 3,
+                    "offset": 35
+                  },
+                  "source": "click"
+                }
+              },
+              "modifiers": [],
+              "loc": {
+                "start": {
+                  "column": 15,
+                  "line": 3,
+                  "offset": 25
+                },
+                "end": {
+                  "column": 39,
+                  "line": 3,
+                  "offset": 49
+                },
+                "source": "v-on:click=\"onClickText\""
+              }
+            },
+            {
+              "type": 6,
+              "name": "class",
+              "value": {
+                "type": 2,
+                "content": "btn",
+                "loc": {
+                  "start": {
+                    "column": 46,
+                    "line": 3,
+                    "offset": 56
+                  },
+                  "end": {
+                    "column": 51,
+                    "line": 3,
+                    "offset": 61
+                  },
+                  "source": "\"btn\""
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 40,
+                  "line": 3,
+                  "offset": 50
+                },
+                "end": {
+                  "column": 51,
+                  "line": 3,
+                  "offset": 61
+                },
+                "source": "class=\"btn\""
+              }
+            }
+          ],
+          "isSelfClosing": false,
+          "children": [
+            {
+              "type": 2,
+              "content": "Hello world,Click me",
+              "loc": {
+                "start": {
+                  "column": 52,
+                  "line": 3,
+                  "offset": 62
+                },
+                "end": {
+                  "column": 72,
+                  "line": 3,
+                  "offset": 82
+                },
+                "source": "Hello world,Click me"
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 7,
+              "line": 3,
+              "offset": 17
+            },
+            "end": {
+              "column": 81,
+              "line": 3,
+              "offset": 91
+            },
+            "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+          },
+          "codegenNode": {
+            "type": 13,
+            "tag": "\"button\"",
+            "props": {
+              "type": 15,
+              "loc": {
+                "start": {
+                  "column": 7,
+                  "line": 3,
+                  "offset": 17
+                },
+                "end": {
+                  "column": 81,
+                  "line": 3,
+                  "offset": 91
+                },
+                "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+              },
+              "properties": [
+                {
+                  "type": 16,
+                  "loc": {
+                    "source": "",
+                    "start": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    },
+                    "end": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    }
+                  },
+                  "key": {
+                    "type": 4,
+                    "loc": {
+                      "start": {
+                        "column": 20,
+                        "line": 3,
+                        "offset": 30
+                      },
+                      "end": {
+                        "column": 25,
+                        "line": 3,
+                        "offset": 35
+                      },
+                      "source": "click"
+                    },
+                    "content": "onClick",
+                    "isStatic": true,
+                    "constType": 3,
+                    "isHandlerKey": true
+                  },
+                  "value": {
+                    "type": 4,
+                    "content": "onClickText",
+                    "isStatic": false,
+                    "constType": 0,
+                    "loc": {
+                      "start": {
+                        "column": 27,
+                        "line": 3,
+                        "offset": 37
+                      },
+                      "end": {
+                        "column": 38,
+                        "line": 3,
+                        "offset": 48
+                      },
+                      "source": "onClickText"
+                    }
+                  }
+                },
+                {
+                  "type": 16,
+                  "loc": {
+                    "source": "",
+                    "start": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    },
+                    "end": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    }
+                  },
+                  "key": {
+                    "type": 4,
+                    "loc": {
+                      "source": "class",
+                      "start": {
+                        "column": 40,
+                        "line": 3,
+                        "offset": 50
+                      },
+                      "end": {
+                        "column": 45,
+                        "line": 3,
+                        "offset": 55
+                      }
+                    },
+                    "content": "class",
+                    "isStatic": true,
+                    "constType": 3
+                  },
+                  "value": {
+                    "type": 4,
+                    "loc": {
+                      "start": {
+                        "column": 46,
+                        "line": 3,
+                        "offset": 56
+                      },
+                      "end": {
+                        "column": 51,
+                        "line": 3,
+                        "offset": 61
+                      },
+                      "source": "\"btn\""
+                    },
+                    "content": "btn",
+                    "isStatic": true,
+                    "constType": 3
+                  }
+                }
+              ]
+            },
+            "children": {
+              "type": 2,
+              "content": "Hello world,Click me",
+              "loc": {
+                "start": {
+                  "column": 52,
+                  "line": 3,
+                  "offset": 62
+                },
+                "end": {
+                  "column": 72,
+                  "line": 3,
+                  "offset": 82
+                },
+                "source": "Hello world,Click me"
+              }
+            },
+            "patchFlag": "8 /* PROPS */",
+            "dynamicProps": {
+              "type": 4,
+              "loc": {
+                "source": "",
+                "start": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                }
+              },
+              "content": "_hoisted_1",
+              "isStatic": false,
+              "constType": 2,
+              "hoisted": {
+                "type": 4,
+                "loc": {
+                  "source": "",
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  }
+                },
+                "content": "[\"onClick\"]",
+                "isStatic": false,
+                "constType": 0
+              }
+            },
+            "isBlock": false,
+            "disableTracking": false,
+            "isComponent": false,
+            "loc": {
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 17
+              },
+              "end": {
+                "column": 81,
+                "line": 3,
+                "offset": 91
+              },
+              "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+            }
+          }
+        },
+        {
+          "type": 1,
+          "ns": 0,
+          "tag": "div",
+          "tagType": 0,
+          "props": [],
+          "isSelfClosing": false,
+          "children": [
+            {
+              "type": 1,
+              "ns": 0,
+              "tag": "span",
+              "tagType": 0,
+              "props": [],
+              "isSelfClosing": false,
+              "children": [
+                {
+                  "type": 8,
+                  "loc": {
+                    "start": {
+                      "column": 18,
+                      "line": 4,
+                      "offset": 109
+                    },
+                    "end": {
+                      "column": 22,
+                      "line": 4,
+                      "offset": 113
+                    },
+                    "source": "ruo-"
+                  },
+                  "children": [
+                    {
+                      "type": 2,
+                      "content": "ruo-",
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      }
+                    },
+                    " + ",
+                    {
+                      "type": 5,
+                      "content": {
+                        "type": 4,
+                        "isStatic": false,
+                        "constType": 0,
+                        "content": "msg",
+                        "loc": {
+                          "start": {
+                            "column": 24,
+                            "line": 4,
+                            "offset": 115
+                          },
+                          "end": {
+                            "column": 27,
+                            "line": 4,
+                            "offset": 118
+                          },
+                          "source": "msg"
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "end": {
+                          "column": 29,
+                          "line": 4,
+                          "offset": 120
+                        },
+                        "source": "{{msg}}"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "loc": {
+                "start": {
+                  "column": 12,
+                  "line": 4,
+                  "offset": 103
+                },
+                "end": {
+                  "column": 36,
+                  "line": 4,
+                  "offset": 127
+                },
+                "source": "<span>ruo-{{msg}}</span>"
+              },
+              "codegenNode": {
+                "type": 13,
+                "tag": "\"span\"",
+                "children": {
+                  "type": 8,
+                  "loc": {
+                    "start": {
+                      "column": 18,
+                      "line": 4,
+                      "offset": 109
+                    },
+                    "end": {
+                      "column": 22,
+                      "line": 4,
+                      "offset": 113
+                    },
+                    "source": "ruo-"
+                  },
+                  "children": [
+                    {
+                      "type": 2,
+                      "content": "ruo-",
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      }
+                    },
+                    " + ",
+                    {
+                      "type": 5,
+                      "content": {
+                        "type": 4,
+                        "isStatic": false,
+                        "constType": 0,
+                        "content": "msg",
+                        "loc": {
+                          "start": {
+                            "column": 24,
+                            "line": 4,
+                            "offset": 115
+                          },
+                          "end": {
+                            "column": 27,
+                            "line": 4,
+                            "offset": 118
+                          },
+                          "source": "msg"
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "end": {
+                          "column": 29,
+                          "line": 4,
+                          "offset": 120
+                        },
+                        "source": "{{msg}}"
+                      }
+                    }
+                  ]
+                },
+                "patchFlag": "1 /* TEXT */",
+                "isBlock": false,
+                "disableTracking": false,
+                "isComponent": false,
+                "loc": {
+                  "start": {
+                    "column": 12,
+                    "line": 4,
+                    "offset": 103
+                  },
+                  "end": {
+                    "column": 36,
+                    "line": 4,
+                    "offset": 127
+                  },
+                  "source": "<span>ruo-{{msg}}</span>"
+                }
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 7,
+              "line": 4,
+              "offset": 98
+            },
+            "end": {
+              "column": 42,
+              "line": 4,
+              "offset": 133
+            },
+            "source": "<div><span>ruo-{{msg}}</span></div>"
+          },
+          "codegenNode": {
+            "type": 13,
+            "tag": "\"div\"",
+            "children": [
+              {
+                "type": 1,
+                "ns": 0,
+                "tag": "span",
+                "tagType": 0,
+                "props": [],
+                "isSelfClosing": false,
+                "children": [
+                  {
+                    "type": 8,
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    },
+                    "children": [
+                      {
+                        "type": 2,
+                        "content": "ruo-",
+                        "loc": {
+                          "start": {
+                            "column": 18,
+                            "line": 4,
+                            "offset": 109
+                          },
+                          "end": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "source": "ruo-"
+                        }
+                      },
+                      " + ",
+                      {
+                        "type": 5,
+                        "content": {
+                          "type": 4,
+                          "isStatic": false,
+                          "constType": 0,
+                          "content": "msg",
+                          "loc": {
+                            "start": {
+                              "column": 24,
+                              "line": 4,
+                              "offset": 115
+                            },
+                            "end": {
+                              "column": 27,
+                              "line": 4,
+                              "offset": 118
+                            },
+                            "source": "msg"
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "end": {
+                            "column": 29,
+                            "line": 4,
+                            "offset": 120
+                          },
+                          "source": "{{msg}}"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "loc": {
+                  "start": {
+                    "column": 12,
+                    "line": 4,
+                    "offset": 103
+                  },
+                  "end": {
+                    "column": 36,
+                    "line": 4,
+                    "offset": 127
+                  },
+                  "source": "<span>ruo-{{msg}}</span>"
+                },
+                "codegenNode": {
+                  "type": 13,
+                  "tag": "\"span\"",
+                  "children": {
+                    "type": 8,
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    },
+                    "children": [
+                      {
+                        "type": 2,
+                        "content": "ruo-",
+                        "loc": {
+                          "start": {
+                            "column": 18,
+                            "line": 4,
+                            "offset": 109
+                          },
+                          "end": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "source": "ruo-"
+                        }
+                      },
+                      " + ",
+                      {
+                        "type": 5,
+                        "content": {
+                          "type": 4,
+                          "isStatic": false,
+                          "constType": 0,
+                          "content": "msg",
+                          "loc": {
+                            "start": {
+                              "column": 24,
+                              "line": 4,
+                              "offset": 115
+                            },
+                            "end": {
+                              "column": 27,
+                              "line": 4,
+                              "offset": 118
+                            },
+                            "source": "msg"
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "end": {
+                            "column": 29,
+                            "line": 4,
+                            "offset": 120
+                          },
+                          "source": "{{msg}}"
+                        }
+                      }
+                    ]
+                  },
+                  "patchFlag": "1 /* TEXT */",
+                  "isBlock": false,
+                  "disableTracking": false,
+                  "isComponent": false,
+                  "loc": {
+                    "start": {
+                      "column": 12,
+                      "line": 4,
+                      "offset": 103
+                    },
+                    "end": {
+                      "column": 36,
+                      "line": 4,
+                      "offset": 127
+                    },
+                    "source": "<span>ruo-{{msg}}</span>"
+                  }
+                }
+              }
+            ],
+            "isBlock": false,
+            "disableTracking": false,
+            "isComponent": false,
+            "loc": {
+              "start": {
+                "column": 7,
+                "line": 4,
+                "offset": 98
+              },
+              "end": {
+                "column": 42,
+                "line": 4,
+                "offset": 133
+              },
+              "source": "<div><span>ruo-{{msg}}</span></div>"
+            }
+          }
+        }
+      ],
+      "loc": {
+        "start": {
+          "column": 5,
+          "line": 2,
+          "offset": 5
+        },
+        "end": {
+          "column": 11,
+          "line": 5,
+          "offset": 144
+        },
+        "source": "<div>\n      <button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>\n      <div><span>ruo-{{msg}}</span></div>\n    </div>"
+      },
+      "codegenNode": {
+        "type": 13,
+        "tag": "\"div\"",
+        "children": [
+          {
+            "type": 1,
+            "ns": 0,
+            "tag": "button",
+            "tagType": 0,
+            "props": [
+              {
+                "type": 7,
+                "name": "on",
+                "exp": {
+                  "type": 4,
+                  "content": "onClickText",
+                  "isStatic": false,
+                  "constType": 0,
+                  "loc": {
+                    "start": {
+                      "column": 27,
+                      "line": 3,
+                      "offset": 37
+                    },
+                    "end": {
+                      "column": 38,
+                      "line": 3,
+                      "offset": 48
+                    },
+                    "source": "onClickText"
+                  }
+                },
+                "arg": {
+                  "type": 4,
+                  "content": "click",
+                  "isStatic": true,
+                  "constType": 3,
+                  "loc": {
+                    "start": {
+                      "column": 20,
+                      "line": 3,
+                      "offset": 30
+                    },
+                    "end": {
+                      "column": 25,
+                      "line": 3,
+                      "offset": 35
+                    },
+                    "source": "click"
+                  }
+                },
+                "modifiers": [],
+                "loc": {
+                  "start": {
+                    "column": 15,
+                    "line": 3,
+                    "offset": 25
+                  },
+                  "end": {
+                    "column": 39,
+                    "line": 3,
+                    "offset": 49
+                  },
+                  "source": "v-on:click=\"onClickText\""
+                }
+              },
+              {
+                "type": 6,
+                "name": "class",
+                "value": {
+                  "type": 2,
+                  "content": "btn",
+                  "loc": {
+                    "start": {
+                      "column": 46,
+                      "line": 3,
+                      "offset": 56
+                    },
+                    "end": {
+                      "column": 51,
+                      "line": 3,
+                      "offset": 61
+                    },
+                    "source": "\"btn\""
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 40,
+                    "line": 3,
+                    "offset": 50
+                  },
+                  "end": {
+                    "column": 51,
+                    "line": 3,
+                    "offset": 61
+                  },
+                  "source": "class=\"btn\""
+                }
+              }
+            ],
+            "isSelfClosing": false,
+            "children": [
+              {
+                "type": 2,
+                "content": "Hello world,Click me",
+                "loc": {
+                  "start": {
+                    "column": 52,
+                    "line": 3,
+                    "offset": 62
+                  },
+                  "end": {
+                    "column": 72,
+                    "line": 3,
+                    "offset": 82
+                  },
+                  "source": "Hello world,Click me"
+                }
+              }
+            ],
+            "loc": {
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 17
+              },
+              "end": {
+                "column": 81,
+                "line": 3,
+                "offset": 91
+              },
+              "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+            },
+            "codegenNode": {
+              "type": 13,
+              "tag": "\"button\"",
+              "props": {
+                "type": 15,
+                "loc": {
+                  "start": {
+                    "column": 7,
+                    "line": 3,
+                    "offset": 17
+                  },
+                  "end": {
+                    "column": 81,
+                    "line": 3,
+                    "offset": 91
+                  },
+                  "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+                },
+                "properties": [
+                  {
+                    "type": 16,
+                    "loc": {
+                      "source": "",
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      }
+                    },
+                    "key": {
+                      "type": 4,
+                      "loc": {
+                        "start": {
+                          "column": 20,
+                          "line": 3,
+                          "offset": 30
+                        },
+                        "end": {
+                          "column": 25,
+                          "line": 3,
+                          "offset": 35
+                        },
+                        "source": "click"
+                      },
+                      "content": "onClick",
+                      "isStatic": true,
+                      "constType": 3,
+                      "isHandlerKey": true
+                    },
+                    "value": {
+                      "type": 4,
+                      "content": "onClickText",
+                      "isStatic": false,
+                      "constType": 0,
+                      "loc": {
+                        "start": {
+                          "column": 27,
+                          "line": 3,
+                          "offset": 37
+                        },
+                        "end": {
+                          "column": 38,
+                          "line": 3,
+                          "offset": 48
+                        },
+                        "source": "onClickText"
+                      }
+                    }
+                  },
+                  {
+                    "type": 16,
+                    "loc": {
+                      "source": "",
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      }
+                    },
+                    "key": {
+                      "type": 4,
+                      "loc": {
+                        "source": "class",
+                        "start": {
+                          "column": 40,
+                          "line": 3,
+                          "offset": 50
+                        },
+                        "end": {
+                          "column": 45,
+                          "line": 3,
+                          "offset": 55
+                        }
+                      },
+                      "content": "class",
+                      "isStatic": true,
+                      "constType": 3
+                    },
+                    "value": {
+                      "type": 4,
+                      "loc": {
+                        "start": {
+                          "column": 46,
+                          "line": 3,
+                          "offset": 56
+                        },
+                        "end": {
+                          "column": 51,
+                          "line": 3,
+                          "offset": 61
+                        },
+                        "source": "\"btn\""
+                      },
+                      "content": "btn",
+                      "isStatic": true,
+                      "constType": 3
+                    }
+                  }
+                ]
+              },
+              "children": {
+                "type": 2,
+                "content": "Hello world,Click me",
+                "loc": {
+                  "start": {
+                    "column": 52,
+                    "line": 3,
+                    "offset": 62
+                  },
+                  "end": {
+                    "column": 72,
+                    "line": 3,
+                    "offset": 82
+                  },
+                  "source": "Hello world,Click me"
+                }
+              },
+              "patchFlag": "8 /* PROPS */",
+              "dynamicProps": {
+                "type": 4,
+                "loc": {
+                  "source": "",
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  }
+                },
+                "content": "_hoisted_1",
+                "isStatic": false,
+                "constType": 2,
+                "hoisted": {
+                  "type": 4,
+                  "loc": {
+                    "source": "",
+                    "start": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    },
+                    "end": {
+                      "line": 1,
+                      "column": 1,
+                      "offset": 0
+                    }
+                  },
+                  "content": "[\"onClick\"]",
+                  "isStatic": false,
+                  "constType": 0
+                }
+              },
+              "isBlock": false,
+              "disableTracking": false,
+              "isComponent": false,
+              "loc": {
+                "start": {
+                  "column": 7,
+                  "line": 3,
+                  "offset": 17
+                },
+                "end": {
+                  "column": 81,
+                  "line": 3,
+                  "offset": 91
+                },
+                "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+              }
+            }
+          },
+          {
+            "type": 1,
+            "ns": 0,
+            "tag": "div",
+            "tagType": 0,
+            "props": [],
+            "isSelfClosing": false,
+            "children": [
+              {
+                "type": 1,
+                "ns": 0,
+                "tag": "span",
+                "tagType": 0,
+                "props": [],
+                "isSelfClosing": false,
+                "children": [
+                  {
+                    "type": 8,
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    },
+                    "children": [
+                      {
+                        "type": 2,
+                        "content": "ruo-",
+                        "loc": {
+                          "start": {
+                            "column": 18,
+                            "line": 4,
+                            "offset": 109
+                          },
+                          "end": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "source": "ruo-"
+                        }
+                      },
+                      " + ",
+                      {
+                        "type": 5,
+                        "content": {
+                          "type": 4,
+                          "isStatic": false,
+                          "constType": 0,
+                          "content": "msg",
+                          "loc": {
+                            "start": {
+                              "column": 24,
+                              "line": 4,
+                              "offset": 115
+                            },
+                            "end": {
+                              "column": 27,
+                              "line": 4,
+                              "offset": 118
+                            },
+                            "source": "msg"
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "end": {
+                            "column": 29,
+                            "line": 4,
+                            "offset": 120
+                          },
+                          "source": "{{msg}}"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "loc": {
+                  "start": {
+                    "column": 12,
+                    "line": 4,
+                    "offset": 103
+                  },
+                  "end": {
+                    "column": 36,
+                    "line": 4,
+                    "offset": 127
+                  },
+                  "source": "<span>ruo-{{msg}}</span>"
+                },
+                "codegenNode": {
+                  "type": 13,
+                  "tag": "\"span\"",
+                  "children": {
+                    "type": 8,
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    },
+                    "children": [
+                      {
+                        "type": 2,
+                        "content": "ruo-",
+                        "loc": {
+                          "start": {
+                            "column": 18,
+                            "line": 4,
+                            "offset": 109
+                          },
+                          "end": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "source": "ruo-"
+                        }
+                      },
+                      " + ",
+                      {
+                        "type": 5,
+                        "content": {
+                          "type": 4,
+                          "isStatic": false,
+                          "constType": 0,
+                          "content": "msg",
+                          "loc": {
+                            "start": {
+                              "column": 24,
+                              "line": 4,
+                              "offset": 115
+                            },
+                            "end": {
+                              "column": 27,
+                              "line": 4,
+                              "offset": 118
+                            },
+                            "source": "msg"
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 22,
+                            "line": 4,
+                            "offset": 113
+                          },
+                          "end": {
+                            "column": 29,
+                            "line": 4,
+                            "offset": 120
+                          },
+                          "source": "{{msg}}"
+                        }
+                      }
+                    ]
+                  },
+                  "patchFlag": "1 /* TEXT */",
+                  "isBlock": false,
+                  "disableTracking": false,
+                  "isComponent": false,
+                  "loc": {
+                    "start": {
+                      "column": 12,
+                      "line": 4,
+                      "offset": 103
+                    },
+                    "end": {
+                      "column": 36,
+                      "line": 4,
+                      "offset": 127
+                    },
+                    "source": "<span>ruo-{{msg}}</span>"
+                  }
+                }
+              }
+            ],
+            "loc": {
+              "start": {
+                "column": 7,
+                "line": 4,
+                "offset": 98
+              },
+              "end": {
+                "column": 42,
+                "line": 4,
+                "offset": 133
+              },
+              "source": "<div><span>ruo-{{msg}}</span></div>"
+            },
+            "codegenNode": {
+              "type": 13,
+              "tag": "\"div\"",
+              "children": [
+                {
+                  "type": 1,
+                  "ns": 0,
+                  "tag": "span",
+                  "tagType": 0,
+                  "props": [],
+                  "isSelfClosing": false,
+                  "children": [
+                    {
+                      "type": 8,
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      },
+                      "children": [
+                        {
+                          "type": 2,
+                          "content": "ruo-",
+                          "loc": {
+                            "start": {
+                              "column": 18,
+                              "line": 4,
+                              "offset": 109
+                            },
+                            "end": {
+                              "column": 22,
+                              "line": 4,
+                              "offset": 113
+                            },
+                            "source": "ruo-"
+                          }
+                        },
+                        " + ",
+                        {
+                          "type": 5,
+                          "content": {
+                            "type": 4,
+                            "isStatic": false,
+                            "constType": 0,
+                            "content": "msg",
+                            "loc": {
+                              "start": {
+                                "column": 24,
+                                "line": 4,
+                                "offset": 115
+                              },
+                              "end": {
+                                "column": 27,
+                                "line": 4,
+                                "offset": 118
+                              },
+                              "source": "msg"
+                            }
+                          },
+                          "loc": {
+                            "start": {
+                              "column": 22,
+                              "line": 4,
+                              "offset": 113
+                            },
+                            "end": {
+                              "column": 29,
+                              "line": 4,
+                              "offset": 120
+                            },
+                            "source": "{{msg}}"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "loc": {
+                    "start": {
+                      "column": 12,
+                      "line": 4,
+                      "offset": 103
+                    },
+                    "end": {
+                      "column": 36,
+                      "line": 4,
+                      "offset": 127
+                    },
+                    "source": "<span>ruo-{{msg}}</span>"
+                  },
+                  "codegenNode": {
+                    "type": 13,
+                    "tag": "\"span\"",
+                    "children": {
+                      "type": 8,
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      },
+                      "children": [
+                        {
+                          "type": 2,
+                          "content": "ruo-",
+                          "loc": {
+                            "start": {
+                              "column": 18,
+                              "line": 4,
+                              "offset": 109
+                            },
+                            "end": {
+                              "column": 22,
+                              "line": 4,
+                              "offset": 113
+                            },
+                            "source": "ruo-"
+                          }
+                        },
+                        " + ",
+                        {
+                          "type": 5,
+                          "content": {
+                            "type": 4,
+                            "isStatic": false,
+                            "constType": 0,
+                            "content": "msg",
+                            "loc": {
+                              "start": {
+                                "column": 24,
+                                "line": 4,
+                                "offset": 115
+                              },
+                              "end": {
+                                "column": 27,
+                                "line": 4,
+                                "offset": 118
+                              },
+                              "source": "msg"
+                            }
+                          },
+                          "loc": {
+                            "start": {
+                              "column": 22,
+                              "line": 4,
+                              "offset": 113
+                            },
+                            "end": {
+                              "column": 29,
+                              "line": 4,
+                              "offset": 120
+                            },
+                            "source": "{{msg}}"
+                          }
+                        }
+                      ]
+                    },
+                    "patchFlag": "1 /* TEXT */",
+                    "isBlock": false,
+                    "disableTracking": false,
+                    "isComponent": false,
+                    "loc": {
+                      "start": {
+                        "column": 12,
+                        "line": 4,
+                        "offset": 103
+                      },
+                      "end": {
+                        "column": 36,
+                        "line": 4,
+                        "offset": 127
+                      },
+                      "source": "<span>ruo-{{msg}}</span>"
+                    }
+                  }
+                }
+              ],
+              "isBlock": false,
+              "disableTracking": false,
+              "isComponent": false,
+              "loc": {
+                "start": {
+                  "column": 7,
+                  "line": 4,
+                  "offset": 98
+                },
+                "end": {
+                  "column": 42,
+                  "line": 4,
+                  "offset": 133
+                },
+                "source": "<div><span>ruo-{{msg}}</span></div>"
+              }
+            }
+          }
+        ],
+        "isBlock": true,
+        "disableTracking": false,
+        "isComponent": false,
+        "loc": {
+          "start": {
+            "column": 5,
+            "line": 2,
+            "offset": 5
+          },
+          "end": {
+            "column": 11,
+            "line": 5,
+            "offset": 144
+          },
+          "source": "<div>\n      <button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>\n      <div><span>ruo-{{msg}}</span></div>\n    </div>"
+        }
+      }
+    }
+  ],
+  "helpers": [
+    null,
+    null,
+    null,
+    null
+  ],
+  "components": [],
+  "directives": [],
+  "hoists": [
+    {
+      "type": 4,
+      "loc": {
+        "source": "",
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        }
+      },
+      "content": "[\"onClick\"]",
+      "isStatic": false,
+      "constType": 0
+    }
+  ],
+  "imports": [],
+  "cached": 0,
+  "temps": 0,
+  "codegenNode": {
+    "type": 13,
+    "tag": "\"div\"",
+    "children": [
+      {
+        "type": 1,
+        "ns": 0,
+        "tag": "button",
+        "tagType": 0,
+        "props": [
+          {
+            "type": 7,
+            "name": "on",
+            "exp": {
+              "type": 4,
+              "content": "onClickText",
+              "isStatic": false,
+              "constType": 0,
+              "loc": {
+                "start": {
+                  "column": 27,
+                  "line": 3,
+                  "offset": 37
+                },
+                "end": {
+                  "column": 38,
+                  "line": 3,
+                  "offset": 48
+                },
+                "source": "onClickText"
+              }
+            },
+            "arg": {
+              "type": 4,
+              "content": "click",
+              "isStatic": true,
+              "constType": 3,
+              "loc": {
+                "start": {
+                  "column": 20,
+                  "line": 3,
+                  "offset": 30
+                },
+                "end": {
+                  "column": 25,
+                  "line": 3,
+                  "offset": 35
+                },
+                "source": "click"
+              }
+            },
+            "modifiers": [],
+            "loc": {
+              "start": {
+                "column": 15,
+                "line": 3,
+                "offset": 25
+              },
+              "end": {
+                "column": 39,
+                "line": 3,
+                "offset": 49
+              },
+              "source": "v-on:click=\"onClickText\""
+            }
+          },
+          {
+            "type": 6,
+            "name": "class",
+            "value": {
+              "type": 2,
+              "content": "btn",
+              "loc": {
+                "start": {
+                  "column": 46,
+                  "line": 3,
+                  "offset": 56
+                },
+                "end": {
+                  "column": 51,
+                  "line": 3,
+                  "offset": 61
+                },
+                "source": "\"btn\""
+              }
+            },
+            "loc": {
+              "start": {
+                "column": 40,
+                "line": 3,
+                "offset": 50
+              },
+              "end": {
+                "column": 51,
+                "line": 3,
+                "offset": 61
+              },
+              "source": "class=\"btn\""
+            }
+          }
+        ],
+        "isSelfClosing": false,
+        "children": [
+          {
+            "type": 2,
+            "content": "Hello world,Click me",
+            "loc": {
+              "start": {
+                "column": 52,
+                "line": 3,
+                "offset": 62
+              },
+              "end": {
+                "column": 72,
+                "line": 3,
+                "offset": 82
+              },
+              "source": "Hello world,Click me"
+            }
+          }
+        ],
+        "loc": {
+          "start": {
+            "column": 7,
+            "line": 3,
+            "offset": 17
+          },
+          "end": {
+            "column": 81,
+            "line": 3,
+            "offset": 91
+          },
+          "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+        },
+        "codegenNode": {
+          "type": 13,
+          "tag": "\"button\"",
+          "props": {
+            "type": 15,
+            "loc": {
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 17
+              },
+              "end": {
+                "column": 81,
+                "line": 3,
+                "offset": 91
+              },
+              "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+            },
+            "properties": [
+              {
+                "type": 16,
+                "loc": {
+                  "source": "",
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  }
+                },
+                "key": {
+                  "type": 4,
+                  "loc": {
+                    "start": {
+                      "column": 20,
+                      "line": 3,
+                      "offset": 30
+                    },
+                    "end": {
+                      "column": 25,
+                      "line": 3,
+                      "offset": 35
+                    },
+                    "source": "click"
+                  },
+                  "content": "onClick",
+                  "isStatic": true,
+                  "constType": 3,
+                  "isHandlerKey": true
+                },
+                "value": {
+                  "type": 4,
+                  "content": "onClickText",
+                  "isStatic": false,
+                  "constType": 0,
+                  "loc": {
+                    "start": {
+                      "column": 27,
+                      "line": 3,
+                      "offset": 37
+                    },
+                    "end": {
+                      "column": 38,
+                      "line": 3,
+                      "offset": 48
+                    },
+                    "source": "onClickText"
+                  }
+                }
+              },
+              {
+                "type": 16,
+                "loc": {
+                  "source": "",
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  }
+                },
+                "key": {
+                  "type": 4,
+                  "loc": {
+                    "source": "class",
+                    "start": {
+                      "column": 40,
+                      "line": 3,
+                      "offset": 50
+                    },
+                    "end": {
+                      "column": 45,
+                      "line": 3,
+                      "offset": 55
+                    }
+                  },
+                  "content": "class",
+                  "isStatic": true,
+                  "constType": 3
+                },
+                "value": {
+                  "type": 4,
+                  "loc": {
+                    "start": {
+                      "column": 46,
+                      "line": 3,
+                      "offset": 56
+                    },
+                    "end": {
+                      "column": 51,
+                      "line": 3,
+                      "offset": 61
+                    },
+                    "source": "\"btn\""
+                  },
+                  "content": "btn",
+                  "isStatic": true,
+                  "constType": 3
+                }
+              }
+            ]
+          },
+          "children": {
+            "type": 2,
+            "content": "Hello world,Click me",
+            "loc": {
+              "start": {
+                "column": 52,
+                "line": 3,
+                "offset": 62
+              },
+              "end": {
+                "column": 72,
+                "line": 3,
+                "offset": 82
+              },
+              "source": "Hello world,Click me"
+            }
+          },
+          "patchFlag": "8 /* PROPS */",
+          "dynamicProps": {
+            "type": 4,
+            "loc": {
+              "source": "",
+              "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              }
+            },
+            "content": "_hoisted_1",
+            "isStatic": false,
+            "constType": 2,
+            "hoisted": {
+              "type": 4,
+              "loc": {
+                "source": "",
+                "start": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                }
+              },
+              "content": "[\"onClick\"]",
+              "isStatic": false,
+              "constType": 0
+            }
+          },
+          "isBlock": false,
+          "disableTracking": false,
+          "isComponent": false,
+          "loc": {
+            "start": {
+              "column": 7,
+              "line": 3,
+              "offset": 17
+            },
+            "end": {
+              "column": 81,
+              "line": 3,
+              "offset": 91
+            },
+            "source": "<button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>"
+          }
+        }
+      },
+      {
+        "type": 1,
+        "ns": 0,
+        "tag": "div",
+        "tagType": 0,
+        "props": [],
+        "isSelfClosing": false,
+        "children": [
+          {
+            "type": 1,
+            "ns": 0,
+            "tag": "span",
+            "tagType": 0,
+            "props": [],
+            "isSelfClosing": false,
+            "children": [
+              {
+                "type": 8,
+                "loc": {
+                  "start": {
+                    "column": 18,
+                    "line": 4,
+                    "offset": 109
+                  },
+                  "end": {
+                    "column": 22,
+                    "line": 4,
+                    "offset": 113
+                  },
+                  "source": "ruo-"
+                },
+                "children": [
+                  {
+                    "type": 2,
+                    "content": "ruo-",
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    }
+                  },
+                  " + ",
+                  {
+                    "type": 5,
+                    "content": {
+                      "type": 4,
+                      "isStatic": false,
+                      "constType": 0,
+                      "content": "msg",
+                      "loc": {
+                        "start": {
+                          "column": 24,
+                          "line": 4,
+                          "offset": 115
+                        },
+                        "end": {
+                          "column": 27,
+                          "line": 4,
+                          "offset": 118
+                        },
+                        "source": "msg"
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "end": {
+                        "column": 29,
+                        "line": 4,
+                        "offset": 120
+                      },
+                      "source": "{{msg}}"
+                    }
+                  }
+                ]
+              }
+            ],
+            "loc": {
+              "start": {
+                "column": 12,
+                "line": 4,
+                "offset": 103
+              },
+              "end": {
+                "column": 36,
+                "line": 4,
+                "offset": 127
+              },
+              "source": "<span>ruo-{{msg}}</span>"
+            },
+            "codegenNode": {
+              "type": 13,
+              "tag": "\"span\"",
+              "children": {
+                "type": 8,
+                "loc": {
+                  "start": {
+                    "column": 18,
+                    "line": 4,
+                    "offset": 109
+                  },
+                  "end": {
+                    "column": 22,
+                    "line": 4,
+                    "offset": 113
+                  },
+                  "source": "ruo-"
+                },
+                "children": [
+                  {
+                    "type": 2,
+                    "content": "ruo-",
+                    "loc": {
+                      "start": {
+                        "column": 18,
+                        "line": 4,
+                        "offset": 109
+                      },
+                      "end": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "source": "ruo-"
+                    }
+                  },
+                  " + ",
+                  {
+                    "type": 5,
+                    "content": {
+                      "type": 4,
+                      "isStatic": false,
+                      "constType": 0,
+                      "content": "msg",
+                      "loc": {
+                        "start": {
+                          "column": 24,
+                          "line": 4,
+                          "offset": 115
+                        },
+                        "end": {
+                          "column": 27,
+                          "line": 4,
+                          "offset": 118
+                        },
+                        "source": "msg"
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 22,
+                        "line": 4,
+                        "offset": 113
+                      },
+                      "end": {
+                        "column": 29,
+                        "line": 4,
+                        "offset": 120
+                      },
+                      "source": "{{msg}}"
+                    }
+                  }
+                ]
+              },
+              "patchFlag": "1 /* TEXT */",
+              "isBlock": false,
+              "disableTracking": false,
+              "isComponent": false,
+              "loc": {
+                "start": {
+                  "column": 12,
+                  "line": 4,
+                  "offset": 103
+                },
+                "end": {
+                  "column": 36,
+                  "line": 4,
+                  "offset": 127
+                },
+                "source": "<span>ruo-{{msg}}</span>"
+              }
+            }
+          }
+        ],
+        "loc": {
+          "start": {
+            "column": 7,
+            "line": 4,
+            "offset": 98
+          },
+          "end": {
+            "column": 42,
+            "line": 4,
+            "offset": 133
+          },
+          "source": "<div><span>ruo-{{msg}}</span></div>"
+        },
+        "codegenNode": {
+          "type": 13,
+          "tag": "\"div\"",
+          "children": [
+            {
+              "type": 1,
+              "ns": 0,
+              "tag": "span",
+              "tagType": 0,
+              "props": [],
+              "isSelfClosing": false,
+              "children": [
+                {
+                  "type": 8,
+                  "loc": {
+                    "start": {
+                      "column": 18,
+                      "line": 4,
+                      "offset": 109
+                    },
+                    "end": {
+                      "column": 22,
+                      "line": 4,
+                      "offset": 113
+                    },
+                    "source": "ruo-"
+                  },
+                  "children": [
+                    {
+                      "type": 2,
+                      "content": "ruo-",
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      }
+                    },
+                    " + ",
+                    {
+                      "type": 5,
+                      "content": {
+                        "type": 4,
+                        "isStatic": false,
+                        "constType": 0,
+                        "content": "msg",
+                        "loc": {
+                          "start": {
+                            "column": 24,
+                            "line": 4,
+                            "offset": 115
+                          },
+                          "end": {
+                            "column": 27,
+                            "line": 4,
+                            "offset": 118
+                          },
+                          "source": "msg"
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "end": {
+                          "column": 29,
+                          "line": 4,
+                          "offset": 120
+                        },
+                        "source": "{{msg}}"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "loc": {
+                "start": {
+                  "column": 12,
+                  "line": 4,
+                  "offset": 103
+                },
+                "end": {
+                  "column": 36,
+                  "line": 4,
+                  "offset": 127
+                },
+                "source": "<span>ruo-{{msg}}</span>"
+              },
+              "codegenNode": {
+                "type": 13,
+                "tag": "\"span\"",
+                "children": {
+                  "type": 8,
+                  "loc": {
+                    "start": {
+                      "column": 18,
+                      "line": 4,
+                      "offset": 109
+                    },
+                    "end": {
+                      "column": 22,
+                      "line": 4,
+                      "offset": 113
+                    },
+                    "source": "ruo-"
+                  },
+                  "children": [
+                    {
+                      "type": 2,
+                      "content": "ruo-",
+                      "loc": {
+                        "start": {
+                          "column": 18,
+                          "line": 4,
+                          "offset": 109
+                        },
+                        "end": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "source": "ruo-"
+                      }
+                    },
+                    " + ",
+                    {
+                      "type": 5,
+                      "content": {
+                        "type": 4,
+                        "isStatic": false,
+                        "constType": 0,
+                        "content": "msg",
+                        "loc": {
+                          "start": {
+                            "column": 24,
+                            "line": 4,
+                            "offset": 115
+                          },
+                          "end": {
+                            "column": 27,
+                            "line": 4,
+                            "offset": 118
+                          },
+                          "source": "msg"
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 22,
+                          "line": 4,
+                          "offset": 113
+                        },
+                        "end": {
+                          "column": 29,
+                          "line": 4,
+                          "offset": 120
+                        },
+                        "source": "{{msg}}"
+                      }
+                    }
+                  ]
+                },
+                "patchFlag": "1 /* TEXT */",
+                "isBlock": false,
+                "disableTracking": false,
+                "isComponent": false,
+                "loc": {
+                  "start": {
+                    "column": 12,
+                    "line": 4,
+                    "offset": 103
+                  },
+                  "end": {
+                    "column": 36,
+                    "line": 4,
+                    "offset": 127
+                  },
+                  "source": "<span>ruo-{{msg}}</span>"
+                }
+              }
+            }
+          ],
+          "isBlock": false,
+          "disableTracking": false,
+          "isComponent": false,
+          "loc": {
+            "start": {
+              "column": 7,
+              "line": 4,
+              "offset": 98
+            },
+            "end": {
+              "column": 42,
+              "line": 4,
+              "offset": 133
+            },
+            "source": "<div><span>ruo-{{msg}}</span></div>"
+          }
+        }
+      }
+    ],
+    "isBlock": true,
+    "disableTracking": false,
+    "isComponent": false,
+    "loc": {
+      "start": {
+        "column": 5,
+        "line": 2,
+        "offset": 5
+      },
+      "end": {
+        "column": 11,
+        "line": 5,
+        "offset": 144
+      },
+      "source": "<div>\n      <button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>\n      <div><span>ruo-{{msg}}</span></div>\n    </div>"
+    }
+  },
+  "loc": {
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0
+    },
+    "end": {
+      "column": 3,
+      "line": 6,
+      "offset": 147
+    },
+    "source": "\n    <div>\n      <button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>\n      <div><span>ruo-{{msg}}</span></div>\n    </div>\n  "
+  }
+}
+```

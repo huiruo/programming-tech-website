@@ -1,8 +1,8 @@
 {
-  "label": "C++",
+  "label": "c",
   "position": 102,
   "link": {
     "type": "generated-index",
-    "description": "C++"
+    "description": "c"
   }
 }

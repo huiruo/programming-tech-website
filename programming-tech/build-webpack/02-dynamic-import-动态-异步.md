@@ -87,7 +87,7 @@ document.body.appendChild(component());
 ![](../assets/img-build/点击按钮后调用流程.png)
 
 ### 点击后按钮第一步
-对应构建源码：[构建动态组件源码](./build-webpack/dynamic-import/构建动态组件源码)
+对应构建源码：[构建动态组件源码](./dynamic-import/构建动态组件源码)
 
 build生成index.bundle.js
 ```js
@@ -167,7 +167,7 @@ build生成index.bundle.js
 
 注意：比如当点击按钮时，只需第一次加载时去请求文件，后面加载时应该要去使用缓存。
 
-* 对应build源码：[构建动态组件源码](./build-webpack/dynamic-import/构建动态组件源码)
+* 对应build源码：[构建动态组件源码](./dynamic-import/构建动态组件源码)
 
 * build之后的源码：index.bundle.js
 ```html

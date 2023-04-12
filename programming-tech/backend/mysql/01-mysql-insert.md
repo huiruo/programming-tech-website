@@ -1,3 +1,8 @@
+---
+title: mysql-insert
+sidebar_position: 1
+---
+
 ## insert两种方法
 第一种方法将列名和列值分开了，在使用时，列名必须和列值的数一致。如下面的语句向users表中插入了一条记录：
 ```sql

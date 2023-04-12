@@ -532,10 +532,9 @@ const sidebars = {
       items: [
         'backend/消息队列',
         'backend/pm2',
-        'backend/pm2-Docker/Apache/01-',
-        'backend/pm2-Docker/Docker/01',
-        'backend/pm2-Docker/Docker/test1',
-        'backend/pm2-Docker/redis',
+        'backend/Docker',
+        'backend/redis',
+        'backend/Apache/Apache',
         {
           label: 'golang',
           type: 'category',
@@ -543,12 +542,12 @@ const sidebars = {
           items: [
             'backend/golang/03-1-function',
             'backend/golang/03-2-函数拥有者',
-            'backend/golang/类型转换',
-            'backend/golang/协程/helloworld',
-            'backend/golang/指针',
-            'backend/golang/字符串拼接',
             'backend/golang/go-备份/go备份',
             'backend/golang/golang启动一个简单的http服务',
+            'backend/golang/协程/helloworld',
+            'backend/golang/字符串拼接',
+            'backend/golang/指针',
+            'backend/golang/类型转换',
           ]
         },
         {
@@ -556,11 +555,11 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
-            'backend/mysql/查看已登录密码',
-            'backend/mysql/行格式-',
-            'backend/mysql/mysql-问题',
             'backend/mysql/mysql-insert',
+            'backend/mysql/mysql-问题',
             'backend/mysql/mysql8安装',
+            'backend/mysql/mysql行格式',
+            'backend/mysql/查看已登录密码',
           ]
         },
       ]

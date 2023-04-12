@@ -1,3 +1,8 @@
+---
+title: redis
+sidebar_position: 1
+---
+
 ## redis
 ```
 sudo apt-get update

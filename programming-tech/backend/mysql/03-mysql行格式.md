@@ -1,4 +1,7 @@
-
+---
+title: mysql行格式
+sidebar_position: 1
+---
 
 以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为 行格式 或者 记录格式 。 InnoDB 到现在为止设计了4种不同类型的 行格式 ，分别是 Compact 、 Redundant 、Dynamic 和 Compressed 行格式。
 

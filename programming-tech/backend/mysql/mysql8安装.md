@@ -1,3 +1,7 @@
+---
+title: mysql8安装
+sidebar_position: 1
+---
 
 修改my.ini文件：
 ```

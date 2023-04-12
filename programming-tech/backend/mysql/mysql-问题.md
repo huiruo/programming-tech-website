@@ -1,3 +1,7 @@
+---
+title: mysql-问题
+sidebar_position: 1
+---
 
 ## mysql 登录
 mysql -u root -p 

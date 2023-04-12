@@ -25,28 +25,36 @@ handler: 一个通常以函数作为属性的对象
 ```
 
 ```js
-let obj = {a: 1}
+let obj = { name: 'iphone', price: 99 }
 
 let proxyObj = new Proxy(obj, {
-  get: function (target, prop) {
-    return prop in target ? target[prop] : 0
+  get: function (target, key) {
+    // 对象中不存在属性名时返回0
+    return key in target ? target[key] : 0
   },
-  set: function (target, prop, value) {
-    console.log('触发set:', prop, '-', value)
-    target[prop] = 888;
+  // 通过代理，你可以轻松地验证向一个对象的传值。下面的代码借此展示了 set handler 的作用。
+  set: function (target, key, value) {
+    console.log('触发set:', { target, key, value })
+    if (key === 'price') {
+      if (value > 100) {
+        console.log("报价过高")
+        return true
+      }
+    }
+
+    // obj[prop] = value;
+    // return false; // 必须true 才成功赋值
+    // 等同下面
+    return Reflect.set(target, key, value)
   }
 })
 
-console.log('1:', proxyObj.a);
-console.log('2:', proxyObj.b);
-proxyObj.a = 666;
-console.log('3:', proxyObj.a)
-/*
-1: 1
-2: 0
-触发set: a - 666
-3: 888
-*/
+console.log('1:', proxyObj.name); // iphone
+console.log('2:', proxyObj.namex); // 0
+proxyObj.price = 666;
+console.log('3:', proxyObj.price) // 99
+proxyObj.price = 98;
+console.log('4:', proxyObj.price) // 98
 ```
 
 

@@ -1,9 +1,8 @@
 ---
-title: Webpack 4-增量构建
+title: webpack4-增量构建
 sidebar_position: 1
 ---
 
-https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F
 ## 为什么我只改了一行代码，却需要花 5 分钟才能构建完成？
 
 但经过前面几节关于 Webpack 构建原理和优化的课程后，相信已经可以解答。尽管只改动了一行代码，但是在执行构建时，要完整执行所有模块的编译、优化和生成产物的处理过程，而不是只需要处理所改动的文件。
@@ -67,3 +66,6 @@ module.exports = {
 `遗憾的是，Webpack 4 中的 cache 配置只支持基于内存的缓存，并不支持文件系统的缓存。因此，我们只能通过上节课讲到的一些支持缓存的第三方处理插件将局部的构建环节应用“增量处理”。`
 
 不过好消息是 Webpack 5 中正式支持基于文件系统的持久化缓存（Persistent Cache）。
+
+参考：
+https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F

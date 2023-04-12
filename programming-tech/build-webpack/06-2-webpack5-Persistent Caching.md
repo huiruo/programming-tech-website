@@ -1,5 +1,5 @@
 ---
-title: webpack5-Persistent Caching
+title: webpack5-Persistent-Caching
 sidebar_position: 1
 ---
 

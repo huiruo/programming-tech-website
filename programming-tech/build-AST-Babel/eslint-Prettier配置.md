@@ -1,5 +1,5 @@
 ---
-title: eslint配置
+title: eslint-Prettier配置
 sidebar_position: 99
 ---
 

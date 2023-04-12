@@ -4,12 +4,13 @@ sidebar_position: 3
 ---
 
 ## 使用webpack babel-loader来进行转换
+```
 npm install webpack-cli --save-dev
-创建webpack.config.js，编写如下配置
-// usage
 cd webpack
 npm run webpack
-可以对比查看babel-cli的转换之后的代码是一致的。
+```
+
+创建webpack.config.js，编写如下配置,可以对比查看babel-cli的转换之后的代码是一致的
 ```js
 // webpack/webpack.config.js
 module.exports = {

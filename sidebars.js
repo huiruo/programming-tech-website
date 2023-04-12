@@ -448,15 +448,21 @@ const sidebars = {
       items: [
         'build-AST-Babel/AST',
         'build-AST-Babel/babel',
-        'build-AST-Babel/babel-编译构建',
+        'build-AST-Babel/babel-编译构建之modules',
         'build-AST-Babel/babel-loader',
         'build-AST-Babel/babel-standalone使用',
         'build-AST-Babel/transform-runtime',
         'build-AST-Babel/less和scss的区别',
-        'build-AST-Babel/辅_代码格式化',
-        'build-AST-Babel/辅_断点调试要领',
-        'build-AST-Babel/辅_code_format',
-        'build-AST-Babel/辅_eslint配置',
+        'build-AST-Babel/断点调试要领',
+        {
+          label: '代码格式化',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'build-AST-Babel/eslint-Prettier配置',
+            'build-AST-Babel/代码格式化',
+          ]
+        },
       ]
     },
     {

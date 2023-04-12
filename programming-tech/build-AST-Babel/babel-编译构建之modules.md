@@ -1,5 +1,5 @@
 ---
-title: babel-编译构建
+title: babel-编译构建之modules
 sidebar_position: 7
 ---
 
@@ -28,7 +28,7 @@ sidebar_position: 7
   ],
 }
 ```
-## 问题
+## 问题:exports is undefined
 升级@babel/preset-env之后，babel-loader的配置保持不变。
 
 babel.config.js中@babel/preset-env的配置modules变为auto。
@@ -38,9 +38,7 @@ babel.config.js中@babel/preset-env的配置modules变为auto。
 当这个异常出现后，把modules的值改回去变为commonjs，异常又消失了。
 
 推论：
-```
 问题出在模块包装上，具体就是webpack打包的时候注入的形参变量中没有exports。而引起webpack未在包装时注入形参的原因很可能是@babel/preset-env的配置modules导致的
-```
 
 babel.config.js
 ```js
@@ -80,32 +78,31 @@ module.exports = {
 };
 ```
 
-## 解决方案
-模块转换的地方
-关注点转移到@babel/preset-env的配置项modules上来
+## 解决方案:模块转换:@babel/preset-env的配置项modules
 ```text
 modules:
 
 "amd" | "umd" | "systemjs" | "commonjs" | "cjs" | "auto" | false, defaults to "auto".
-
-modules值为umd:
+```
+* modules值为umd:
 其含义为将es module的模块语法、模块特性转换成umd的模块语法、模块特性;
 如果是非es module的模块语法、模块特性，则不会转换其模块语法和模块特性，只是做一层umd的模块包装。
 
-modules值为systemjs:
+* modules值为systemjs:
 其含义为将es module的模块语法、模块特性转换成systemjs的模块语法、模块特性;
 如果是非es module的模块语法、模块特性，则不会转换其模块语法和模块特性，只是做一层systemjs的模块包装。
 
-modules值为commonjs或者cjs（二者等价）:
+* modules值为commonjs或者cjs（二者等价）:
 其含义为将es module的模块语法、模块特性转换成commonjs的模块语法、模块特性。
 如果是非es module的模块语法、模块特性，则原样输出
 
-modules值为false:
+* modules值为false:
 其含义为：不转换es module;如果是非es module的模块语法、模块特性，则原样输出。
 
-modules值为auto:
+* modules值为auto:
 其含义为：根据caller参数supportsStaticESM来决定要不要转换es module，为true则不转换，为false则转换成commonjs。caller可以手动传入，也可以是loader或者plugin传入的（如babel-loader）。非必要不要手动传入，因为会影响loader或者plugin的行为，导致产物和预期有差别。
-```
+
+
 将babel-loader中处理node_modules下的模块的配置单独拎出去，覆盖公共的babel.config.js配置
 
 用babel-loader去处理node_modules的原因是做语法兼容。

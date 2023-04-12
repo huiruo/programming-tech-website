@@ -1,4 +1,9 @@
-##### 2、配置webpck.config.js文件
+---
+title: react18-ssr
+sidebar_position: 1
+---
+
+## 配置webpack.config.js文件
 ```js
 const path = require("path");
 
@@ -26,13 +31,13 @@ module.exports = {
 };
 ```
 
-##### 3、配置编译命令
+配置编译命令
 
 ```json
 "scripts": {"build": "webpack"}
 ```
 
-#### 五、水合（hydrateRoot）
+## 水合（hydrateRoot）
 
 + 水合是指其他物质溶于水发生化学反应
 + 此处水合是指后端数据达到前端后，js绑定事件，才能够响应用户的操作或者DOM的更新。
@@ -44,8 +49,7 @@ module.exports = {
 此过程类似于银耳，长成后晒干，然后加入水再泡发。
 
 
-##### 3、项目代码
-
+## 例子
 ```js
 import React from "react";
 import App from "./page/App/index.jsx";
@@ -123,10 +127,7 @@ module.exports = render;
 
 **注意： 由于render函数中即使用了commonjs，又使用了es的代码，所以，servicejs文件中使用了@babel/register插件进行转换，将es转换成commonjs进行执行。**
 
-#### 七、react18的ssr
-
-##### 1、特性
-
+## react18的ssr
 + 选择性水合，可以在局部进行水合。
 + 像流水一样，打造一个从服务端到客户端的持续不断的渲染管线。而不是renderToString那样一次性渲染。
 
@@ -137,10 +138,8 @@ module.exports = render;
 
 + 需要请求的组件会先返回一个```<template></template>```占位，然后再替换。
 
-##### 2、新版ssr代码：（加上react-router@6版本）
-
+### 新版ssr代码：（加上react-router@6版本）
 + service.js文件不变，render函数做出如下修改：
-
 ```js
 import React from "react";
 import { renderToPipeableStream } from "react-dom/server";
@@ -268,20 +267,11 @@ export default function NavList() {
 
 **注意： 此处没有使用Link，原因是由于如果跳转过于频繁，Suspense中内容还没有渲染结束，会导致报错。需要使用startTransition来降低优先级。**
 
-#### 八、useId
-
-+ 客户端和服务端保持一致的id
-
-#### 九、项目搭建附录
-
-##### 1、安装插件
-
 ```bash
 npm install @babel/core @babel/preset-env  @babel/preset-react babel-loader express react-router-dom webpack webpack-cli @babel/plugin-transform-modules-commonjs @babel/register cross-env nodemon react react-dom @babel/plugin-transform-runtime --save
 ```
 
-##### 2、webpack.config.js
-
+## webpack.config.js
 ```js
 const path = require("path");
 
@@ -311,4 +301,3 @@ module.exports = {
   },
 };
 ```
-

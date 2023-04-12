@@ -3,4 +3,4 @@
 
 * 方法二.将 position:absolute 元素 的 left 设置为 50%，margin-left 设置为负的父元素的宽度的一半，也就是 -width/2 ，这个的缺点是要知道父元素的确切宽度。
 
-*方法三.在 position:absolute 元素外部套一层 div，对这个 div 设置绝对定位，然后再设置里面的元素 margin:0 auto。
+* 方法三.在 position:absolute 元素外部套一层 div，对这个 div 设置绝对定位，然后再设置里面的元素 margin:0 auto。

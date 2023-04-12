@@ -265,19 +265,6 @@ const sidebars = {
       ]
     },
     {
-      label: 'ssr服务端渲染-nodejs',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'ssr服务端渲染-nodejs/02-1-NextJS',
-        'ssr服务端渲染-nodejs/node-模块化/node',
-        'ssr服务端渲染-nodejs/node-模块化/node事件循环',
-        'ssr服务端渲染-nodejs/react-ssr-demo/react18-ssr',
-        'ssr服务端渲染-nodejs/README',
-        'ssr服务端渲染-nodejs/TypeORM和Prisma',
-      ]
-    },
-    {
       label: '解析-解释-编译-事件循环-promise-安全',
       type: 'category',
       collapsed: true,
@@ -475,6 +462,17 @@ const sidebars = {
       items: [
         'build-monorepo-turbopack/monorepo',
         'build-monorepo-turbopack/turbopack',
+      ]
+    },
+    {
+      label: 'ssr服务端渲染-nodejs',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'ssr服务端渲染-nodejs/react-ssr-demo/react18-ssr',
+        'ssr服务端渲染-nodejs/NextJS',
+        'ssr服务端渲染-nodejs/nodejs事件循环',
+        'ssr服务端渲染-nodejs/TypeORM和Prisma',
       ]
     },
     {

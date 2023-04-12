@@ -1,3 +1,14 @@
+---
+title: nodejs事件循环
+sidebar_position: 1
+---
+
+## nodejs
+1. nodejs是运行js的一个平台；
+2. nodejs在浏览器之外运行 V8 JavaScript 引擎（Google Chrome 的内核）；
+3. 单个进程中运行，一组异步的 I/O 原语，使用非阻塞范式编写；
+
+### 事件循环
 每个阶段的含义：
 ```
 1.timers 阶段：这个阶段执行 timer（setTimeout、setInterval）的回调
@@ -9,8 +20,6 @@
 
 外部输入数据–>轮询阶段(poll)–>检查阶段(check)–>关闭事件回调阶段(close callback)–>定时器检测阶段(timer)–>I/O 事件回调阶段(I/O callbacks)–>闲置阶段(idle, prepare)–>轮询阶段
 ```
-
-
 
 js是单线程运⾏，异步操作特别重要。只要⽤到引擎之外的功能，就需要跟外部交互，从⽽形成异步操作。
 Node的异步语法⽐浏览器复杂，因为它可以跟内核对话，不得不搞了⼀个专门的库 libuv 做这件事。
@@ -41,13 +50,13 @@ process.nextTick()是node中一个特殊的队列，这些事件会在每一个�
 
 小呆到达迷宫，已经有了地图，根据地图冒险。
 
-迷宫有六个房间，分别是timer, i/ocallback, ide prepare(内部使用，已封闭), poll, check， close callback，
+迷宫有六个房间，分别是timer, i/callback, ide prepare(内部使用，已封闭), poll, check， close callback，
 
 其中timer是虚拟现实房间，小呆随时可以看到里面的场景。
 
 其他的每个房间又五个房间，有的开放，有的不开放。
 
-探险规则：每次离开一个房间，都要检查有没有受伤（peocess.nextTick()）
+探险规则：每次离开一个房间，都要检查有没有受伤（process.nextTick()）
 
 小呆首先进入poll房间，开始探险（执行poll 队列），之后进入check房间，timer房间（随机），探险完之后出来，进入close callback，探险完之后，进入io/callback房间，最后完成探险，离开。
 
@@ -74,8 +83,8 @@ Node 规定，process.nextTick 和 Promise 的回调函数，追加在本轮循�
 process.nextTick 这个名字有点误导，它是在本轮循环执⾏的，⽽且是所有异步任务⾥⾯最快执⾏的。Node 执⾏完所有同步任务，接下 来就会执⾏ process.nextTick 的任务队列。
 所以，下⾯这⾏代码是第⼆个输出结果。基本上，如果你希望异步任务尽可能快地执⾏，那就使⽤ process.nextTick。
 
-## 、微任务
-根据语⾔规定，Promise 对象的回调函数，会进⼊异步任务⾥⾯的”微任务”（microtask）队列。微任务队列追加在 process.nextTick 队列的后⾯，也属于本轮循环。所以，下⾯的代码总是先输出 3，再输出 4。
+## 微任务
+根据语⾔规定，Promise 对象的回调函数，会进⼊异步任务⾥⾯的”微任务”（microTask）队列。微任务队列追加在 process.nextTick 队列的后⾯，也属于本轮循环。所以，下⾯的代码总是先输出 3，再输出 4。
 
 ⾄此，本轮循环的执⾏顺序就讲完了：同步任务 => process.nextTick() => 微任务
 ```js

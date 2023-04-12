@@ -18,7 +18,6 @@ Prisma 的主要目的是使应用程序开发人员在与数据库打交道时�
 
 更容易上手和更贴近原生SQL的各种操作符等
 
-
 Prisma 通过提供一个干净（clean）和类型安全（type-safe）的 API 来提交数据库查询，同时返回一个普通 JavaScript 对象（plain old JavaScript object），来使得开发者能够更容易地进行数据库查询
 
 提供VS Code编辑器扩展插件、语法高亮、智能自动补全

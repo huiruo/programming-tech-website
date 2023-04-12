@@ -17,7 +17,7 @@ margin 是用来隔开元素与元素的间距；
 
 padding 是用来隔开元素与内容的间隔，让内容（文字）与（包裹）元素之间有一段 呼吸距离。
 
-##  2-1.box-sizing
+## box-sizing
 通过修改box-sizing 属性可以改变计算盒子大小的方式
 
 W3C的标准Box Model: 元素的宽度(width) 和高度(height)计算方式如下：
@@ -31,7 +31,7 @@ height(高度) + padding(内边距) + border(边框) = 元素实际高度
 默认值:	box-sizing: content-box;
 ```
 
-### IE怪异盒模型、box-sizing: border-box;
+### IE怪异盒模型:box-sizing:border-box
 border-box：指定盒模型为 IE模型，设置 border、padding 不会影响元素 width 与 height 的尺寸，即 border 与 padding 由元素已设空间转变。
 即空间还是这个空间，只是将部分空余的地方，转变成了其他空间用法而已，为内部转变
 ```html
@@ -66,7 +66,7 @@ span/a/img/input/em/strong/font/br/select/textarea/i/label/
 abbr/acronym/b/big/cite/code/kbd/q/s/small/strike/sub/sup/tt/u
 ```
 
-### 1-0.元素互相转化
+### 元素互相转化
 1. 行内标签：块级标签转换为行内标签：display:inline;
   - 2.宽高:
   行内元素不可以设置宽高,宽度高度随文本内容的变化而变化,但是可以设置行高;
@@ -135,21 +135,21 @@ p{} 标签
 
 <br />
 
-## 3.position定位与脱离文档流
+## position定位与脱离文档流
 
-### 3-1.absolute  --->脱离文档流
+### absolute  --->脱离文档流
 生成绝对定位的元素，相对于 static 定位以外的第一个父元素进行定位。
 元素的位置通过 "left", "top", "right" 以及 "bottom" 属性进行规定。
 当父级 position 为 static 时，absolute元素将以body坐标原点进行定位，可以通过z-index进行层次分级。
 
-### 3-2.relative -->未脱离文档流
+### relative -->未脱离文档流
 生成相对定位的元素，相对于其正常位置进行定位。
 因此，"left:20" 会向元素的 LEFT 位置添加 20 像素。
 ```
 该元素仍然会在原来的地方。
 top
 right
-boottom
+bottom
 left
 
 决定平移一定距离
@@ -161,7 +161,7 @@ left
 - fixed:生成绝对定位的元素，相对于浏览器窗口进行定位。
 元素的位置通过 "left", "top", "right" 以及 "bottom" 属性进行规定。
 
-### 3-3.二者区别
+### 二者区别
 + relative 不脱离文档流，,参照自己本身
 absolute 脱离了文档流，其在文档流中的位置也不存在
 ```
@@ -173,7 +173,7 @@ absolute元素:
 规则：根据display:static 之外任意值的父级元素。如果没有这么一个定位祖先。那么就相对于文档的根元素定位。
 ```
 
-## 4.响应式
+## 响应式
 ```css
 @media (max-width: 1366px) {
   .room-item {
@@ -183,41 +183,39 @@ absolute元素:
 }
 ```
 
-## 5.隐藏元素的多少种方式
-### 5-1.display:none
+## 隐藏元素的多少种方式
+### display:none
 ```
 设置为display:none;的元素将不会再占用页面空间，其占用的空间会被其他元素所占有，从而会引起浏览器的重排和重汇。
 事件绑定：该素会直接从页面上消失，因此在该元素上绑定的事件不会生效
 ```
-### 5-2.visibility:hidden
+### visibility:hidden
 [ˌvɪzəˈbɪləti]
 ```
 这种做法虽然能够隐藏元素，但是该元素仍会占用页面空间，因此只会导致浏览器的重汇而不会引起重排。
 事件绑定：
 与 opacity 唯一不同的是它不会响应任何用户交互。
 ```
-### 5-3.opacity:0
+### opacity:0
 [əʊˈpæsəti]
 ```
 和visibility:hidden一样，设置后该元素仍会占用页面空间，因此只会导致浏览器的重汇而不会引起重排。
 事件绑定：
 元素会触发绑定的事件，例如点击会触发click函数。
 ```
-### 5-4.总结：差异性-动画属性:
+### 总结：差异性-动画属性:
 display:none;的元素会直接从页面消失，因此定义transition效果完全无效。
 visibility:hidden;的元素会在transition设置的时间内消失，但是没有动画效果。
 opacity:0;的元素可以和正常元素一样，从页面以动画效果消失。
 
 
-## 6.未知宽度：水平居中
+## 未知宽度：水平居中
 父级元素设置text-align:center;自身元素设置display: inline-block;即可水平居中
 
 ## BFC
-```
-css基础-2-块级格式化上下文BFC.md
-```
+[块级格式化上下文BFC](./css-2-块级格式化上下文BFC)
 
-### 3-3.margin 穿透及解决
+### margin 穿透及解决
 子元素设置margin-top或者margin-bottom会影响其父元素，这就是所谓的margin穿透。
 
 margin重叠是指两个同级元素之间。margin穿透指的是，子元素margin超出父元素而未被父元素包含的现象。

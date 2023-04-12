@@ -345,9 +345,9 @@ const sidebars = {
             'html-css/requestAnimationFrame/requestAnimationFrame动画',
           ]
         },
-        'html-css/css基础-1-块级元素-css',
-        'html-css/css基础-2-块级格式化上下文BFC',
-        'html-css/css基础-04-为什么需要清除浮动',
+        'html-css/css-1-块级元素-css',
+        'html-css/css-2-块级格式化上下文BFC',
+        'html-css/css-4-为什么需要清除浮动',
         'html-css/em和rem',
         'html-css/html5属性',
         'html-css/重要的html-dom属性',
@@ -355,7 +355,7 @@ const sidebars = {
         'html-css/flex基础-三个属性-等分布局',
         'html-css/flex实现左右浮动-justifyContent',
         'html-css/flex水平垂直居中-justifyContent-alignContent',
-        'html-css/垂直居中/10-1-要实现最右边请使用absolute',
+        'html-css/垂直居中/要实现最右边请使用absolute',
         'html-css/水平居中/position-absolute水平居中的三种方法',
         {
           label: 'css3动画',

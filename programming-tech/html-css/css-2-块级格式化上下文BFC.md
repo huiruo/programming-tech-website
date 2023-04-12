@@ -5,16 +5,14 @@ sidebar_position: 2
 
 ## BFC 是什么
 FC 是 formatting context 缩写
-```
-它是页面中的一块渲染区域，有一套渲染规则，决定了其子元素如何布局，以及和其他元素之间的关系和作用。
+
+它是页面中的一块渲染区域，渲染规则:决定了其子元素如何布局，以及和其他元素之间的关系和作用。
 
 它决定了元素如何对其内容进行定位，以及与其他元素的关系和相互作用。
 
 最常见的 Formatting context 有 Block formatting context (简称BFC)和 Inline formatting context (简称IFC)。
 
 Box 是 CSS 布局的对象和基本单位， 直观点来说，就是一个页面是由很多个 Box 组成的。元素的类型和 display 属性，决定了这个 Box 的类型。 不同类型的 Box， 会参与不同的 Formatting Context（一个决定如何渲染文档的容器），因此Box内的元素会以不同的方式渲染。
-```
-
 
 ### 总结
 以上例子都体现了： BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。
@@ -38,47 +36,41 @@ BFC就是页面上的一个隔离的独立容器，容器里面的子元素不�
 
 
 ## 怎样才能形成 BFC
-- 1.float 的值不为 none。
+- 1.float 的值不为 none
 
 - 2.overflow 的值不为 visible
 也就是：overflow:hidden、auto、scroll
 
-- 3.display 的值为 table-cell, table-caption, inline-block 中的任何一个
+- 3.display 的值为 table-cell, table-caption, inline-block 中的任何一个。<br/>
+因此通过将其中一个元素display属性设置为inline-block，width设置为100%是比较好的解决方式；既解决了margin穿透问题，又达到与display为block一样的效果。
 
 - 4.position 的值不为 relative 和 static
 也就是position:absolute或则position:fixed
-```
-因此通过将其中一个元素display属性设置为inline-block，width设置为100%是比较好的解决方式；既解决了margin穿透问题，又达到与display为block一样的效果。
-```
 
 ## BFC 规则
-```
-1.内部的元素会在垂直方向，从顶部开始一个接一个地放置。 
+1. 内部的元素会在垂直方向，从顶部开始一个接一个地放置。 
 
-2.元素垂直方向的距离由margin决定。属于同一个BFC的两个相邻 元素的margin会发生叠加
+2. 元素垂直方向的距离由margin决定。属于同一个BFC的两个相邻 元素的margin会发生叠加
 
-3.都是从最左边开始的。每个元素的margin box的左边，与包含块border box的左边(对于从左往右的格式化，否则相反)。即使存在浮动也是如此
+3. 都是从最左边开始的。每个元素的margin box的左边，与包含块border box的左边(对于从左往右的格式化，否则相反)。即使存在浮动也是如此
 
-4.BFC的区域不会与float box叠加。 
+4. BFC的区域不会与float box叠加。 
 
-5.BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素，反之亦然。 
+5. BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素，反之亦然。 
 
-6.计算BFC的高度时，浮动元素也参与计算（当BFC内部有浮动时，为了不影响外部元素的布局，BFC计算高度时会
+6. 计算BFC的高度时，浮动元素也参与计算（当BFC内部有浮动时，为了不影响外部元素的布局，BFC计算高度时会
 包括浮动元素的高度）
-```
 
 ## BFC 的作用
-```
-1.解决margin叠加问题
+1. 解决margin叠加问题
 根据BFC的第二条规则： Box垂直方向的距离由margin决定，属于同一 BFC的两个Box会发生margin重叠 因此，可以在其中一个元素上包裹容器， 然后触发其BFC，这样两个元素就不在同一个 BFC，因此就不会发生重叠
 
-2.用于清除浮动， 根据BFC的第六条规则：计算BFC的高度时，浮动元素也参与计算
+2. 用于清除浮动， 根据BFC的第六条规则：计算BFC的高度时，浮动元素也参与计算
 
-3.自适应两栏布局
+3. 自适应两栏布局
 根据BFC的第三条规则： 每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左 往右的格式化，否则相反)。即使存在浮动也是如此。 且根据BFC的第四条规则：BFC的区域不会与float box叠加
-```
 
-### 1.利用BFC避免margin重叠。
+### 利用BFC避免margin重叠。
 以下产生了塌陷：根据：Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠。
 ```html
 <!DOCTYPE html>
@@ -184,8 +176,8 @@ p {
 </html>
 ```
 
-### 3.清楚浮动
-问题点：当我们不给父节点设置高度，子节点设置浮动的时候，会发生高度塌陷，这个时候我们就要清楚浮动。
+### 清除浮动
+问题点：当我们不给父节点设置高度，子节点设置浮动的时候，会发生高度塌陷，这个时候我们就要清除浮动。
 ```html
 <!DOCTYPE html>
 <html lang="en">

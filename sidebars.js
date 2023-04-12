@@ -460,12 +460,12 @@ const sidebars = {
       ]
     },
     {
-      label: 'monorepo-Turbopack',
+      label: 'monorepo-turbopack',
       type: 'category',
       collapsed: true,
       items: [
-        'build-monorepo-Turbopack/monorepo',
-        'build-monorepo-Turbopack/Turbopack',
+        'build-monorepo-turbopack/monorepo',
+        'build-monorepo-turbopack/turbopack',
       ]
     },
     {
@@ -473,12 +473,12 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
+        '优化/React',
+        '优化/Vue优化',
+        '优化/首屏加载',
+        '优化/CDN-内容分发网络',
+        '优化/总结',
         '优化/国际化',
-        '优化/优化0-React',
-        '优化/优化0-vue',
-        '优化/优化1-总结',
-        '优化/优化2-首屏加载',
-        '优化/优化3-CDN-内容分发网络',
       ]
     },
     {

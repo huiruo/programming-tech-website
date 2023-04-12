@@ -1,34 +1,27 @@
-https://cloud.tencent.com/developer/article/1974147
 
-知乎：
+## 影响开发体验的地方是首次编译和后续的增量编译
+[Turbopack 官网](https://turbo.build/pack)
+
 如何评价Vercel开源的使用Rust实现的Turbopack?
+
 https://www.zhihu.com/question/562349205/answers/updated
 
-* 真正影响开发体验的地方是首次编译和后续的增量编译
-
 ## 为什么选择 Turbopack
-上述提到传统的 Monorepo 解决方案中，项目构建时如果基于多个应用程序存在依赖构建，耗时是非常可怕的。
-
-TurboRepo 的出现，正是解决 Monorepo 慢的问题。
+传统的 Monorepo 解决方案中，项目构建时如果基于多个应用程序存在依赖构建，耗时是非常可怕的。
 
 Turbopack 是针对 JavaScript 和 TypeScript 优化的增量打包工具
-```
-https://turbo.build/pack
-```
 
 比方说 Monorepo 存在三个依赖应用程序包，A、B、C。此时 A 和 C 包都依赖与 B 包。基于 Lerna 你可以发现一次仅能执行一个任务，当构建时首先运行 lerna run link --parallel 时仅支持单个任务的运行。
 
 而基于 TurboRepo 支持多个任务的并行处理，完美了的解决了 Lerna 构建时类似“单线程”的不足。
 
-
 由于 Turbopack 只打包开发所需的最少资源，因此启动时间非常快。在具有 3000 个模块的应用上，Turbopack 需要 1.8 秒即可启动，而 Vite 则需要 11.4 秒：
 
-## Turbopack 为什么这么快？
-https://zhuanlan.zhihu.com/p/577703886
+## Turbopack 为什么快？
+Turbopack 性能的秘诀有两个：
+* 高度优化的机器代码和低层级增量计算引擎，可以缓存到单个函数的级别。它的架构吸取了 Turborepo 和 Google 的 Bazel 等工具的经验教训，它们都专注于使用缓存来避免重复执行相同的工作。
 
-Turbopack 性能的秘诀有两个：高度优化的机器代码和低层级增量计算引擎，可以缓存到单个函数的级别。它的架构吸取了 Turborepo 和 Google 的 Bazel 等工具的经验教训，它们都专注于使用缓存来避免重复执行相同的工作。
-
-Turbopack 之所以如此之快，是因为它建立在一个可重用的 Rust 库之上，该库支持增量计算，称为 Turbo 引擎。以下是它的工作原理。
+* Rust Turbo 引擎,支持增量计算。以下是它的工作原理。
 
 在 Turbopack 驱动的程序中，可以将某些函数标记为“to be remembered”。当这些函数被调用时，Turbo 引擎会记住它们被调用的内容，以及它们返回的内容。然后它将其保存在内存缓存中。下面是一个简化的示例：
 
@@ -85,24 +78,22 @@ Turbopack 在以下两个关键指标上的表现优于 Vite。
 （2）代码更新
 当文件更改时，它需要将更改呈现给浏览器。 它做到的越快，反馈循环就越紧密，发布的速度就越快。
 
-## 文章2
-https://juejin.cn/post/7129267782515949575
-
-## 常用
-https://cloud.tencent.com/developer/article/1974147
-
+## 使用
 快速创建:
+```
 npx create-turbo@latest
-
 yarn workspace web add monaco-editor
 yarn workspace web remove monaco-editor
-
 ```
+
 turbo.json ，这个文件主要可以用来设定一些执行指令的 pipeline，而 pipeline 主要的功能就是当你在执行 yarn run xxx 时
-```
-
 
 dev 有一个 cache 为 false 的设定，就代表著每次执行 dev 这个指令时都不要使用先前的 cache 以确保每次的开发环境都会是最新的环境。
 
 ## 在其他包引入packages
-假如要让 packages 内的某个文件容给 apps 内的某个项目用，这时候就可以在该项目 package.json 中填上对应包名，并且把版本号设定为 * ，这样就可以顺利在该项目内引用 packages 中的内容！
+假如要让 packages 内的某个文件容给 apps 内的某个项目用，这时候就可以在该项目 package.json 中填上对应包名，并且把版本号设定为 * ，这样就可以在该项目内引用 packages 中的内容
+
+## 参考：
+https://cloud.tencent.com/developer/article/1974147
+
+https://juejin.cn/post/7129267782515949575

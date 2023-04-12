@@ -2,6 +2,20 @@
 不同点：
 type 是 类型别名，给一些类型的组合起别名，这样能够更方便地在各个地方使用。
 
+语法：
+```ts
+interface Point {
+  x: number;
+  y: number;
+}
+
+type Point = {
+  x: number;
+  y: number;
+};
+```
+
+
 interface 是 接口。有点像 type，可以用来代表一种类型组合，但它范围更小一些，只能描述对象结构。interface 只能表示对象结构的类型。
 ```js
 // 1、都可以描述一个对象或者函数
@@ -36,7 +50,7 @@ type Circle = {
 }
 ```
 
-2. 同名 interface 会合并，而同名 type 会报错
+## 同名 interface 会合并，而同名 type 会报错
 ```js
 interface Point {
   x: number;
@@ -49,9 +63,9 @@ interface Point {
 const point: Point = { x: 10, y: 30 };
 ```
 
-3. 一个不太重要但是值得说给面试官的区别：type 声明的是类型别名，而 interface 声明的是新类型。
+##  一个不太重要但是值得说给面试官的区别：type 声明的是类型别名，而 interface 声明的是新类型。
 
-4. 声明函数像带有属性的函数可以这样写：
+### 声明函数像带有属性的函数可以这样写：
 ```js
 interface Fn {
   (): void; // 函数的描述
@@ -102,3 +116,4 @@ const circle: Circle = { x: 0, y: 0, r: 8 }
 ```
 
 ## 推荐：能用interface就用interface
+其实这个解释官方说的也比较明确，这样使用的原因是因为更贴合 JavaScript 对象的工作方式，再清晰一些，如果我们是定义一个 object，那么最好是使用 interface 去做类型声明，什么时候用 type 呢，当定义一个 function 的时候，用 type 会更好一些：

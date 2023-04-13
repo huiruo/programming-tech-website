@@ -3,23 +3,39 @@ title: monorepo
 sidebar_position: 2
 ---
 
-在一般的开发模式中，通常都是一个项目用一个仓库进行管理，假如今天要设计一个内容管理系统的产品，一般来说会提供以下两种服务。
+## 概念:monolithic repository
+monolithic repository是一种项目架构，简单的来说：一个仓库内包含多个开发项目（模块，包）
 
-后台管理系统。
-前台页面(H5)。
+在一般的开发模式中，通常都是一个项目用一个仓库进行管理，假如今天要设计一个内容管理系统的产品,可能有多端:
+* 后台管理系统。
+* 前台页面(H5)。
+
 这时候按照以往的开发方式，我们会创立两个仓库分别去管理这两个网站，这种项目架构的设计方式称之为：Multi-repo。
 
 反之，当我们把这两个网站都用一个 仓库 进行管理，这种做法就是 Monorepo。
 
-
-## 概念
-monorepo:monolithic repository是一种项目架构，简单的来说：一个仓库内包含多个开发项目（模块，包）
-
 在 Monorepo 项目中你可以同时管理多个逻辑共存的应用程序，比如桌面应用程序和 Web 应用程序
 
-对于monorepo的优点以及发展历史可以参考精读《Monorepo 的优势》。总结一下：
 * 各模块独立方便管理（对于element来说，修改表单只需要修改packages下的form目录）结构清晰（模块独立之后，结构自然清晰）
 * 缺点就是仓库代码体积可能比较大（一个仓库包含多个项目，项目多了，体积自然会大）
+
+例如：[本站点使用的docusaurus开源库用Monorepo构建](https://github.com/facebook/docusaurus/blob/main/package.json)
+
+```json
+{
+  "name": "root",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "website",
+    "test-website-in-workspace",
+    "packages/create-docusaurus/templates/*",
+    "admin/new.docusaurus.io"
+  ],
+}
+```
 
 ## Monorepo 的优势
 * 管理一些共用的组件，甚至是共用的 utils，这样就不用很麻烦的在两个项目上进行 ctr c + v，通常在 Monorepo 上会用以下的项目架构进行设计。

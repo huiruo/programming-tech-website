@@ -3,7 +3,16 @@ title: data发生改变dom更新流程
 sidebar_position: -2
 ---
 
-## 流程图
+## data更新流程图
+```mermaid
+flowchart TD
+A1(data改变)-->b1("set(target,key,value,receiver)")--触发副作用-->b4("trigger(target,'set',key, value,oldValue)")-->b5("triggerEffects(dep)")-->b6("triggerEffect(effect)")
+
+A1-->b2("get(target,key,receiver")--收集依赖-->b3("track(target,'get',key)")
+
+b3-->b7("trackEffects(dep, eventInfo)")
+```
+
 ```mermaid
 flowchart TD
 A1("set(target, key, value, receiver)")--hadKey=true-->A2("trigger(target,'set',key,value,oldValue)")-->A4

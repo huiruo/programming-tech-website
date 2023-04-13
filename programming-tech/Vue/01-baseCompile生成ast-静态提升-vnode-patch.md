@@ -214,7 +214,7 @@ function handleSetupResult(instance, setupResult, isSSR) {
 调用patch处理组件元素为例
 * 在mountComponent走reactive流程
 
-参考：[响应式原理与reactive.md](./vue3源码-响应式原理与reactive.md)
+参考：[响应式原理与reactive](./响应式原理与reactive)
 
 * 在 componentUpdateFn 函数中，进行了组件的初始挂载和更新，生命周期函数就是在这些操作的前后触发执行的，在上面的源码中，使用 invokeArrayFns 函数进行生命周期函数的触发执行
 ```mermaid
@@ -244,10 +244,7 @@ b10-->b11(renderComponentRoot)-->b12("render(props)会触发一次依赖收集")
 ```
 
 ## render生成之后-vnode构建
-参考：[vnode创建](./vnode创建)
+参考：[vnode创建](./render生成之后-vnode构建)
 
 ## VNode构建之后-开始渲染
-参考：[VNode构建之后-开始渲染](./VNode构建之后-开始渲染)
-
-## 构建好了VNode，接下来是渲染
 参考：[VNode构建之后-开始渲染](./VNode构建之后-开始渲染)

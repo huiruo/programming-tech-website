@@ -21,6 +21,7 @@ const sidebars = {
         'React/vue3-Dff',
         'React/02-1-commit阶段-useLayoutEffect-useEffect',
         'React/02-2-setState',
+        'React/setState异步-同步',
         'React/02-3-useEffect',
         'React/05-01-React-算法之深度优先遍历',
         'React/05-02-Virtual DOM算法',

@@ -2,7 +2,8 @@
 title: react-vue异同-vue
 sidebar_position: -2
 ---
-# vue 特点
+
+## vue 特点
 重点：`render.call(proxyToUse,..)调用ast生成的render生成vnode`
 ```mermaid
 flowchart LR
@@ -10,9 +11,9 @@ flowchart LR
 template-->ast-->a1("render()")--执行render-->VNode-->A1("创建好vnode调用patch(prevTree,nextTree)进行渲染")
 ```
 
-* 1.Vue的template、script、style是分离的，可读性和可维护性比较好
+1. Vue的template、script、style是分离的，可读性和可维护性比较好
 
-* 2.提供了便捷的模板命令
+2. 提供了便捷的模板命令
 ```
 vue 用v-if 条件渲染div
 还有v-model,v-on:click,v-for
@@ -20,22 +21,23 @@ vue 用v-if 条件渲染div
 react中用js，运算符去实现 v-if, array.map() 去实现 v-for
 ```
 
-* 3.提供了computed,watch 副作用的钩子，在react 统一使用useEffect去实现这些功能
+3. 提供了computed,watch 副作用的钩子，在react 统一使用useEffect去实现这些功能
+4. 改变组件状态：
 ```js
-改变组件状态：
 vue: this.data = x;
 react: setState(x);
 ```
-4. 模板引擎和生成虚拟dom方式不同;
+
+4. 模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom 运行时+编译时 都是找出差异修改;
 
 ## vue模板引擎
-一方面从初始化 data 开始，到解析 template 模版，进行依赖收集。另一方面能够从 data 改变，通知渲染 Effect 更新，到页面变化；
+从初始化data开始，到解析 template 模版，进行依赖收集。
 
+从data改变，通知渲染 Effect 更新，到页面变化。
 
-vue和react同样采用的是虚拟dom 运行时+编译时 都是找出差异修改;
-vue在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新
+vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新
 
-编译模板阶段生成render函数:
+### 编译模板阶段生成render函数:
 如果有配置，直接使用配置的render函数，如果没有，使用运行时编译器，把模板编译成render函数。
 
 注意:如果在webpack：
@@ -646,18 +648,6 @@ const patchChildren = (n1, n2, container, anchor, parentComponent, parentSuspens
 
 ### 函数1：patchKeyedChildren
 ### 函数2：patchUnkeyedChildren
-# 其他异同点
-5. 由于 Vue 是通过 template 模版进行编译的，所以在编译的时候可以很好对静态节点进行分析然后进行打补丁标记，然后在 Diff 的时候，Vue2 是判断如果是静态节点则跳过过循环对比，而 Vue3 则是把整个静态节点进行提升处理，Diff 的时候是不过进入循环的，所以 Vue3 比 Vue2 的 Diff 性能更高效。而 React 因为是通过 JSX 进行编译的，是无法进行静态节点分析的，所以 React 在对静态节点处理这一块是要逊色的。
-
-6. 渲染/更新方式,见下面扩展
-回答react和vue不同：
-在Vue中，一个组件在渲染期间依赖于自动追踪，因此vue框架知道提前哪一个组件需要渲染当组件状态发生改变时。每个组件可以被认为具有自动为你实现react shouldComponentUpdate。
-
-
-7. Vue2 和 Vue3 的比对和更新是同步进行的，这个跟 React15 是相同的，就是在比对的过程中，如果发现了那些节点需要移动或者更新或删除，是立即执行的，也就是 React 中常讲的不可中断的更新，如果比对量过大的话，就会造成卡顿，所以 React16 起就更改为了比对和更新是异步进行的，所以 React16 以后的 Diff 是可以中断，Diff 和任务调度都是在内存中进行的，所以即便中断了，用户也不会知道。
-
-
-8. 另外 Vue2 和 Vue3 都使用了双端对比算法，而 React 的 Fiber 由于是单向链表的结构，所以在 React 不设置由右向左的链表之前，都无法实现双端对比。
 
 ## 扩展:vue渲染/更新方式
 数据劫持结合发布者-订阅者模式的方式实现:数据-->视图的变化

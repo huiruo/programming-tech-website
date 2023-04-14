@@ -3,15 +3,8 @@ render阶段的执行是一个深度优先遍历的过程，它有两个核心�
 
 参考：[图的两种遍历](/structure-algorithm/图-深度优先遍历-广度优先遍历/图的两种遍历)
 
-### beginWork-->completeUnitOfWork
-在遍历的过程中，会对每个遍历到的节点执行beginWork创建子fiber节点。若当前节点不存在子节点（next === null），则对其执行completeUnitOfWork。
 
-completeUnitOfWork方法内部会判断当前节点有无兄弟节点，有则进入兄弟节点的beginWork流程，否则进
-入父节点的completeUnitOfWork流程
-
-当beginWork返回值为空时，代表在遍历父->子链表的过程中发现当前链表已经无下一个节点了（也就是已遍历完当前父->子链表），此时会进入到completeUnitOfWork函数。
-
-## beginWork阶段:将ast树转换为fiber 树
+### beginWork阶段:将ast树转换为fiber 树
 这些Fiber节点会被标记成带有'Placement'的副作用，说明它们是新增的节点，需要被插入到真实节点中了
 ```
 - 执行部分生命周期和render，得到最新的 children
@@ -19,7 +12,7 @@ completeUnitOfWork方法内部会判断当前节点有无兄弟节点，有则�
 - 打不同的副作用标签effectTag，比如类组件的生命周期，或者元素的增加，删除，更新。
 ```
 
-## completeWork阶段:生成实例
+### completeWork阶段:生成实例
 completeUnitOfWork 的流程是自下向上的
 1. 将effectTag 的 Fiber 节点保存到 effectList 的单向链表中。 在 commit 阶段，将不再需要遍历每一个 fiber ，只需要执行更新 effectList 就可以了。
 2. 处理组件的context，初始化元素标签，生成真实DOM，处理props，等
@@ -39,6 +32,66 @@ render 阶段：纯净且没有副作用，可能会被 React 暂停、终止或
 在 render 阶段，React 主要是在内存中做计算，明确 DOM 树的更新点；而 commit 阶段，则负责把 render 阶段生成的更新真正地执行掉。
 
 在 render 阶段，一个庞大的更新任务被分解为了一个个的工作单元，这些工作单元有着不同的优先级，React 可以根据优先级的高低去实现工作单元的打断和恢复。
+
+### 每个fiber节点都会经历两个阶段beginWork和completeWork
+首次渲染， workInProgress fiber tree中除了根节点之外，所有节点的alternate都为空。
+
+所以在mount时，除了根节点fiberRootNode之外，其余节点调用beginWork时参数current等于null。
+
+render阶段是在内存中构建一棵新的fiber树（称为workInProgress树）,构建过程是依照现有fiber树（current树）从root开始深度优先遍历再回溯到root的过程，`这个过程中每个fiber节点都会经历两个阶段：beginWork和completeWork。`
+
+
+### update时
+workInProgress fiber tree所有节点都存在上一次更新时的fiber节点，所以current !== null。
+
+当current和workInProgress满足一定条件时,可以复用current节点的子节点的作为workInProgress的子节点，
+反之则需要进入对比（diff）的流程，根据比对的结果创建workInProgress的子节点。
+
+beginWork在创建fiber节点的过程中中会依赖一个didReceiveUpdate变量来标识当前的current是否有更新。
+在满足下面的几种情况时，didReceiveUpdate === false：
+
+1. 未使用forceUpdate，且oldProps === newProps && workInProgress.type === current.type && ！hasLegacyContextChanged() ，即props、fiber.type和context都未发生变化
+
+2. 未使用forceUpdate，且!includesSomeLane(renderLanes, updateLanes)，即当前fiber节点优先级低于当前更新的优先级
+```js
+const updateLanes = workInProgress.lanes;
+if (current !== null) {
+  //update时
+  const oldProps = current.memoizedProps;
+  const newProps = workInProgress.pendingProps;
+  if (
+    oldProps !== newProps ||
+    hasLegacyContextChanged() ||
+    (__DEV__ ? workInProgress.type !== current.type : false)
+  ) {
+    didReceiveUpdate = true;
+  } else if (!includesSomeLane(renderLanes, updateLanes)) {
+    // 本次的渲染优先级renderLanes不包含fiber.lanes, 表明当前fiber节点优先级低于本次的渲染优先级，不需渲染
+    didReceiveUpdate = false;
+    //...
+    // 虽然当前节点不需要更新，但需要使用bailoutOnAlreadyFinishedWork循环检测子节点是否需要更新
+    return bailoutOnAlreadyFinishedWork(current, workInProgress, renderLanes);
+  } else {
+    if ((current.effectTag & ForceUpdateForLegacySuspense) !== NoEffect) {
+      // forceUpdate产生的更新，需要强制渲染
+      didReceiveUpdate = true;
+    } else {
+      didReceiveUpdate = false;
+    }
+  }
+} else {
+  //mount时
+  //...
+}
+```
+
+### beginWork-->completeUnitOfWork
+在遍历的过程中，会对每个遍历到的节点执行beginWork创建子fiber节点。若当前节点不存在子节点（next === null），则对其执行completeUnitOfWork。
+
+completeUnitOfWork方法内部会判断当前节点有无兄弟节点，有则进入兄弟节点的beginWork流程，否则进
+入父节点的completeUnitOfWork流程
+
+当beginWork返回值为空时，代表在遍历父->子链表的过程中发现当前链表已经无下一个节点了（也就是已遍历完当前父->子链表），此时会进入到completeUnitOfWork函数。
 
 ## render之任务调度
 * 同步不可中断更新，意味着在更新过程中，即使产生了更高优先级的更新，原来的更新也会继续处理，等处理完毕渲染到屏幕上以后才会开始处理更高优先级的更新。
@@ -824,6 +877,8 @@ export const Deletion = /*                     */ 0b000000000001000;
 > React 的优先级 lane 模型中同样使用了二进制的方式来表示优先级。
 
 ## beginWork第3步-Reconciliation-双缓存-diff,这个代码很长 1k
+[beginWork第3步-Reconciliation-双缓存-diff](./beginWork第3步-Reconciliation-双缓存-diff)
+
 了解了遍历流程与任务调度方法之后，接下来就是就是我们熟知的Reconciliation阶段了（为了方便理解，这里不区分Diff和Reconciliation, 两者是同一个东西）。思路和 Fiber 重构之前差别不大，只不过这里不会再递归去比对、而且不会马上提交变更。
 
 对于我们常见的组件类型，如（FunctionComponent/ClassComponent/HostComponent），最终会进入 reconcileChildren 方法,从该函数名就能看出这是Reconciler模块的核心部分。那么他究竟做了什么呢？

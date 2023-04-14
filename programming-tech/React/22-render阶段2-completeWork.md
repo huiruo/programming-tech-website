@@ -451,7 +451,7 @@ completeWork 内部有 3 个关键动作：
 "递"和"归"阶段会交错执行直到"归"到 rootFiber。至此，协调阶段的工作就结束了。
 
 
-# 更新阶段
+## 更新阶段
 会根据新的状态形成的jsx（ClassComponent的render或者FuncComponent的返回值）和current Fiber对比形（diff算法）构建**workInProgress的Fiber树**
 
 然后将fiberRoot的current指向workInProgress树，此时workInProgress就变成了current Fiber。
@@ -459,14 +459,14 @@ completeWork 内部有 3 个关键动作：
 在update的时候，render阶段会根据最新的jsx和老的Fiber进行对比，生成新的Fiber。
 这些Fiber会带有各种副作用，比如‘Deletion’、‘Update’、‘Placement’等，这一个对比的过程就是diff算法 ，在commit阶段会操作真实节点，执行相应的副作用。
 
-diff ⽐较的是什么？ ⽐较的是 current fiber 和 vdom，⽐较之后⽣成 workInprogress Fiber
+diff ⽐较的是什么？ ⽐较的是 current fiber 和 vdom，⽐较之后⽣成 workInProgress Fiber
 ```
-render阶段会根据最新的jsx生成的虚拟dom和current Fiber树进行对比，比较之后生成workinProgress Fiber(workinProgress Fiber树的alternate指向Current Fiber树的对应节点，这些Fiber会带有各种副作用，比如‘Deletion’、‘Update’、'Placement’等)这一对比过程就是diff算法
+render阶段会根据最新的jsx生成的虚拟dom和current Fiber树进行对比，比较之后生成workInProgress Fiber(workInProgress Fiber树的alternate指向Current Fiber树的对应节点，这些Fiber会带有各种副作用，比如‘Deletion’、‘Update’、'Placement’等)这一对比过程就是diff算法
 ```
 
-当workinProgress Fiber树构建完成，workInprogress 则成为了curent Fiber渲染到页面上
+当workInProgress Fiber树构建完成，workInProgress 则成为了current Fiber渲染到页面上
 
-## render阶段之update时: fiber 双缓存 和 diff；beginWork与completeWork的不同
+### render阶段之update时: fiber 双缓存 和 diff；beginWork与completeWork的不同
 在update diff 比较时： 就是在构建 workInProgress fiber tree 的过程中，会根据新的状态形成的jsx（ClassComponent的render或者FuncComponent的返回值）和current Fiber对比形（diff算法）构建**workInProgress的Fiber树**。
 ```
 判断 current fiber tree 中的 fiber node 是否可以被 workInProgress fiber tree 复用。
@@ -917,6 +917,263 @@ rootFiber.firstEffect -----------> fiber -----------> fiber
 你可以在这里看到这段代码逻辑。
 
 借用 React 团队成员Dan Abramov的话：effectList 相较于 Fiber 树，就像圣诞树上挂的那一串彩灯。
+
+
+## 例子:从渲染到performConcurrentWorkOnRoot在render结束会开启commit阶段
+### 程序开头-->`ReactDOM.createRoot`
+```js
+const root = ReactDOM.createRoot(document.getElementById('root'))
+
+console.log("=app=root:", root)
+
+root.render(<Test />);
+
+function createRoot(container, options) {
+		// 省略
+    console.log('%c=一切开始1:createRoot(', 'color:red', { createRoot: container, options })
+    var root = createContainer(container, ConcurrentRoot, null, isStrictMode, concurrentUpdatesByDefaultOverride, identifierPrefix, onRecoverableError);
+    markContainerAsRoot(root.current, container);
+    var rootContainerElement = container.nodeType === COMMENT_NODE ? container.parentNode : container;
+    listenToAllSupportedEvents(rootContainerElement);
+    return new ReactDOMRoot(root);
+}
+
+function createContainer(containerInfo, tag, hydrationCallbacks, isStrictMode, concurrentUpdatesByDefaultOverride, identifierPrefix, onRecoverableError, transitionCallbacks) {
+	var hydrate = false;
+	var initialChildren = null;
+	console.log('初始/更新-->FiberRoot:a-->createContainer')
+	return createFiberRoot(containerInfo, tag, hydrate, initialChildren, hydrationCallbacks, isStrictMode, concurrentUpdatesByDefaultOverride, identifierPrefix, onRecoverableError);
+}
+```
+
+### createFiberRoot-->FiberRootNode是初始化相关只调用一次
+```js
+function createFiberRoot(containerInfo, tag, hydrate, initialChildren, hydrationCallbacks, isStrictMode, concurrentUpdatesByDefaultOverride, // TODO: We have several of these arguments that are conceptually part of the
+	// host config, but because they are passed in at runtime, we have to thread
+	// them through the root constructor. Perhaps we should put them all into a
+	// single type, like a DynamicHostConfig that is defined by the renderer.
+	identifierPrefix, onRecoverableError, transitionCallbacks) {
+	var root = new FiberRootNode(containerInfo, tag, hydrate, identifierPrefix, onRecoverableError);
+
+	return root;
+}
+
+function FiberRootNode(containerInfo, tag, hydrate, identifierPrefix, onRecoverableError) {
+	console.log('==FiberRootNode是初始化相关只调用一次===')
+	this.tag = tag;
+	this.containerInfo = containerInfo;
+	this.pendingChildren = null;
+	this.current = null;
+	this.pingCache = null;
+	this.finishedWork = null;
+	this.timeoutHandle = noTimeout;
+	this.context = null;
+	this.pendingContext = null;
+	this.callbackNode = null;
+	this.callbackPriority = NoLane;
+	this.eventTimes = createLaneMap(NoLanes);
+	this.expirationTimes = createLaneMap(NoTimestamp);
+	this.pendingLanes = NoLanes;
+	this.suspendedLanes = NoLanes;
+	this.pingedLanes = NoLanes;
+	this.expiredLanes = NoLanes;
+	this.mutableReadLanes = NoLanes;
+	this.finishedLanes = NoLanes;
+	this.entangledLanes = NoLanes;
+	this.entanglements = createLaneMap(NoLanes);
+	this.identifierPrefix = identifierPrefix;
+	this.onRecoverableError = onRecoverableError;
+
+	{
+		this.mutableSourceEagerHydrationData = null;
+	}
+
+	{
+		this.effectDuration = 0;
+		this.passiveEffectDuration = 0;
+	}
+
+	{
+		this.memoizedUpdaters = new Set();
+		var pendingUpdatersLaneMap = this.pendingUpdatersLaneMap = [];
+
+		for (var _i = 0; _i < TotalLanes; _i++) {
+			pendingUpdatersLaneMap.push(new Set());
+		}
+	}
+
+	{
+		switch (tag) {
+			case ConcurrentRoot:
+				this._debugRootType = hydrate ? 'hydrateRoot()' : 'createRoot()';
+				break;
+
+			case LegacyRoot:
+				this._debugRootType = hydrate ? 'hydrate()' : 'render()';
+				break;
+		}
+	}
+}
+```
+
+### 可见children 就是root(根节点)
+```js
+ReactDOMHydrationRoot.prototype.render = ReactDOMRoot.prototype.render = function (children) {
+	console.log('%c=一切开始3:', 'color:red', 'ReactDOMRoot.prototype.render调用updateContainer()开启render阶段==', { children });
+	var root = this._internalRoot;
+	// 省略函数
+	updateContainer(children, root, null, null);
+};
+```
+
+### 开始2:render-->updateContainer()--scheduleUpdateOnFiber
+```js
+function updateContainer(element, container, parentComponent, callback) {
+	{
+		onScheduleRoot(container, element);
+	}
+
+	var current$1 = container.current;
+	var eventTime = requestEventTime();
+	var lane = requestUpdateLane(current$1);
+
+	{
+		markRenderScheduled(lane);
+	}
+
+	var context = getContextForSubtree(parentComponent);
+
+	if (container.context === null) {
+		container.context = context;
+	} else {
+		container.pendingContext = context;
+	}
+
+	// 省略
+	var update = createUpdate(eventTime, lane); // Caution: React DevTools currently depends on this property
+	// being called "element".
+
+	update.payload = {
+		element: element
+	};
+	callback = callback === undefined ? null : callback;
+
+
+	// 省略
+	console.log('==render阶段准备：updateContainer调用enqueueUpdate()和scheduleUpdateOnFiber()==')
+	enqueueUpdate(current$1, update);
+	var root = scheduleUpdateOnFiber(current$1, lane, eventTime);
+
+	if (root !== null) {
+		entangleTransitions(root, current$1, lane);
+	}
+
+	return lane;
+}
+```
+
+```js
+function scheduleUpdateOnFiber(fiber, lane, eventTime) {
+	var root = markUpdateLaneFromFiberToRoot(fiber, lane);
+	console.log('==render阶段准备:scheduleUpdateOnFiber()调用ensureRootIsScheduled()==')
+	ensureRootIsScheduled(root, eventTime);
+	return root;
+}
+```
+
+### ensureRootIsScheduled-->performConcurrentWorkOnRoot
+```js
+function ensureRootIsScheduled(root, currentTime) {
+	// 省略
+	if (newCallbackPriority === SyncLane) {
+		// Special case: Sync React callbacks are scheduled on a special
+		// internal queue
+		if (root.tag === LegacyRoot) {
+			if (ReactCurrentActQueue$1.isBatchingLegacy !== null) {
+				ReactCurrentActQueue$1.didScheduleLegacyUpdate = true;
+			}
+
+			console.log('%c=render阶段准备:ensureRootIsScheduled调用performSyncWorkOnRoot：异步更新legacy模式1==', 'color:red')
+			scheduleLegacySyncCallback(performSyncWorkOnRoot.bind(null, root));
+		} else {
+
+			console.log('%c=render阶段准备:ensureRootIsScheduled调用performSyncWorkOnRoot：异步更新legacy模式2==', 'color:red')
+			scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root));
+		}
+
+		// 省略
+	} else {
+		// 省略
+		// console.log('更新流程-->0-c2: performConcurrentWorkOnRoot')
+		console.log('%c=render阶段准备:', 'color:red', 'ensureRootIsScheduled()调用performConcurrentWorkOnRoot--同步更新:concurrent模式==')
+		newCallbackNode = scheduleCallback$1(schedulerPriorityLevel, performConcurrentWorkOnRoot.bind(null, root));
+	}
+
+	root.callbackPriority = newCallbackPriority;
+	root.callbackNode = newCallbackNode;
+}
+```
+
+### performConcurrentWorkOnRoot 这个函数在render结束会开启commit阶段
+```js
+function performConcurrentWorkOnRoot(root, didTimeout) {
+	// 省略
+	console.log('%c==render阶段准备:重点函数performConcurrentWorkOnRoot,这个函数在render结束会开启commit阶段', 'color:red', 'color:cyan');
+
+	console.log('==render阶段准备:performConcurrentWorkOnRoot调用renderRootSync():同步更新concurrent模式:', { shouldTimeSlice });
+	var exitStatus = shouldTimeSlice ? renderRootConcurrent(root, lanes) : renderRootSync(root, lanes);
+
+	if (exitStatus !== RootInProgress) {
+		// 省略
+
+		if (exitStatus === RootDidNotComplete) {
+			markRootSuspended$1(root, lanes);
+		} else {
+			// 省略
+
+			root.finishedWork = finishedWork;
+			root.finishedLanes = lanes;
+			console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan')
+			finishConcurrentRender(root, exitStatus, lanes);
+		}
+	}
+
+	// 省略
+
+	return null;
+}
+```
+
+```js
+function renderRootSync(root, lanes) {
+	var prevExecutionContext = executionContext;
+	executionContext |= RenderContext;
+	var prevDispatcher = pushDispatcher(); // If the root or lanes have changed, throw out the existing stack
+	// 省略
+
+	do {
+		try {
+			console.log('%c=render阶段准备:', 'color:red', 'renderRootSync()调用workLoopSync()-root:', { root });
+			workLoopSync();
+			break;
+		} catch (thrownValue) {
+			handleError(root, thrownValue);
+		}
+	} while (true);
+
+	// 省略
+	workInProgressRoot = null;
+	workInProgressRootRenderLanes = NoLanes;
+	return workInProgressRootExitStatus;
+}
+```
+
+图例
+
+![](../assets/img-react/react18-函数调用栈1.png)
+![](../assets/img-react/react18-函数调用栈2.png)
+![](../assets/img-react/react构建三个阶段参考.png)
+
 
 ## 流程结尾:render 阶段全部工作完成
 至此，render 阶段全部工作完成。在 performSyncWorkOnRoot 函数中 fiberRootNode 被传递给 commitRoot 方法，开启commit 阶段工作流程。

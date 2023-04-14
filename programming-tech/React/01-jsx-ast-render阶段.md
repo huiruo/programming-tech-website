@@ -4,7 +4,7 @@ sidebar_position: 1
 ---
 
 ## 构建AST
-### jsx语法糖的html结构通过babel将结构解析转换为ast语法树结构
+### jsx语的html结构通过babel将结构解析转换为ast语法树结构
 * react 18中：使用 babel将jsx代码转换为root.render()调用,此时得到转化后的Ast树结构
 
 * react17中 使用 babel将jsx代码转换为React.createElement()调用,此时得到转化后的Ast树结构
@@ -125,7 +125,7 @@ function transform(code, options) {
 ```
 
 ### mockData-babel返回.json
-[mockData-babel返回code函数](./mockData-babel返回code函数)
+[mockData-babel返回code函数](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/Vue/02-mockData-compile%E8%B0%83%E7%94%A8baseParse%E8%BF%94%E5%9B%9East.json)
 ```json
 {
 "metadata":"",

@@ -1161,7 +1161,8 @@ A2--静态提升-->b1("hoistStatic(root, context)")
 
 ## 例子
 ### 探究初始化:compile调用baseParse返回ast
-返回的ast：[compile调用baseParse返回ast](./mockData-compile调用baseParse返回ast)
+<!-- 返回的ast：[compile调用baseParse返回ast](./mockData-compile调用baseParse返回ast) -->
+返回的ast：[compile调用baseParse返回ast](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/02-mockData-babel%E8%BF%94%E5%9B%9E.json)
 
 ### 生成由AST生成的code转化的render函数
 ```js

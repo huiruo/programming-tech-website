@@ -21,7 +21,7 @@ vue 里面 require 图片返回的是图片最后打包发布的 url，那你在
 
 ## vue项目，本质上其实是webpack项目
 利用webpack的各类加载器(loader)，可以把任意资源作为模块引入
-```
+
 两个require不是一个意思，一个被webpack处理成图片引入了。
 
 另一个node里，你是要处理图片的数据呢？直接用读取文件就行。
@@ -30,6 +30,4 @@ vue 里面 require 图片返回的是图片最后打包发布的 url，那你在
 
 后端用图片又不用拿来显示的。
 
-
 vue.js开发依赖的环境需要node.js，比如需要依赖webpack+babel构建依赖打包（本身webpack就是在node.js环境下运行的），webpack也会在开发环境中生成webpack-dev-server给开发用。vue也依赖需要依赖npm生态的各种包。
-```

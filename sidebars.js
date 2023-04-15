@@ -281,11 +281,17 @@ const sidebars = {
         '解析-解释-编译-事件循环-promise-安全/步骤2-作用域-块级作用域原理',
         '解析-解释-编译-事件循环-promise-安全/步骤3-执行上下文-函数调用栈-this',
         '解析-解释-编译-事件循环-promise-安全/闭包-内存生命周期',
-        '解析-解释-编译-事件循环-promise-安全/模块化/esm模块解析是发生在编译阶段',
-        '解析-解释-编译-事件循环-promise-安全/模块化/输出拷贝和输出引用变量提升',
-        '解析-解释-编译-事件循环-promise-安全/模块化/es6模块静态编译',
-        '解析-解释-编译-事件循环-promise-安全/模块化/es6和commonjs模块区别',
-        '解析-解释-编译-事件循环-promise-安全/模块化/exports与module.exports的区别',
+        {
+          label: '模块化',
+          type: 'category',
+          collapsed: true,
+          items: [
+            '解析-解释-编译-事件循环-promise-安全/模块化/模块化和闭包',
+            '解析-解释-编译-事件循环-promise-安全/模块化/cjs',
+            '解析-解释-编译-事件循环-promise-安全/模块化/esm',
+            '解析-解释-编译-事件循环-promise-安全/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
+          ]
+        },
         {
           label: 'promise',
           type: 'category',
@@ -302,23 +308,6 @@ const sidebars = {
           ]
         },
         {
-          label: 'js模块',
-          type: 'category',
-          collapsed: true,
-          items: [
-            '解析-解释-编译-事件循环-promise-安全/04-1-babel转化es6',
-            '解析-解释-编译-事件循环-promise-安全/cjs使用',
-            '解析-解释-编译-事件循环-promise-安全/esm原理-和cjs的区别',
-            '解析-解释-编译-事件循环-promise-安全/04-3-nodejs为什么require不能引入图片而vue_require可以引入图片',
-          ]
-        },
-        '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
-        '解析-解释-编译-事件循环-promise-安全/辅-浏览器兼容性-防抖函数',
-        '解析-解释-编译-事件循环-promise-安全/辅-ie浏览器兼容性',
-        '解析-解释-编译-事件循环-promise-安全/旧-变量对象',
-        '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
-        '解析-解释-编译-事件循环-promise-安全/题目',
-        {
           label: 'event loop-浏览器事件',
           type: 'category',
           collapsed: true,
@@ -327,6 +316,12 @@ const sidebars = {
             '解析-解释-编译-事件循环-promise-安全/event loop-浏览器事件/event loop',
           ]
         },
+        '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
+        '解析-解释-编译-事件循环-promise-安全/辅-浏览器兼容性-防抖函数',
+        '解析-解释-编译-事件循环-promise-安全/辅-ie浏览器兼容性',
+        '解析-解释-编译-事件循环-promise-安全/旧-变量对象',
+        '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
+        '解析-解释-编译-事件循环-promise-安全/题目',
       ]
     },
     {

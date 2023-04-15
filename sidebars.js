@@ -24,9 +24,7 @@ const sidebars = {
         'React/setState',
         'React/setState异步-同步',
         'React/useEffect',
-        'React/React-算法之深度优先遍历',
-        'React/虚拟dom-Fiber2点性能优化-构架分三层',
-        'React/Virtual DOM算法',
+        'React/fiber',
         'React/diff',
         'React/react-ssr渲染',
         'React/基础-高阶组件',
@@ -631,7 +629,6 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'structure-algorithm/前端中数据结构和算法/Fiber树',
         'structure-algorithm/前端中数据结构和算法/js数组和算法',
         'structure-algorithm/前端中数据结构和算法/js原型链和链表',
       ]
@@ -644,6 +641,7 @@ const sidebars = {
         'structure-algorithm/图-深度优先遍历-广度优先遍历/图的两种遍历',
         'structure-algorithm/图-深度优先遍历-广度优先遍历/图的遍历-深度优先遍历-DFS',
         'structure-algorithm/图-深度优先遍历-广度优先遍历/广度优先搜索',
+        'structure-algorithm/图-深度优先遍历-广度优先遍历/React-算法之深度优先遍历',
         'structure-algorithm/图-深度优先遍历-广度优先遍历/表示无向图的数据类型',
         'structure-algorithm/图-深度优先遍历-广度优先遍历/图',
         'structure-algorithm/图-深度优先遍历-广度优先遍历/图-术语',

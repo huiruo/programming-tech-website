@@ -1,9 +1,3 @@
----
-title: mockData-babel返回
-sidebar_position: 2
----
-
-```json
 {
     "metadata": {
         "usedHelpers": [
@@ -10222,4 +10216,3 @@ sidebar_position: 2
     },
     "map": null
 }
-```

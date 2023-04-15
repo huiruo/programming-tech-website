@@ -1,9 +1,3 @@
----
-title: mockData-compile调用baseParse返回ast
-sidebar_position: 2
----
-
-```json
 {
   "type": 0,
   "children": [
@@ -2374,4 +2368,3 @@ sidebar_position: 2
     "source": "\n    <div>\n      <button v-on:click=\"onClickText\" class=\"btn\">Hello world,Click me</button>\n      <div><span>ruo-{{msg}}</span></div>\n    </div>\n  "
   }
 }
-```

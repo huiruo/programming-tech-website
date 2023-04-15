@@ -3,70 +3,7 @@ title: diff
 sidebar_position: 8
 ---
 
-## React Diff算法
-将Virtual DOM树转换成actual DOM树的最少操作的过程 称为 协调（Reconciliaton）。 
-
-React Diff三大策略：
-1.tree diff;
-2.component diff;
-3.element diff;
-PS: 之前H5开发遇到的State 中变量更新但视图未更新的Bug就是element diff检测导致。解决方案：
-
-1.两种业务场景下的DOM节点尽量避免雷同； 
-2.两种业务场景下的DOM节点样式避免雷同；
-
-
-当前存在一个DOM节点，触发了一次更新，那么在协调的过程中，会有四种节点和该节点相关联：
-1. 该DOM节点本身
-2. workInProgress fiber，更新过程中产生的workInProgress Tree中的fiber节点（即current fiber.alternate）
-3. current fiber，在页面中已经渲染了的DOM节点对应的fiber节点（即workInProgress fiber.alternate，也就是上
-   一次更新中产生的workInProgress fiber）
-4. ReactElement，更新过程中，ClassComponent的render方法或FunctionComponent的调用结果。 ReactElement中包含描述DOM节点的信息。
-
-```
-一棵是在屏幕上显示的dom对应的fiber tree，称为current fiber tree
-
-一棵是当触发新的更新任务时，React在内存中构建的fiber tree，称为workInProgress fiber tree
-
-Diff算法为更新的过程中产生了新的ReactElement,
-update的React element与current fiber tree中的节点进行比较，并最终在内存中生成workInProgress fiber tree
-
-此时Renderer会依据workInProgress fiber tree将update渲染到页面上。
-
-同时根节点的current属性会指向workInProgress fiber tree，
-
-此时workInProgress fiber tree就变为current fiber tree。
-```
-### 1-1.effectTag
-用于保存要执行DOM操作的具体类型的。 effectTag通过二进制表示：
-```js
-//...
-// 意味着该Fiber节点对应的DOM节点需要插入到页面中。
-export const Placement = /*                    */ 0b000000000000010;
-//意味着该Fiber节点需要更新。
-export const Update = /*                       */ 0b000000000000100;
-export const PlacementAndUpdate = /*           */ 0b000000000000110;
-//意味着该Fiber节点对应的DOM节点需要从页面中删除。
-export const Deletion = /*                     */ 0b000000000001000;
-//...
-```
-
-### 1-2.时间复杂度
-```
-生成将一棵树转换成另一棵树的最小操作次数。即使使用最优的算法，该算法的复杂程度仍为 O(n^3 )，其中 n 是树中元素的数量。
-```
-
-### 1-3.基于条件下的 O(n)
-React 在以下三个假设的基础之上提出了一套 O(n) :
-```
-1.只对同级元素进行Diff；
-
-2.两个不同类型的元素会产生出不同的树；
-
-3.开发者可以通过设置 key 属性，来告知渲染哪些子元素在不同的渲染下可以保存不变；
-```
-
-## 二.Diff
+## 图
 ```mermaid
 flowchart BR
 A1(reconcileChildren)
@@ -80,10 +17,248 @@ A1if--不为null更新-->A2B(reconcileChildFibers)--false-->A3
 A3(ChildReconciler)--调用内部函数-->A4(reconcileChildFibers)
 ```
 
-### 2-1.Diff的入口函数为 reconcileChildren
+## diff算法:比较两颗DOM树的差异
+生成将一棵树转换成另一棵树的最小操作次数。即使使用最优的算法，该算法的复杂程度仍为 O(n^3 )，其中 n 是树中元素的数量。
+
+### 1-3.基于条件下的 O(n)
+React 在以下三个假设的基础之上提出了一套 O(n) :
+1. 只对同级元素进行Diff；
+
+2. 两个不同类型的元素会产生出不同的树；
+
+3. 开发者可以通过设置 key 属性，来告知渲染哪些子元素在不同的渲染下可以保存不变；
+
+diff算法复杂度达到 O(n),必须保持Virtual DOM 只会对同一个层级的元素进行对比：
+![](../assets/img-react/diff比较例子.png)
+
+例子中：div只会和同一层级的div对比，第二层级的只会跟第二层级对比。
+
+假设现在可以英文字母唯一地标识每一个子节点：
+旧的节点顺序：a b c d e f g h i
+```
+现在对节点进行了删除、插入、移动的操作。新增j节点，删除e节点，移动h节点：
+新的节点顺序：a b c h d f g i j
+```
+
+现在知道了新旧的顺序，求最小的插入、删除操作（移动可以看成是删除和插入操作的结合）。
+这个问题抽象出来其实是字符串的最小编辑距离问题（Edition Distance），最常见的解决算法是 Levenshtein Distance，通过动态规划求解，时间复杂度为 O(M * N)。
+但是我们并不需要真的达到最小的操作，我们只需要优化一些比较常见的移动情况，牺牲一定DOM操作，让算法时间复杂度达到线性的（O(max(M, N))。
+
+但是要注意的是，因为tagName是可重复的，不能用这个来进行对比。
+所以需要给子节点加上唯一标识key，列表对比的时候，使用key进行对比，这样才能复用老的 DOM 树上的节点。
+
+这样，我们就可以通过深度优先遍历两棵树，每层的节点进行对比，记录下每个节点的差异了
+
+### 1.深度优先遍历，记录差异
+对新旧两棵树进行一个深度优先的遍历，这样每个节点都会有一个唯一的标记：
+```
+在深度优先遍历的时候，每遍历到一个节点就把该节点和新的的树进行对比。如果有差异的话就记录到一个对象里面。
+```
+![](../assets/img-react/diff深度遍历.png)
+```js
+// diff函数,对比两棵树
+function diff(oldTree,newTree){
+    let index = 0;  // 当前节点的标志
+    let patches = {};   //记录每个节点的差异对象
+    dfsWalk(oldTree, newTree, index, patches);
+    return patches;
+}
+
+// 对两棵树进行深度优先遍历
+function dfsWalk(oldNode,newNode,index,patches){
+    // 对比oldNode和newNode的不同,记录下来
+    patches[index] = [...]
+    diffChildren(oldNode.children, newNode.children, index, patches)
+}
+
+// 遍历子节点
+function diffChildren(oldChildren, newChildren, index, patches){
+    let leftNode = null;
+    let currentNodeIndex = index;
+    oldChildren.forEach(function(child,i){
+        let newChild = newChildren[i];
+        currentNodeIndex = (leftNode && leftNode.count) // 计算节点的标识
+      ? currentNodeIndex + leftNode.count + 1
+      : currentNodeIndex + 1
+        dfsWalk(child, newChild, currentNodeIndex, patches) // 深度遍历子节点
+        leftNode = child
+    });
+}
+```
+
+例如，上面的div和新的div有差异，当前的标记是0，那么：
+```js
+patches[0] = [{difference}, {difference}, ...] // 用数组存储新旧节点的不同
+// 同理p是patches[1]，ul是patches[3]，类推。
+```
+
+### 2.只考虑相同等级diff，可以分为下面4中情况：
+```
+1. 替换掉原来的节点，例如把上面的div换成了section
+2. 修改了节点的属性
+3. 移动、删除、新增子节点，例如上面div的子节点，把p和ul顺序互换
+4. 对于文本节点，文本内容可能会改变。例如修改上面的文本节点2内容为Virtual DOM 2。
+```
+
+1. 第一种。如果节点类型变了，比如下面的p标签变成了h3标签，则直接卸载旧节点装载新节点，这个过程称为REPLACE。
+```
+renderA: <ul>
+renderB: <ul class: 'marginLeft10'>
+=> [addAttribute class "marginLeft10"]
+```
+
+2. 第二种情况。节点类型一样，仅仅是属性变化了，这一过程叫PROPS。比如
+
+这一过程只会执行节点的更新操作，不会触发节点的卸载和装载操作。
+```
+renderA: <ul>
+renderB: <ul class: 'marginLeft10'>
+=> [addAttribute class "marginLeft10"]
+```
+3. 第三种。节点发生了移动，增加，或者删除操作。该过程称为REOREDR。虚拟DOM Diff算法解析
+4. 第四种。只是文本变化了，TEXT过程。该过程只会替换文本。
+5. 如果在一些节点中间插入一个F节点，简单粗暴的做法是：卸载C，装载F，卸载D，装载C，卸载E，装载D，装载E。如下图：
+这种方法显然是不高效的。 而如果给每个节点唯一的标识(key)，那么就能找到正确的位置去插入新的节点。
+
+
+### 3.差异类型
+假设定义如下：
+```js
+var REPLACE = 0
+var REORDER = 1
+var PROPS = 2
+var TEXT = 3
+```
+
+对于节点替换，很简单。判断新旧节点的tagName和是不是一样的，如果不一样的说明需要替换掉。如div换成section，就记录下：
+```js
+patches[0] = [{
+  type: REPALCE,
+  node: newNode // el('section', props, children)
+}]
+```
+
+如果给div新增了属性id为container，就记录下：
+```js
+patches[0] = [{
+  type: REPALCE,
+  node: newNode // el('section', props, children)
+}, {
+  type: PROPS,
+  props: {
+    id: "container"
+  }
+}]
+```
+
+如果是文本节点，如上面的文本节点2，就记录下：
+```js
+patches[2] = [{
+  type: TEXT,
+  content: "Virtual DOM2"
+}]
+```
+
+那如果把我div的子节点重新排序呢？例如p, ul, div的顺序换成了div, p, ul。这个该怎么对比？
+```
+如果按照同层级进行顺序对比的话，它们都会被替换掉。如p和div的tagName不同，p会被div所替代。
+
+最终，三个节点都会被替换，这样DOM开销就非常大。
+
+而实际上是不需要替换节点，而只需要经过节点移动就可以达到，我们只需知道怎么进行移动。
+```
+
+## 最后把差异应用到真正的DOM树上
+因为步骤一所构建的 JavaScript 对象树和render出来真正的DOM树的信息、结构是一样的。
+
+所以我们可以对那棵DOM树也进行深度优先的遍历，遍历的时候从步骤二生成的patches对象中找出当前遍历的节点差异，然后进行 DOM 操作
+```js
+function patch (node, patches) {
+  var walker = {index: 0}
+  dfsWalk(node, walker, patches)
+}
+
+function dfsWalk (node, walker, patches) {
+  var currentPatches = patches[walker.index] // 从patches拿出当前节点的差异
+
+  var len = node.childNodes
+    ? node.childNodes.length
+    : 0
+  for (var i = 0; i < len; i++) { // 深度遍历子节点
+    var child = node.childNodes[i]
+    walker.index++
+    dfsWalk(child, walker, patches)
+  }
+
+  if (currentPatches) {
+    applyPatches(node, currentPatches) // 对当前节点进行DOM操作
+  }
+}
+```
+applyPatches，根据不同类型的差异对当前节点进行 DOM 操作：
+```js
+function applyPatches (node, currentPatches) {
+  currentPatches.forEach(function (currentPatch) {
+    switch (currentPatch.type) {
+      case REPLACE:
+        node.parentNode.replaceChild(currentPatch.node.render(), node)
+        break
+      case REORDER:
+        reorderChildren(node, currentPatch.moves)
+        break
+      case PROPS:
+        setProps(node, currentPatch.props)
+        break
+      case TEXT:
+        node.textContent = currentPatch.content
+        break
+      default:
+        throw new Error('Unknown patch type ' + currentPatch.type)
+    }
+  })
+}
+```
+
+## React Diff三大策略
+1. tree diff;
+2. component diff;
+3. element diff;
+
+PS: 之前H5开发遇到的State 中变量更新但视图未更新的Bug就是element diff检测导致。解决方案：
+1. 两种业务场景下的DOM节点尽量避免雷同； 
+2. 两种业务场景下的DOM节点样式避免雷同；
+
+
+当前存在一个DOM节点，触发了一次更新，那么在协调的过程中，会有四种节点和该节点相关联：
+1. 该DOM节点本身
+2. workInProgress fiber，更新过程中产生的workInProgress Tree中的fiber节点（即current fiber.alternate）
+3. current fiber，在页面中已经渲染了的DOM节点对应的fiber节点（即workInProgress fiber.alternate，也就是上
+   一次更新中产生的workInProgress fiber）
+4. ReactElement，更新过程中，ClassComponent的render方法或FunctionComponent的调用结果。 ReactElement中包含描述DOM节点的信息。
+
+### effectTag
+用于保存要执行DOM操作的具体类型的。 effectTag通过二进制表示：
+```js
+//...
+// 意味着该Fiber节点对应的DOM节点需要插入到页面中。
+export const Placement = /*                    */ 0b000000000000010;
+//意味着该Fiber节点需要更新。
+export const Update = /*                       */ 0b000000000000100;
+export const PlacementAndUpdate = /*           */ 0b000000000000110;
+//意味着该Fiber节点对应的DOM节点需要从页面中删除。
+export const Deletion = /*                     */ 0b000000000001000;
+//...
+```
+
+## Diff的入口函数为 reconcileChildren
+ChildReconciler内部定义了许多协调相关的函数，并将reconcileChildFibers作为函数的返回值。
+
 内部会通过current === null 区分当前fiber节点是mount还是update:
+```
 mount-->mountChildFibers
 update-->reconcileChildFibers
+```
+
 ```js
 /*
 * shouldTrackSideEffects为true时会为生成的fiber节点收集effectTag属性，反之不会进行收集effectTag属性。
@@ -154,9 +329,15 @@ function ChildReconciler(shouldTrackSideEffects) {
     return reconcileChildFibers;
 }
 ```
-ChildReconciler内部定义了许多协调相关的函数，并将reconcileChildFibers作为函数的返回值。
-### reconcileChildFibers 是React Diff真正的入口函数
+
+## reconcileChildFibers是React Diff真正的入口函数
 reconcileChildFibers内部会根据newChild（即新生成的ReactElement）的类型和$$typeof属性调用不同的处理函数。
+
+据newChild中节点的数量把Diff分为两种类型：
+```
+1. 当newChild只有一个节点，也即newChild类型为object、number、string时，我们会进入单节点的Diff
+2. 当newChild有多个节点，也即类型为Array时，进入多节点的Diff
+```
 ```js
 // 根据newChild进入不同Diff函数处理
 function reconcileChildFibers(
@@ -195,11 +376,6 @@ function reconcileChildFibers(
   // 如果以上分支都没有命中，则删除节点
   return deleteRemainingChildren(returnFiber, currentFirstChild);
 }
-```
-据newChild中节点的数量把Diff分为两种类型：
-```
-1. 当newChild只有一个节点，也即newChild类型为object、number、string时，我们会进入单节点的Diff
-2. 当newChild有多个节点，也即类型为Array时，进入多节点的Diff
 ```
 
 ## 三.单节点的Diff

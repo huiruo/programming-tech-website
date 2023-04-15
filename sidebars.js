@@ -83,12 +83,9 @@ const sidebars = {
         'Vue/VNode构建之后-开始渲染',
         'Vue/data发生改变dom更新流程',
         'Vue/mockData-生成的code函数',
-        // 'Vue/mockData-compile调用baseParse返回ast',
         'Vue/响应式原理与reactive',
         'Vue/Reactivity简单例子',
-        'Vue/patch',
-        'Vue/Patch算法之PatchkeyChildren',
-        'Vue/vue3-Dff',
+        'Vue/patch-diff',
         'Vue/proxy',
         'Vue/proxy-defineProperty区别',
         'Vue/Reflect',
@@ -156,7 +153,6 @@ const sidebars = {
           items: [
             'JavaScript/es7-es8',
             'JavaScript/class-super',
-            'JavaScript/async',
             'JavaScript/修饰器',
           ]
         },
@@ -291,6 +287,21 @@ const sidebars = {
         '解析-解释-编译-事件循环-promise-安全/模块化/es6和commonjs模块区别',
         '解析-解释-编译-事件循环-promise-安全/模块化/exports与module.exports的区别',
         {
+          label: 'promise',
+          type: 'category',
+          collapsed: true,
+          items: [
+            '解析-解释-编译-事件循环-promise-安全/promise/Generator',
+            '解析-解释-编译-事件循环-promise-安全/promise/async-await',
+            '解析-解释-编译-事件循环-promise-安全/promise/题目',
+            '解析-解释-编译-事件循环-promise-安全/promise/promise基础',
+            '解析-解释-编译-事件循环-promise-安全/promise/实现-promise方法',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise-all-20191121新',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise模拟请求',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-tabControl-两个请求合并promiseAll',
+          ]
+        },
+        {
           label: 'js模块',
           type: 'category',
           collapsed: true,
@@ -308,7 +319,7 @@ const sidebars = {
         '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
         '解析-解释-编译-事件循环-promise-安全/题目',
         {
-          label: 'TS',
+          label: 'event loop-浏览器事件',
           type: 'category',
           collapsed: true,
           items: [
@@ -316,19 +327,6 @@ const sidebars = {
             '解析-解释-编译-事件循环-promise-安全/event loop-浏览器事件/event loop',
           ]
         },
-        {
-          label: 'promise',
-          type: 'category',
-          collapsed: true,
-          items: [
-            '解析-解释-编译-事件循环-promise-安全/promise/实现-promise方法',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise-all-20191121新',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise模拟请求',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-tabControl-两个请求合并promiseAll',
-            '解析-解释-编译-事件循环-promise-安全/promise/Generator',
-            '解析-解释-编译-事件循环-promise-安全/promise/promise基础',
-          ]
-        }
       ]
     },
     {
@@ -419,17 +417,6 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'build-webpack/浏览器正常运行流程-静态-同步',
-        'build-webpack/dynamic-import-动态-异步',
-        'build-webpack/构建包大小优化',
-        'build-webpack/构建速度优化',
-        'build-webpack/06-1-webpack5新特性',
-        'build-webpack/06-2-webpack5-Persistent Caching',
-        'build-webpack/webpack4-增量构建',
-        'build-webpack/loader',
-        'build-webpack/resolve',
-        'build-webpack/webpack基础原理',
-        'build-webpack/打包原理',
         {
           label: 'dynamic-import',
           type: 'category',
@@ -442,6 +429,18 @@ const sidebars = {
             'build-webpack/配置实例2',
           ]
         },
+        'build-webpack/浏览器正常运行流程-静态-同步',
+        'build-webpack/dynamic-import-动态-异步',
+        'build-webpack/构建包大小优化',
+        'build-webpack/构建速度优化',
+        'build-webpack/06-1-webpack5新特性',
+        'build-webpack/06-2-webpack5-Persistent Caching',
+        'build-webpack/webpack4-增量构建',
+        'build-webpack/loader',
+        'build-webpack/resolve',
+        'build-webpack/webpack基础原理',
+        'build-webpack/打包原理',
+        'build-webpack/vite',
       ]
     },
     {

@@ -1,27 +1,40 @@
 ---
-title: patch
+title: patch-diff
 sidebar_position: -2
 ---
 
-## patch函数里主要对新旧节点也就是虚拟DOM的对比
+## 为什么 Vue 不需要时间分片？
+1. Vue 通过响应式依赖跟踪，在默认的情况下可以做到只进行组件树级别的更新计算，而默认下 React 是做不到
 
-常说的vue里的diff算法，便是从patch开始。结合render函数来看，我们知道，旧的虚拟DOM存储在container._vnode上。那么diff的方式就在patch中了：
-* 新旧节点相同，直接返回；
-* 旧节点存在，且新旧节点类型不同，则旧节点不可复用，将其卸载(unmount)，锚点anchor移向下一个节点；
-* 新节点是否静态节点标记；
-* 根据新节点的类型，相应地调用不同类型的处理方法：
-    * 文本：processText；
-    * 注释：processCommentNode；
-    * 静态节点：mountStaticNode或patchStaticNode；
-    * 文档片段：processFragment；
-    * 其它。
+2. 时间分片是为了解决 CPU 进行大量计算的问题,vue没有？
 
+## patch()主要对新旧节点的对比
+diff算法从patch开始。结合render函数来看，旧的虚拟DOM存储在container._vnode上
 
-1. 如果新旧虚拟节点相同 (n1 === n2)，则直接返回，不做 Diff 比较。
-2. 如果新旧虚拟节点不相同，则直接卸载旧的虚拟节点及其子节点。同时将旧虚拟节点n1 置为 null，这样就保证了新节点可以正常挂载。
-3. 判断新虚拟节点的 patchFlag 类型是否为 PatchFlags.BAIL，则将 optimized 置为 false，那么在后续的 Diff 过程中就不会启用 diff 优化。同时也将新虚拟节点的动态子节点数组 dynamicChildren 置为 null，在后续 Diff 过程中也不会启用 diff 优化。
-4. 然后根据新虚拟节点的 type 类型，分别对文本节点、注释节点、静态节点以及Fragment节点调用相应的处理函数对其进行处理。
-5. 接着根据 shapeFlag 的类型，调用不同的处理函数，分别对 Element类型的节点、Component 组件、Teleport 组件、Suspense 异步组件进行处理。
+### 新旧节点相同，直接返回
+```
+如果新旧虚拟节点相同 (n1 === n2)，则直接返回，不做 Diff 比较。
+```
+
+### 旧节点存在，且新旧节点类型不同，则旧节点不可复用，将其卸载(unmount)，锚点anchor移向下一个节点；
+如果新旧虚拟节点不相同，则直接卸载旧的虚拟节点及其子节点。同时将旧虚拟节点n1 置为 null，这样就保证了新节点可以正常挂载。
+
+1. 判断新虚拟节点的 patchFlag 类型是否为 PatchFlags.BAIL，则将 optimized 置为 false，那么在后续的 Diff 过程中就不会启用 diff 优化。同时也将新虚拟节点的动态子节点数组 dynamicChildren 置为 null，在后续 Diff 过程中也不会启用 diff 优化。
+
+2. 然后根据新虚拟节点的 type 类型，分别对文本节点、注释节点、静态节点以及Fragment节点调用相应的处理函数对其进行处理。
+```
+新节点是否静态节点标记；
+
+根据新节点的类型，相应地调用不同类型的处理方法：
+* 文本：processText；
+* 注释：processCommentNode；
+* 静态节点：mountStaticNode或patchStaticNode；
+* 文档片段：processFragment；
+* 其它。
+```
+
+3. 接着根据 shapeFlag 的类型，调用不同的处理函数，分别对 Element类型的节点、Component 组件、Teleport 组件、Suspense 异步组件进行处理。
+
 最后，调用了 setRef 函数来设置 ref 引用。
 
 ```js
@@ -102,7 +115,7 @@ const patch = (n1, n2, container, anchor = null, parentComponent = null, parentS
 };
 ```
 
-### processElement-patchElement更新dom元素
+## processElement-patchElement更新dom元素
 ```js
 const processElement = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
   isSVG = isSVG || n2.type === 'svg';
@@ -117,8 +130,7 @@ const processElement = (n1, n2, container, anchor, parentComponent, parentSuspen
 };
 ```
 
-### patchElement
-patchElemengt相当重要，因为其它和你多内容的patch，最终经过递归，依然会走到patchElement。当新旧元素节点都存在时，就会调用patchElement进行对比。可以看到顺序：
+patchElement相当重要，当新旧元素节点都存在时，就会调用patchElement进行对比。可以看到顺序：
 
 在patchElement中，注意到当新节点具有动态子节点时，调用了patchBlockChildren来进行子节点的比较，而在没有动态子节点且不符合优化条件时，则使用patchChildren来比较。这与processFragment类似。
 而当patchFlag <= 0且没有设置优化时，对props进行全量diff。分别遍历新的props和旧的props，最后刷新value的值。
@@ -238,7 +250,7 @@ const patchElement = (n1, n2, parentComponent, parentSuspense, isSVG, slotScopeI
 };
 ```
 
-## patchBlockChildren
+## patchElement-->patchBlockChildren
 在文档片段中的diff中，当符合优化条件时，则调用patchBlockChildren来进行优化的diff。这里主要以新节点的子节点长度为准，遍历新旧节点的子节点，更新了每个子节点的container然后进行patch。
 ```js
 const patchBlockChildren = (oldChildren, newChildren, fallbackContainer, parentComponent, parentSuspense, isSVG, slotScopeIds) => {
@@ -270,9 +282,7 @@ const patchBlockChildren = (oldChildren, newChildren, fallbackContainer, parentC
 };
 ```
 
-# 再次进入patch:以更新文本节点为例:-->processText(n1, n2
-
-
+## patchBlockChildren再次进入patch:以更新文本节点为例:-->processText(n1, n2)
 ```js
 const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = isHmrUpdating ? false : !!n2.dynamicChildren) => {
   // 省略...
@@ -342,3 +352,58 @@ const nodeOps = {
     // 省略
 }
 ```
+
+## Patch算法之PatchKeyChildren
+patchKeyedChildren是patch算法中较为复杂的一段，首先patchKeyedChildren是在子列表对比并且有key的情况会进入，并且逻辑大致分为5步
+### 第一步,从前向后遍历
+这一步是从节点组头部向尾部遍历，如果遍历过程中遇到相似节点，就进行patch对比，否则就退出遍历，并记录当前遍历的最新下标
+
+
+### 第二步，从后向前遍历
+从后向前遍历，如果遇到第一步记录的下标就停止，然后遍历过程中，如果遇到相似节点也是直接进行patch对比，如果不相同就是直接退出遍历，并且记录旧节点组和新节点组的尾指针
+
+### 第三步，检查旧节点组
+这一步就是检查旧节点组在上两步的遍历后是否遍历完，如果遍历完，那么新节点组没有遍历完的就都是新的dom，可以全部当作新增节点进行挂载处理
+
+### 第四步，检查新节点组
+如果上一步检查旧节点未遍历完，那么就检查新节点组是否遍历完，如果遍历完，那么旧的节点组剩余的节点说明都是要卸载的，因为都不需要了
+
+### 第五步，未知序列
+
+-   如果新旧节点组都未遍历完，说明存在未知序列，可能存在位移等情况，就需要进一步处理
+-   首先创建一个数组，用于记录新旧节点的对应关系
+```js
+// toBePatched是新序列的节点数量 e2 - s2 + 1
+const newIndexToOldIndexMap = new Array(toBePatched)
+for (i = 0; i < toBePatched; i++) newIndexToOldIndexMap[i] = 0
+```
+* 然后会遍历旧节点组，这里会用两个变量记录
+let moved = false：位移标识，用于判断是否需要位移
+let patched = 0：记录已执行patch的新节点数量，用于处理如果在更新时更新过的数量大于需要更新的节点数量，就卸载对应旧节点
+
+## vue3 Diff以数组和数组比对为例子
+### 第一轮，常见情况的比对:
+
+首先从左往右进行比对，如果是相同的就进行更新比对，如果不相同则停止比对，并且记录停止的下标。
+
+再从右往左进行比对，如果是相同的就进行更新比对，如果不相同也停止比对，也进行记录停止的下标。
+
+通过这样左右进行比对，最后就可以把真正复杂部分进行范围锁定了。
+
+左右比对完之后，如果新节点已经比对完了，老节点列表还存在节点未比对，则删除老节点列表上的未比对的节点，如果老节点已经比对完了，新节点列表还存在未比对的节点则进行创建。
+
+### 第二轮，复杂情况的比对
+如果新节点未比对完，老节点也未比对完，则进行最后最复杂的处理。
+
+先把剩下的新节点处理成节点的 key 为 key, 节点下标为 value 的 Map；
+接着初始化一个长度为剩下未比对的新节点的长度的数组 newIndexToOldIndexMap，初始化每个数组的下标的默认值为 0。
+
+再循环剩下的旧节点，通过旧节点的 key 去刚刚创建的 Map 中查找，看看旧节点有没有在新节点中，如果旧节点没有 key 则需要通过循环剩下的新节点进行查找。
+如果旧节点在新节点中没找到，则说明该旧节点需要进行删除。
+
+如果找到了，则把找到的新节点的下标对应存储到上述的数组 newIndexToOldIndexMap 中，然后更新比对匹配到的新老节点。
+
+把所有的旧节点比对完成后，就会得到一个刚刚收集的新节点的下标数组，然后对这个新节点的下标数组进行进行最长递增子序列查找得到一个最长递增子序列的下标数据。
+然后再进行循环左右对比完之后剩余新节点的下标，然后判断循环的下标是否被上述的数组 newIndexToOldIndexMap 进行收集了，如果没被收集到则说明这个新节点需要进行创建，如果已经被收集了则判断该循环的下标是否在上面计算得到的最长递增子序列中，如果不在则需要对该循环节点进行移动操作。
+
+以上就是 Vue3 Diff 算法大概过程了。

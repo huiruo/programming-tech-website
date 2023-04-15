@@ -4,7 +4,7 @@ sidebar_position: -1
 ---
 
 ## react 特点
-### 模板引擎-jsx
+### 模板引擎
 react初始化的时候使用babel 处理jsx模板组件，得到ast树的结构树,并转化为code函数；<br/>
 jsx 转换为了浏览器能够识别的原生js语法，为 react 后续对状态改变、事件响应以及页面更新等奠定了基础。
 ```mermaid

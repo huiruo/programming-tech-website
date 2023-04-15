@@ -15,44 +15,31 @@ promise有三个状态：
 Promise上还有then方法，then 方法就是用来指定Promise 对象的状态改变时确定执行的操作，resolve 时执行第一个函数（onFulfilled），reject时执行第二个函数（onRejected）
 
 ```js
-new Promise(function (resolve, reject) {
-  // 一段耗时的异步操作
-  resolve('成功') // 数据处理完成
-  // reject('失败') // 数据处理出错
-}).then((res) => {
-  console.log(res)
-}, (err) => {
-  console.log(err)
+function getNumber() {
+  const p = new Promise(function (resolve, reject) {
+    // 做一些异步操作
+    setTimeout(function () {
+      const num = Math.ceil(Math.random() * 10); //生成1-10的随机数
+      if (num <= 5) {
+        resolve(num);
+      }
+      else {
+        reject('数字太大了');
+      }
+    }, 2000);
+  });
+  return p;
 }
-)
-```
 
-```js
-function getNumber(){
-    var p = new Promise(function(resolve, reject){
-        //做一些异步操作
-        setTimeout(function(){
-            var num = Math.ceil(Math.random()*10); //生成1-10的随机数
-            if(num<=5){
-                resolve(num);
-            }
-            else{
-                reject('数字太大了');
-            }
-        }, 2000);
-    });
-    return p;            
-}
- 
 getNumber().then(
-    function(data){
-        console.log('resolved');
-        console.log(data);
-    }, 
-    function(reason, data){
-        console.log('rejected');
-        console.log(reason);
-    }
+  function (data) {
+    console.log('resolved');
+    console.log(data);
+  },
+  function (reason, data) {
+    console.log('rejected');
+    console.log(reason);
+  }
 );
 ```
 

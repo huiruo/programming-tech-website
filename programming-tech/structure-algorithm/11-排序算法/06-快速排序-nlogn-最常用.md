@@ -92,3 +92,115 @@ partition函数返回值将赋值给index（行{3}）。
 然后子数组[2, 3, 5, 4]中的较大子数组[5, 4]也继续进行划分（算法中的行{7}），示意图如下。
 ![](../../assets/img-排序/图7-快速排序.png)
 最终，较大子数组[6, 7]也会进行划分操作，快速排序算法的操作执行完成。
+
+## 简单版本
+当我们调用 quickSort 函数时，传入一个数组作为参数。首先，函数会检查数组的长度是否小于等于 1。
+如果是，说明数组已经有序，直接返回即可。
+
+接下来，我们选择数组中间的元素作为基准元素（这个实现并不是最优的，但是足够简单）。我们创建两个
+新数组 left 和 right 来存储数组中比基准元素小和大的元素。遍历原始数组中除基准元素外的所有元素，
+如果元素小于基准元素，则将它放入左数组，否则放入右数组。
+
+然后我们对左数组和右数组分别递归调用 quickSort 函数。递归调用的结束条件就是数组长度小于等于 1。
+
+最后，我们将左数组、基准元素和右数组合并起来，返回一个新数组。
+这里我们使用了扩展运算符 ...，可以将多个数组合并成一个。
+
+这个实现虽然简单易懂，但是它并不是最优的，因为在每次调用函数时都要创建新的数组，可能会消耗大量的内存空间。
+在实际使用中，我们可以通过修改数组中元素的位置来实现原地排序，从而节省空间。
+```js
+function quickSort(arr) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  debugger
+  const pivotIndex = Math.floor(arr.length / 2);
+  const pivot = arr[pivotIndex];
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i === pivotIndex) {
+      continue;
+    }
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+const arr = [52, 63, 14, 59, 68, 35, 8, 67, 45, 99];
+const sortedArr = quickSort(arr);
+console.log(sortedArr); // [8, 14, 35, 45, 52, 59, 63, 67, 68, 99]
+```
+
+## 实现2
+```js
+const Compare = {
+  LESS_THAN: -1,
+  BIGGER_THAN: 1,
+  EQUALS: 0
+};
+
+function defaultCompare(a, b) {
+  if (a === b) {
+    return Compare.EQUALS;
+  }
+  return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
+}
+
+function swap(array, index1, index2) {
+  const aux = array[index1];
+  array[index1] = array[index2];
+  array[index2] = aux;
+}
+
+
+function partition(array, left, right, compareFn) {
+  const pivot = array[Math.floor((right + left) / 2)]; // 8
+  let i = left; // 9
+  let j = right; // 10
+
+  while (i <= j) { // 11
+    while (compareFn(array[i], pivot) === Compare.LESS_THAN) { // 12
+      i++;
+    }
+    while (compareFn(array[j], pivot) === Compare.BIGGER_THAN) { // 13
+      j--;
+    }
+    if (i <= j) { // 14
+      swap(array, i, j); // 15
+      i++;
+      j--;
+    }
+  }
+  return i; // 16
+}
+
+function quick(array, left, right, compareFn) {
+  let index;  // 1
+  if (array.length > 1) { // 2
+    index = partition(array, left, right, compareFn); // 3
+    if (left < index - 1) {   // 4
+      quick(array, left, index - 1, compareFn); // 5
+    }
+    if (index < right) {  // 6
+      quick(array, index, right, compareFn); // 7
+    }
+  }
+  return array;
+}
+
+function quickSort(array, compareFn = defaultCompare) {
+  return quick(array, 0, array.length - 1, compareFn);
+}
+
+const array = [52, 63, 14, 59, 68, 35, 8, 67, 45, 99];
+console.log('array:', array)
+console.log('array:', quickSort(array))
+```

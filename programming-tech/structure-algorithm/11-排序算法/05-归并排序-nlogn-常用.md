@@ -71,3 +71,96 @@ left数组由索引0至中间索引的元素组成，而right数组由中间索�
 6. 将元素 35 放入结果数组中，并将 35 所在的数组 [8, 35, 45, 67, 99] 的指针向后移动一个位置。
 
 重复以上步骤，直到有一个数组中的所有元素都被放入结果数组中。
+
+## 实现1
+数组长度是否小于等于1，如果是则直接返回该数组。否则，将数组平均分成两个子数组，然后递归地
+对左右子数组进行归并排序。最后将排好序的左右子数组合并成一个有序数组，并返回该数组。在合并
+两个子数组的过程中，我们使用双指针法，分别从两个子数组的开头开始比较大小，每次将较小的元素
+加入新的数组中，直到其中一个子数组的元素全部被加入新的数组中，然后将另一个子数组中剩余的元素
+直接加入新的数组中即可。
+```js
+function mergeSort(arr) {
+  // 如果数组长度小于等于1，直接返回数组
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  // 将数组平均分成两个子数组
+  const mid = Math.floor(arr.length / 2);
+  const leftArr = arr.slice(0, mid);
+  const rightArr = arr.slice(mid);
+
+  debugger
+  console.log('leftArr:', leftArr)
+  console.log('rightArr:', rightArr)
+
+  // 递归地对左右子数组进行归并排序
+  const sortedLeftArr = mergeSort(leftArr);
+  const sortedRightArr = mergeSort(rightArr);
+  console.log('========')
+
+  // 将排好序的左右子数组合并成一个有序数组
+  const mergedArr = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+  while (leftIndex < sortedLeftArr.length && rightIndex < sortedRightArr.length) {
+    if (sortedLeftArr[leftIndex] < sortedRightArr[rightIndex]) {
+      mergedArr.push(sortedLeftArr[leftIndex]);
+      leftIndex++;
+    } else {
+      mergedArr.push(sortedRightArr[rightIndex]);
+      rightIndex++;
+    }
+  }
+
+  const mergedArrReturn = mergedArr.concat(sortedLeftArr.slice(leftIndex)).concat(sortedRightArr.slice(rightIndex));
+  console.log('mergedArrReturn:', mergedArrReturn)
+  return mergedArrReturn;
+}
+
+// 测试代码
+const arr = [52, 63, 14, 59, 68, 35, 8, 67, 45, 99];
+console.log(mergeSort(arr)); // [8, 14, 35, 45, 52, 59, 63, 67, 68, 99]
+```
+
+## 实现2
+```js
+const Compare = {
+  LESS_THAN: -1,
+  BIGGER_THAN: 1,
+  EQUALS: 0
+};
+
+function defaultCompare(a, b) {
+  if (a === b) {
+    return Compare.EQUALS;
+  }
+  return a < b ? Compare.LESS_THAN : Compare.BIGGER_THAN;
+}
+
+function merge(left, right, compareFn) {
+  let i = 0;
+  let j = 0;
+  const result = [];
+  while (i < left.length && j < right.length) {
+    result.push(compareFn(left[i], right[j]) === Compare.LESS_THAN ? left[i++] : right[j++]);
+  }
+  return result.concat(i < left.length ? left.slice(i) : right.slice(j));
+}
+
+function mergeSort(array, compareFn = defaultCompare) {
+  if (array.length > 1) { // 1
+    const { length } = array;
+    const middle = Math.floor(length / 2); // 2
+    const left = mergeSort(array.slice(0, middle), compareFn); // 3
+    const right = mergeSort(array.slice(middle, length), compareFn); // 4
+    array = merge(left, right, compareFn); // 5
+  }
+  return array;
+}
+
+const array = [52, 63, 14, 59, 68, 35, 8, 67, 45, 99];
+
+console.log('array', array)
+console.log('array', mergeSort(array))
+```

@@ -657,6 +657,8 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
+        'structure-algorithm/排序算法/前言',
+        'structure-algorithm/排序算法/冒泡排序-oN2',
         'structure-algorithm/排序算法/选择排序-oN2',
         'structure-algorithm/排序算法/插入排序-oN或oN2',
         'structure-algorithm/排序算法/归并排序-nlogn-常用',
@@ -664,7 +666,6 @@ const sidebars = {
         'structure-algorithm/排序算法/快速排序-优化版本',
         'structure-algorithm/排序算法/归并和分治',
         'structure-algorithm/排序算法/基数排序',
-        'structure-algorithm/排序算法/前言',
         'structure-algorithm/排序算法/桶排序',
       ]
     },
@@ -673,9 +674,11 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
+        'structure-algorithm/搜索算法/符号表也称为字典',
+        'structure-algorithm/搜索算法/顺序搜索-最基本的搜索',
         'structure-algorithm/搜索算法/二分查找',
         'structure-algorithm/搜索算法/二叉查找树',
-        'structure-algorithm/搜索算法/二分查找',
+
         'structure-algorithm/搜索算法/符号表-散列表/扩展-hasCode',
         'structure-algorithm/搜索算法/符号表-散列表/散列表',
         'structure-algorithm/搜索算法/符号表-散列表/算法书-散列表',
@@ -685,7 +688,6 @@ const sidebars = {
         'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/红黑树与平衡二叉树',
         'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/平衡二叉树',
         'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/树',
-        'structure-algorithm/搜索算法/前言',
       ]
     },
     {
@@ -727,7 +729,6 @@ const sidebars = {
     'structure-algorithm/数据结构/关于数据结构',
     'structure-algorithm/二叉堆和堆排序/二叉堆',
     'structure-algorithm/集合/集合运算',
-    'structure-algorithm/字符串/字符串查找',
     {
       label: '递归',
       type: 'category',
@@ -736,6 +737,15 @@ const sidebars = {
         'structure-algorithm/递归/递归例子',
         'structure-algorithm/递归/array转树',
         'structure-algorithm/递归/树转array',
+      ]
+    },
+    {
+      label: '字符串',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/字符串/字符串查找',
+        'structure-algorithm/字符串/去掉首尾空格',
       ]
     },
     {

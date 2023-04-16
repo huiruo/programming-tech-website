@@ -1,3 +1,50 @@
+## 广度优先遍历
+广度优先搜索算法会从指定的第一个顶点开始遍历图，先访问其所有的邻点（相邻顶点），就像一次访问图的一层。
+换句话说，就是先宽后深地访问顶点
+```js
+const departArrTest = [{
+    id: 1,
+    name: '部门1',
+    pid: 0,
+    children: [{
+        "id": 2,
+        "name": "部门2",
+        "pid": 1,
+        "children": []
+    },
+    {
+        "id": 3,
+        "name": "部门3",
+        "pid": 1,
+        "children": []
+    }]
+},
+{
+    id: 10,
+    name: '部门1',
+    pid: 9,
+    children: [
+        {id: 11, name: '部门1', pid: 10},
+    ]
+}]
+
+const generateList = (data, dataList) => {
+    for (let i = 0; i < data.length; i++) {
+        const node = data[i]
+        if (node.children) {
+            generateList(node.children, dataList, node.id)
+        }
+        delete node['children'];
+        dataList.push(node)
+    }
+
+    return dataList
+}
+
+console.log('将树形节点改为一维数组:',generateList(departArrTest, []))
+```
+
+
 ## 方式1：使用递归来将嵌套的对象数组转换为扁平的数组
 此代码会将 testArr 数组中的所有对象递归地遍历，并将它们添加到 result 数组中。如果当前对象有 children 属性，则递归地调用 flatten 函数来处理子节点，并使用展开运算符将结果添加到 result 数组中。最终返回 result 数组即可。
 

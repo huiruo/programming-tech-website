@@ -378,7 +378,7 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'http-浏览器缓存/浏览器请求-渲染的流程-回流重绘',
+        'http-浏览器缓存/浏览器请求-渲染的流程',
         'http-浏览器缓存/浏览器缓存',
         'http-浏览器缓存/http1.1-http2.0-报文',
         'http-浏览器缓存/reflow-repaint',
@@ -612,9 +612,20 @@ const sidebars = {
 
   structureAlgorithm: [
     'structure-algorithm/README',
-    'structure-algorithm/递归/递归例子',
-    'structure-algorithm/二叉堆和堆排序/01-1-二叉堆',
-    'structure-algorithm/数据结构/关于数据结构',
+    {
+      label: '算法设计与技巧',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/算法设计与技巧/分治算法',
+        'structure-algorithm/算法设计与技巧/动态规划',
+        'structure-algorithm/算法设计与技巧/动态规划和分治区别',
+        'structure-algorithm/算法设计与技巧/贪心算法',
+        'structure-algorithm/算法设计与技巧/回溯算法',
+        'structure-algorithm/算法设计与技巧/滑动窗口算法',
+        'structure-algorithm/算法设计与技巧/关于动态规划',
+      ]
+    },
     {
       label: '前端中数据结构和算法',
       type: 'category',
@@ -642,13 +653,102 @@ const sidebars = {
       ]
     },
     {
+      label: '排序算法',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/排序算法/选择排序-oN2',
+        'structure-algorithm/排序算法/插入排序-oN或oN2',
+        'structure-algorithm/排序算法/归并排序-nlogn-常用',
+        'structure-algorithm/排序算法/快速排序-nlogn-最常用',
+        'structure-algorithm/排序算法/快速排序-优化版本',
+        'structure-algorithm/排序算法/归并和分治',
+        'structure-algorithm/排序算法/基数排序',
+        'structure-algorithm/排序算法/前言',
+        'structure-algorithm/排序算法/桶排序',
+      ]
+    },
+    {
+      label: '搜索算法',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/搜索算法/二分查找',
+        'structure-algorithm/搜索算法/二叉查找树',
+        'structure-algorithm/搜索算法/二分查找',
+        'structure-algorithm/搜索算法/符号表-散列表/扩展-hasCode',
+        'structure-algorithm/搜索算法/符号表-散列表/散列表',
+        'structure-algorithm/搜索算法/符号表-散列表/算法书-散列表',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉查找树',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉查找树与平衡二叉树的区别',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉树',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/红黑树与平衡二叉树',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/平衡二叉树',
+        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/树',
+        'structure-algorithm/搜索算法/前言',
+      ]
+    },
+    {
+      label: 'Tree',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/树/树',
+        'structure-algorithm/树/二叉树-二叉树种类',
+        'structure-algorithm/树/二叉搜索树-BST',
+        'structure-algorithm/树/自平衡树',
+        'structure-algorithm/树/红黑树',
+        'structure-algorithm/树/AVL树',
+      ]
+    },
+    {
+      label: '链表',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/链表/链表',
+        'structure-algorithm/链表/队列链表实现',
+        'structure-algorithm/链表/链表背包的实现',
+        'structure-algorithm/链表/双向链表和单向链表区别',
+        'structure-algorithm/链表/循环链表',
+        'structure-algorithm/链表/有序链表',
+      ]
+    },
+    {
+      label: '字典和散列表',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/字典和散列表/字典',
+        'structure-algorithm/字典和散列表/散列表',
+        'structure-algorithm/字典和散列表/weakmap和map',
+      ]
+    },
+    'structure-algorithm/数据结构/关于数据结构',
+    'structure-algorithm/递归/递归例子',
+    'structure-algorithm/二叉堆和堆排序/二叉堆',
+    'structure-algorithm/集合/集合运算',
+    'structure-algorithm/字符串/字符串查找',
+    {
       label: '队列和双端队列',
       type: 'category',
       collapsed: true,
       items: [
         'structure-algorithm/队列和双端队列/队列-栈和队列的区别',
-        'structure-algorithm/队列和双端队列/a-双端队列',
+        'structure-algorithm/队列和双端队列/双端队列',
         'structure-algorithm/队列和双端队列/js的任务队列',
+      ]
+    },
+    {
+      label: '栈-背包',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/栈-背包/背包',
+        'structure-algorithm/栈-背包/集合类数据类型的实现-定容栈',
+        'structure-algorithm/栈-背包/集合类数据类型的实现-集合的迭代',
+        'structure-algorithm/栈-背包/链式数据结构很重要-实现背包-队列-栈',
+        'structure-algorithm/栈-背包/栈的应用',
       ]
     },
     {
@@ -665,106 +765,6 @@ const sidebars = {
         'structure-algorithm/基础数学-算法表示-算法复杂度/算法复杂度',
       ]
     },
-    'structure-algorithm/集合/集合运算',
-    {
-      label: '链表',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/链表/01-1-链表',
-        'structure-algorithm/链表/队列链表实现',
-        'structure-algorithm/链表/链表背包的实现',
-        'structure-algorithm/链表/双向链表和单向链表区别',
-        'structure-algorithm/链表/循环链表',
-        'structure-algorithm/链表/有序链表',
-      ]
-    },
-    {
-      label: '排序算法',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/排序算法/03-1-选择排序-oN2',
-        'structure-algorithm/排序算法/04-1-插入排序-oN或oN2',
-        'structure-algorithm/排序算法/05-1-归并排序-nlogn-常用',
-        'structure-algorithm/排序算法/06-1-快速排序-nlogn-最常用',
-        'structure-algorithm/排序算法/06-2-快速排序-优化版本',
-        'structure-algorithm/排序算法/归并和分治',
-        'structure-algorithm/排序算法/基数排序',
-        'structure-algorithm/排序算法/前言',
-        'structure-algorithm/排序算法/桶排序',
-      ]
-    },
-    {
-      label: 'Tree',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/树/二叉树-二叉树种类',
-        'structure-algorithm/树/例1-二叉搜索树-BST',
-        'structure-algorithm/树/例2-1-自平衡树',
-        'structure-algorithm/树/例3-1-红黑树',
-        'structure-algorithm/树/例4-AVL树',
-        'structure-algorithm/树/树',
-      ]
-    },
-    {
-      label: '搜索算法',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/搜索算法/02-1-二分查找',
-        'structure-algorithm/搜索算法/二叉查找树',
-        'structure-algorithm/搜索算法/二分查找',
-        'structure-algorithm/搜索算法/符号表-散列表/扩展-hasCode',
-        'structure-algorithm/搜索算法/符号表-散列表/散列表',
-        'structure-algorithm/搜索算法/符号表-散列表/算法书-散列表',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉查找树',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉查找树与平衡二叉树的区别',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/二叉树',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/红黑树与平衡二叉树',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/平衡二叉树',
-        'structure-algorithm/搜索算法/符号表-树-二叉树-二叉查找树/树',
-        'structure-algorithm/搜索算法/前言',
-      ]
-    },
-    {
-      label: '算法设计与技巧',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/算法设计与技巧/01-1-分治算法',
-        'structure-algorithm/算法设计与技巧/02-1-动态规划',
-        'structure-algorithm/算法设计与技巧/02-2-动态规划和分治区别',
-        'structure-algorithm/算法设计与技巧/03-1-贪心算法',
-        'structure-algorithm/算法设计与技巧/04-2-回溯算法',
-        'structure-algorithm/算法设计与技巧/05-1-滑动窗口算法',
-        'structure-algorithm/算法设计与技巧/关于动态规划',
-      ]
-    },
-    {
-      label: '栈-背包',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/栈-背包/背包',
-        'structure-algorithm/栈-背包/集合类数据类型的实现-定容栈',
-        'structure-algorithm/栈-背包/集合类数据类型的实现-集合的迭代',
-        'structure-algorithm/栈-背包/链式数据结构很重要-实现背包-队列-栈',
-        'structure-algorithm/栈-背包/栈的应用',
-      ]
-    },
-    {
-      label: '字典和散列表',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'structure-algorithm/字典和散列表/字典',
-        'structure-algorithm/字典和散列表/a-散列表',
-        'structure-algorithm/字典和散列表/weakmap和map',
-      ]
-    },
-    'structure-algorithm/字符串/字符串查找',
     {
       label: 'code-practice',
       type: 'category',

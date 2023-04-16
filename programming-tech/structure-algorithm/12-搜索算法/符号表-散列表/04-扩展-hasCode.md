@@ -1,3 +1,9 @@
+---
+title: 扩展-hasCode
+sidebar_position: 1
+---
+
+
 ```
 每种数据类型都需要相应的散列函数，于是 Java 令所有数据类型都继承了一个能够返回一个 32 比特整数的 hashCode() 方法。
 

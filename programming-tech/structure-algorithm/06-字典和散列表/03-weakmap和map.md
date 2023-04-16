@@ -1,3 +1,8 @@
+---
+title: weakmap和map
+sidebar_position: 1
+---
+
 ## 弱化版本的区别
 基本上，Map和Set与其弱化版本之间仅有的区别是：
 * WeakSet或WeakMap类没有entries、keys和values等方法；

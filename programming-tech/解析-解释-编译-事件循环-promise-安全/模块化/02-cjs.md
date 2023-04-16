@@ -31,7 +31,7 @@ dest = webpack(src, config)
 ## cjs
 CommonJS用于浏览器,并不是 ECMAScript 标准的一部分，其中api:module和require,并不是JS的关键字，仅仅是对象或者函数。
 
-```javaScript
+```js
 // commonjs 写法
 var clock = require('clock.js')
 clock.start();
@@ -41,7 +41,7 @@ clock.start();
 CommonJS一个模块对应一个脚本文件，require 命令每次加载一个模块就会执行整个脚本，然后生成一个对象。
 
 这个对象一旦生成，以后再次执行相同的 require 命令都会直接到缓存中取值。也就是说：CommonJS 模块无论加载多少次，都只会在第一次加载时运行一次，以后再加载时就返回第一次运行的结果，除非手动清除系统缓存。
-```javaScript
+```js
 {
     id: '',  // 模块名，唯一
     exports: {  // 模块输出的各个接口
@@ -57,7 +57,7 @@ CommonJS一个模块对应一个脚本文件，require 命令每次加载一个�
 cjs规范下，每个.js文件都是一个模块，它们内部各自使用的变量名和函数名都互不冲突
 
 该规范的核心思想是： 允许模块通过require方法来同步加载所要依赖的其他模块，通过 exports 或 module.exports 来导出需要暴露的接口。
-```javascript
+```js
 'use strict';
 
 var s = 'Hello';
@@ -70,7 +70,7 @@ module.exports = greet;
 ```
 
 其他模块中引入并使用
-```javaScript
+```js
 'use strict';
 
 /*
@@ -103,7 +103,7 @@ require能看到的只有module.exports这个对象，它是看不到exports对�
 
 
 方法一：对module.exports赋值：
-```javascript
+```js
 // hello.js
 
 function hello() {
@@ -123,7 +123,7 @@ module.exports = {
 
 
 方法二：直接使用exports：
-```javascript
+```js
 // hello.js
 
 function hello() {
@@ -143,7 +143,7 @@ exports.greet = greet;
 ```
 
 但是你不可以直接对exports赋值：
-```javascript
+```js
 // 代码可以执行，但是模块并没有输出任何变量:
 exports = {
     hello: hello,
@@ -164,7 +164,7 @@ CommonJS require函数可以在index.js任何地方使用，并且接受的路�
 * 3.require的模块如果曾被加载过，再次加载时候模块内部代码不会再次被执行，直接导出首次执行的结果。
 
 * 4.require函数是运行时执行的，所以require函数可以接收表达式，并且可以放在逻辑代码中执行。
-```javaScript
+```js
 const name = 'Tom';
 const scriptName = 'tom.js';
 if (name === 'Tom') {
@@ -179,7 +179,7 @@ if (name === 'Tom') {
 * 2. module.exports属性表示当前模块对外输出的接口，其他文件加载该模块，实际上就是读取module.exports变量。
 
 * 3. 为了方便，Node为每个模块提供一个exports变量，指向module.exports。
-```javaScript
+```js
 let exports = module.exports
 ```
 
@@ -208,7 +208,7 @@ cache 表示 node 中模块加载的缓存，也就是说，当一个模块加�
 
 例子：整体加载fs模块（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取 3 个方法。
 这种加载称为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”。
-```javascript
+```js
 // CommonJS模块
 let { stat, exists, readfile } = require('fs');
 
@@ -221,13 +221,13 @@ let readfile = _fs.readfile;
 
 ## 什么是编译时加载或静态加载呢？
 上面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“编译时加载”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比CommonJS 模块的加载方式高。当然，这也导致了没法引用 ES6 模块本身，因为它不是对象。
-```javascript
+```js
 // ES6模块
 import { stat, exists, readFile } from 'fs';
 ```
 
 ### CommonJS模块
-```javaScript
+```js
 let { stat, exists, readFile } = require('fs');
 ```
 其实上面代码是先执行 fs 模块，得到一份代码拷贝，再获取对应的属性或方法的。
@@ -461,7 +461,7 @@ module.exports = {
 
 ### 模块的输出module.exports怎么实现？
 hello.js
-```javascript
+```js
 // Node可以先准备一个对象module：
 /*
 
@@ -493,13 +493,13 @@ save(module, exported);
 
 由于Node保存了所有导入的module，当我们用require()获取module时，Node找到对应的module，把这个module的exports变量返回，
 这样，另一个模块就顺利拿到了模块的输出：
-```javascript
+```js
 var greet = require('./hello');
 ```
 
 ## import加载CommonJS模块
 使用import命令加载CommonJS模块，Node会自动将module.exports属性当做模块的默认输出，即等同于export default
-```javaScript
+```js
 // a.js
 module.exports = {
   foo: 'hello',
@@ -516,7 +516,7 @@ export default {
 这是因为 ES6 模块需要支持静态代码分析，而 CommonJS 模块的输出接口是module.exports，是一个对象，无法被静态分析，所以只能整体加载。
 
 ES6 模块的import命令可以加载 CommonJS 模块，但是只能整体加载，不能只加载单一的输出项。
-```javaScript
+```js
 // 正确 
 import packageMain from 'commonjs-package'; 
 
@@ -535,7 +535,7 @@ const { method } = packageMain;
 如果原始模块是 ES6 格式，那么需要给出一个整体输出接口，比如export default obj，使得 CommonJS 可以用import()进行加载。
 
 如果原始模块是 CommonJS 格式，那么可以加一个包装层。
-```javaScript
+```js
 // 先整体输入 CommonJS 模块，然后再根据需要输出具名接口。
 import cjsModule from '../index.js';
 export const foo = cjsModule.foo;
@@ -544,7 +544,7 @@ export const foo = cjsModule.foo;
 
 ## module.exports和exports区别
 默认情况下，Node准备的exports变量和module.exports变量实际上是同一个变量，并且初始化为空对象{}：
-```javaScript
+```js
 // 于是，我们可以写
 exports.foo = function () {
   return 'foo';
@@ -570,13 +570,13 @@ module.exports.bar = function () {
 ```
 
 * 但是，如果我们要输出的是一个函数或数组，那么，只能给module.exports赋值：
-```javaScript
+```js
 module.exports = function () { return 'foo'; };
 ```
 给exports赋值是无效的，因为赋值后，module.exports仍然是空对象{}。
 
 * 所以可以得出结论：直接对module.exports赋值，可以应对任何情况：
-```javaScript
+```js
 module.exports = {
     foo: function () { return 'foo'; }
 };

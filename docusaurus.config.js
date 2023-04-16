@@ -99,7 +99,7 @@ const config = {
             type: 'doc',
             position: 'left',
             docId: 'structure-algorithm/README',
-            label: 'Structure Algorithm',
+            label: 'Structure algorithm',
           },
           {
             href: 'https://github.com/huiruo/programming-tech-website/',

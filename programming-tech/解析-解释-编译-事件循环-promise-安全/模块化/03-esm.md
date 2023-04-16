@@ -6,7 +6,7 @@ esm的设计思想是尽量的静态化，使得编译时就能确定模块的�
 CommonJS和AMD模块，都只能在运行时确定这些东西。
 
 对比CommonJS
-```javaScript
+```js
 // CommonJS
 let { start, exists, readFile } = require('fs')
 // 相当于
@@ -82,7 +82,7 @@ export const readFile() // 方法上，注意这里只是做了指针指向，�
 简单地说，任何 JavaScript 代码片段在执行前都要进行编译（通常就在执行前）。因此，JavaScript 编译器会对 var a = 2; 这段程序进行编译，然后做好执行它的准备，并且通常马上就会执行它。
 
 变量提升
-```javaScript
+```js
 function test() {
     console.log(a);
     console.log(foo());
@@ -124,7 +124,7 @@ import { 'f' + 'oo' } from 'my_module' ，而 require是执行代码获取属性
 
 所谓的静态编译阶段，完全是区分于cjs的运行时建立引用，esm是标准的在转化成中间代码时就会发现是否正确(比如不能在条件判断里import)，而非在运行时才发现错误。
 
-```javaScript
+```js
 import { readFile } from 'fs';
 ```
 js 代码被 JavaScript 引擎编译时, 并将上面 fs 模块的属性 readFile 指向对应模块的
@@ -153,7 +153,7 @@ ESM 的加载细节，它其实和前面提到的 CommonJS 的 Module._load 函�
 
 ## es6 的动态加载
 import()函数接收与import相同的参数，返回一个Promise对象，加载获取到的值作为then方法的回调参数。
-```javaScript
+```js
 const main = document.querySelector('main')
 
 import(`./section-modules/${someVariable}.js`)
@@ -431,7 +431,7 @@ JS 引擎通过执行顶层代码（函数之外的代码，此处可以理解�
 
 ## import变量提升
 demo2 - ES6
-```javaScript
+```js
 // a.js
 console.log('I am a.js...')
 import { foo } from './b.js';
@@ -449,7 +449,7 @@ export let foo = 1;
 
 demo2 先打印 'I am b.js'，而 demo3 先打印 'I am a.js'。
 demo3 - CommonJS
-```javaScript
+```js
 // a.js
 console.log('I am a.js...')
 var b = require('./b');
@@ -474,7 +474,7 @@ demo2 中因为 ES6 在语言标准层面上实现了模块功能，所以当对
 ```
 
 demo3 中，对 a.js 预编译时，只会把变量 b 的声明提前，a.js & b.js 预编译后的执行顺序如下：
-```javaScript
+```js
 // a.js
 var b;
 console.log('I am a.js...')
@@ -492,7 +492,7 @@ module.exports = {
 ## export 变量提升
 正常的引用模块没办法看出变量声明提升的特性，需要通过循环依引用才能看出。
 我们来看下 demo4：
-```javaScript
+```js
 // a.js
 import { foo } from './b';
 console.log('a.js');

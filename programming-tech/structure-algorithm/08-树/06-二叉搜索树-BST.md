@@ -1,5 +1,5 @@
 ---
-title: 例1-二叉搜索树-BST
+title: 二叉搜索树-BST
 sidebar_position: 1
 ---
 

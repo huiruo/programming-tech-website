@@ -163,8 +163,9 @@ const sidebars = {
             'JavaScript/for常用循环/正向遍历-反向',
             'JavaScript/for常用循环/最基础的循环',
             'JavaScript/for常用循环/for-in-实现深拷贝',
-            'JavaScript/for常用循环/for-of-遍历对象-数组',
             'JavaScript/for常用循环/forEach',
+            'JavaScript/for常用循环/for-of-遍历对象-数组',
+            'JavaScript/for常用循环/forin-遍历对象',
             'JavaScript/for常用循环/keys-getOwnPropertyNames',
           ]
         },
@@ -311,8 +312,9 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
-            '解析-解释-编译-事件循环-promise-安全/event loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
-            '解析-解释-编译-事件循环-promise-安全/event loop-浏览器事件/event loop',
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/event-loop',
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/js的任务队列',
           ]
         },
         '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
@@ -617,13 +619,11 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'structure-algorithm/算法设计与技巧/分治算法',
         'structure-algorithm/算法设计与技巧/动态规划',
-        'structure-algorithm/算法设计与技巧/动态规划和分治区别',
+        'structure-algorithm/算法设计与技巧/分治和动态规划区别',
         'structure-algorithm/算法设计与技巧/贪心算法',
         'structure-algorithm/算法设计与技巧/回溯算法',
         'structure-algorithm/算法设计与技巧/滑动窗口算法',
-        'structure-algorithm/算法设计与技巧/关于动态规划',
       ]
     },
     {
@@ -631,8 +631,8 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'structure-algorithm/前端中数据结构和算法/js数组和算法',
-        'structure-algorithm/前端中数据结构和算法/js原型链和链表',
+        'structure-algorithm/前端中数据结构和算法/原型链和链表',
+        'structure-algorithm/前端中数据结构和算法/数组和算法',
       ]
     },
     {
@@ -725,10 +725,19 @@ const sidebars = {
       ]
     },
     'structure-algorithm/数据结构/关于数据结构',
-    'structure-algorithm/递归/递归例子',
     'structure-algorithm/二叉堆和堆排序/二叉堆',
     'structure-algorithm/集合/集合运算',
     'structure-algorithm/字符串/字符串查找',
+    {
+      label: '递归',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'structure-algorithm/递归/递归例子',
+        'structure-algorithm/递归/array转树',
+        'structure-algorithm/递归/树转array',
+      ]
+    },
     {
       label: '队列和双端队列',
       type: 'category',
@@ -736,7 +745,7 @@ const sidebars = {
       items: [
         'structure-algorithm/队列和双端队列/队列-栈和队列的区别',
         'structure-algorithm/队列和双端队列/双端队列',
-        'structure-algorithm/队列和双端队列/js的任务队列',
+        'structure-algorithm/队列和双端队列/js数组实现队列',
       ]
     },
     {
@@ -749,6 +758,7 @@ const sidebars = {
         'structure-algorithm/栈-背包/集合类数据类型的实现-集合的迭代',
         'structure-algorithm/栈-背包/链式数据结构很重要-实现背包-队列-栈',
         'structure-algorithm/栈-背包/栈的应用',
+        'structure-algorithm/栈-背包/js数组实现栈',
       ]
     },
     {

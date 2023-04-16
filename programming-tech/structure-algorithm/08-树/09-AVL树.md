@@ -1,5 +1,5 @@
 ---
-title: 例4-AVL树
+title: AVL树
 sidebar_position: 1
 ---
 

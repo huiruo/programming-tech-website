@@ -26,7 +26,6 @@ const sidebars = {
         'React/useEffect',
         'React/fiber',
         'React/diff',
-        'React/react-ssr渲染',
         'React/基础-高阶组件',
         'React/基础-无状态组件和HOC-容器组件-展示组件',
         'React/库-redux-mobx',
@@ -445,7 +444,6 @@ const sidebars = {
         'build-AST-Babel/AST',
         'build-AST-Babel/babel',
         'build-AST-Babel/babel-编译构建之modules',
-        'build-AST-Babel/babel-loader',
         'build-AST-Babel/babel-standalone使用',
         'build-AST-Babel/transform-runtime',
         'build-AST-Babel/less和scss的区别',
@@ -475,6 +473,7 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
+        'ssr服务端渲染-nodejs/react-ssr渲染',
         'ssr服务端渲染-nodejs/react-ssr-demo/react18-ssr',
         'ssr服务端渲染-nodejs/NextJS',
         'ssr服务端渲染-nodejs/nodejs事件循环',
@@ -488,9 +487,8 @@ const sidebars = {
       items: [
         '优化/React',
         '优化/Vue优化',
-        '优化/首屏加载',
-        '优化/CDN-内容分发网络',
         '优化/总结',
+        '优化/CDN-内容分发网络',
         '优化/国际化',
       ]
     },

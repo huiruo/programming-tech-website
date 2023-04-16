@@ -3,6 +3,9 @@ title: babel
 sidebar_position: 2
 ---
 
+## 例子：es6-->es5
+[es6-to-es5](https://github.com/huiruo/es6-to-es5)
+
 ## Babel是一个 JavaScript 编译器
 
 Babel 工作过程：解析，转换，生成,将ES6+语法转换成浏览器能识别的 ES5 语法
@@ -10,26 +13,24 @@ Babel 工作过程：解析，转换，生成,将ES6+语法转换成浏览器能
 
 ### 1.第1步:Parser
 第1步转换的过程中可以验证语法的正确性，同时由字符串变为对象结构后更有利于精准地分析以及进行代码结构调整。
+
+Parser 解析我们的代码转换为 AST
 ```mermaid
 flowchart LR
 ES6代码输入-->babylon进行解析-->得到AST
 ```
 
-
 ### 2.第2步:transforming阶段 
 plugin用babel-traverse对AST树进行遍历转译-->得到新的AST树
 
-第 2 步原理就很简单了，就是遍历这个对象所描述的抽象语法树，遇到哪里需要做一下改变，就直接在对象上进行操作
+第2步原理是遍历这个对象所描述的抽象语法树，遇到哪里需要做一下改变，就直接在对象上进行操作
 
-### 3.用babel-generator通过AST树生成ES5代码
-1. Parser 解析我们的代码转换为 AST。
-
-2. Transformer 利用我们配置好的 plugins/presets 把 Parser 生成的 AST 转变为 新的 AST。
+Transformer 利用我们配置好的 plugins/presets 把 Parser 生成的 AST 转变为 新的 AST。
 ```
 在.babelrc 里配置的 presets 和 plugins 都是在第 2 步工作的。
 ```
 
-3. Generator 把转换后的 AST 生成新的代码
+### 3.Generator 把转换后的 AST 生成新的代码
 递归遍历这颗语法树，然后生成相应的代码,代码生成步骤把最终（经过一系列转换之后）的AST转换成字符串形式的代码，同时还会创建源码映射（source maps）;<br/>代码生成其实很简单：深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串
 
 ### 举例子

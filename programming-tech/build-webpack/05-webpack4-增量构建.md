@@ -33,10 +33,8 @@ module.exports = {
 };
 ```
 
-### cache 配置
-```
+### cache配置
 https://v4.webpack.docschina.org/configuration/other-options/#cache
-```
 
 Webpack 5 中这一选项会有大的改变，会在下一节课中展开讨论。这一选项的值有两种类型：布尔值和对象类型。一般情况下默认为false，即不使用缓存，但在开发模式开启 watch 配置的情况下，cache 的默认值变更为true。此外，如果 cache 传值为对象类型，则表示使用该对象来作为缓存对象，这往往用于多个编译器 compiler 的调用情况。
 

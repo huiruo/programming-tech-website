@@ -4,9 +4,25 @@ sidebar_position: 1
 ---
 
 ## Webpack
-Webpack：将各种类型的资源，包括图片、css、js等，转译、组合、拼接、生成 JS 格式的 bundler 文件。
+[官方文档](https://webpack.docschina.org/concepts/)
 
-它能够根据配置的入口路径（entry），通过模块间的依赖关系（import/export），递归地构建出一张依赖关系图（dependency graph）。而由于webpack只理解 JavaScript 和 JSON 文件，过程中需要通过配置指定的加载器（loader）对相应文件进行转换，也可以通过配置指定的插件（plugins）对上下文进行优化输出（output）为代码块（chunk）
+定义：webpack是一个打包模块化 javaScript的工具，它会从main.js出发，
+
+它能够根据配置的入口路径（entry），通过模块间的依赖关系（import/export），识别出源码中的模块化导入语句，递归地找出出入口文件的所有依赖，通过Loader转换文件，将入口和其所有依赖打包到一个单独的文件中。
+
+- 1.模块打包
+```
+一切文件如 js,css,scss,图片对于webpack都是一个个模块,经过webpack 的处理，最终会输出浏览器使用的静态资源。
+```
+
+- 2.编译兼容
+通过webpack的Loader机制，不仅仅可以帮助我们对代码做polyfill，还可以编译转换诸如.less, .vue, .jsx这类在浏览器无法识别的格式文件
+
+- 3.能力扩展。通过webpack的Plugin机制，我们在实现模块化打包和编译兼容的基础上，可以进一步实现诸如按需加载，代码压缩等一系列功能，帮助我们进一步提高自动化程度，工程效率以及打包输出的质量。
+
+而由于webpack只理解 JavaScript 和 JSON 文件，过程中需要通过配置指定的加载器（loader）对相应文件进行转换，也可以通过配置指定的插件（plugins）对上下文进行优化输出（output）为代码块（chunk）
+
+将各种类型的资源，包括图片、css、js等，转译、组合、拼接、生成输出bundle.js,一个IIFE的执行函数。
 
 
 这个过程核心完成了 内容转换 + 资源合并 两种功能，实现上包含三个阶段：
@@ -26,8 +42,6 @@ Webpack：将各种类型的资源，包括图片、css、js等，转译、组�
 2. 写入文件系统(emitAssets)：在确定好输出内容后，根据配置确定输出的路径和文件名，把文件内容写入到文件系统
 
 ## 单次构建过程自上而下按顺序执行,webpack 编译过程都是围绕着这些关键对象展开的
-它能够根据配置的入口路径（entry），通过模块间的依赖关系（import/export），递归地构建出一张依赖关系图（dependency graph）。而由于webpack只理解 JavaScript 和 JSON 文件，过程中需要通过配置指定的加载器（loader）对相应文件进行转换，也可以通过配置指定的插件（plugins）对上下文进行优化输出（output）为代码块（chunk）
-
 * Entry：编译入口，webpack 编译的起点
 
 * Compiler：编译管理器，webpack 启动后会创建 compiler 对象，该对象一直存活知道结束退出
@@ -40,10 +54,8 @@ Webpack：将各种类型的资源，包括图片、css、js等，转译、组�
 
 * Chunk：编译完成准备输出时，webpack 会将 module 按特定的规则组织成一个一个的 chunk，这些 chunk 某种程度上跟最终输出一一对应
 
-* Loader：资源内容转换器，其实就是实现从内容 A 转换 B 的转换器
-```
-00-2-loader.md
-```
+* Loader：资源内容转换器<br/>
+参考: [loader](./loader)
 
 * Plugin：webpack构建过程中，会在特定的时机广播对应的事件，插件监听这些事件，在特定时间点介入编译过程
 ```
@@ -60,7 +72,6 @@ devtool: 'cheap-module-eval-source-map',
 生产环境
 devtool: 'cheap-module-source-map',
 ```
-
 
 ## 初始化阶段
 webpack 的初始化过程,从创建 compiler 实例到调用 make 钩子，逻辑链路很长,这个过程需要在 webpack 初始化的时候预埋下各种插件，经历 4 个文件，7次跳转才开始进入主题，前戏太足了，如果读者对 webpack 的概念、架构、组件没有足够了解时，源码阅读过程会很痛苦。

@@ -3,10 +3,16 @@ title: loader
 sidebar_position: 1
 ---
 
-# Loader 配置处理模块的规则
-webpack本身只能理解JavaScript语法，因此只能对js文件进行直接的文件合并、压缩处理。然而实际开发中会用到各种其他类型的文件，如 css、less、jpg、jsx、vue 等等类型的文件，webpack本身是无法处理这些类型文件的，此时就需要借助各种文件的loader（加载器）。loader 的作用就是将各种类型的文件转换成 webpack 能够处理的模块
+## Loader 配置处理模块的规则
+webpack只能对js文件进行直接的文件合并、压缩处理。然而实际开发中会用到各种其他类型的文件，如 css、less、jpg、jsx、vue 等等类型的文件，webpack本身是无法处理这些类型文件的，此时就需要借助各种文件的loader（加载器）。
 
-需要注意的是由于 loader 是从右往左执行的，一个 loader 处理完的结果会交给下一个 loader 继续处理，就像一条工厂流水线一样，所以加载器数组存在一定的次序，配置的时候就需要注意书写的loader次序。 此外有一个在实际中接触得非常多且非常重要的 loader，那就是 babel-loader，其可以将es6语法转换成能普遍被浏览器所执行的es5，几乎用到es6语法的项目都会有所接触。
+loader 的作用就是将各种类型的文件转换成 webpack 能够处理的模块
+
+需要注意的是由于 loader 是从右往左执行的，一个 loader 处理完的结果会交给下一个 loader 继续处理，就像一条工厂流水线一样，所以加载器数组存在一定的次序，配置的时候就需要注意书写的loader次序。 
+
+接受源代码作为参数的函数，并返回这些转换过的新版本代码。
+
+loader 可以将文件从不同的语言（如 TypeScript）转换为 JavaScript 或将内联图像转换为 data URL。loader 甚至允许你直接在 JavaScript 模块中 import CSS 文件！babel-loader将es6语法转换成能普遍被浏览器所执行的es5。
 
 一个实际开发中经常接触到的例子：项目中使用了 less 语法，就需要使用 less-loader 去将其转译为 css，然后通过 css-loader 去加载 css 文件，处理后交给 style-loader，最后把资源路径写入到 html 中的 style 标签内生效。
 ```js
@@ -19,32 +25,27 @@ module: {
 ```
 
 
+可以使用 Node.js 编写自己的 loader
 
-loader 是转译模块源代码的转换规则。 loader 被编写为，接受源代码作为参数的函数， 并返回这些转换过的新版本代码。
-
-loader 用于对模块的源代码进行转换。loader 可以使你在 import 或 "load(加载)" 模块时预处理文件。因此，loader 类似于其他构建工具中“任务(task)”，并提供了处理前端构建步骤的得力方式。loader 可以将文件从不同的语言（如 TypeScript）转换为 JavaScript 或将内联图像转换为 data URL。loader 甚至允许你直接在 JavaScript 模块中 import CSS 文件！
-```
 https://webpack.docschina.org/loaders/
+
 https://webpack.docschina.org/concepts/loaders
-```
 
-Webpack 支持使用 loader 对文件进行预处理。你可以构建包括 JavaScript 在内的任何静态资源。并且可以使用 Node.js 轻松编写自己的 loader。
-
-```
-https://webpack.docschina.org/loaders/
-```
+## loader参数
 
 module:配置处理模块的规则,配置文件时使用哪些Loader去加载和转换
 
-1. 三种方式：
-条件匹配:通过test,include,exclude,来选中loader要应用规则的文件
+1. 三种方式：条件匹配:通过test,include,exclude,来选中loader要应用规则的文件
 2. 应用规则：对选中的文件通过use 配置项来应用 Loader,
+```
 use: use是每一个rule的属性，指定要用什么loader
 test:该属性标识应该转换哪个或哪些文件。
 include: 包含某文件
 exclude: 排除某文件
-
 noParse:忽略对部分没采用模块化的文件的递归解析和处理。提高构建性能。
+parser:细粒度地配置哪些模块被哪些模块解析
+```
+
 一些库如lodash,chartJS大而没采用模块化标准让webpack 解析耗时又没意义,使用该属性让 Webpack不扫描该文件，以提高整体的构建速度。
 ```js
 module.exports = {
@@ -56,9 +57,6 @@ module.exports = {
     }
 }
 ```
-
-
-parser:细粒度地配置哪些模块被哪些模块解析
 
 ### 常用loader
 1.样式相关，如下所示：
@@ -95,28 +93,19 @@ eslint-loader：通过 ESLint 检查 JavaScript 代码；
 tslint-loader：通过 TSLint 检查 TypeScript 代码；
 mocha-loader：加载 Mocha 测试用例代码。
 
-### css-loader 和 style-loader 的区别和使用
+### css-loader和style-loader区别和使用
+默认webpack打包的时候只会处理JS之间的依赖关系,`.css`文件不是一个 JavaScript 模块，你需要配置 webpack 使用 css-loader 或者 style-loader 去合理地处理它们
 ```
-webpack是用JS写的，运行在node环境，所以默认webpack打包的时候只会处理JS之间的依赖关系
-因为像 .css 这样的文件不是一个 JavaScript 模块，你需要配置 webpack 使用 css-loader 或者 style-loader 去合理地处理它们;
-
-css-loader: 加载.css文件
-
-style-loader:使用<style>将css-loader内部样式注入到我们的HTML页面
-
-style-loader 是通过一个JS脚本创建一个style标签，里面包含一些样式。style-loader是不能单独使用的，应为它并不负责解析 css 之前的依赖关系，每个loader的功能都是单一的，各自拆分独立。
+css-loader: 加载.css文件,并输出数组
+style-loader: style-loader的作用是把 CSS 插入到 DOM 中，就是处理css-loader导出的模块数组
 ```
-
 ```js
 const path = require('path');
 
 module.exports = {
-  // JS 执行入口文件
   entry: './main.js',
   output: {
-    // 把所有依赖的模块合并输出到一个 bundle.js 文件
     filename: 'bundle.js',
-    // 输出文件都放到 dist 目录下
     path: path.resolve(__dirname, './dist'),
   },
   module: {
@@ -149,11 +138,7 @@ module.exports = {
               shouldUseReactRefresh &&
               require.resolve('react-refresh/babel'),
             ].filter(Boolean),
-            // This is a feature of `babel-loader` for webpack (not Babel itself).
-            // It enables caching results in ./node_modules/.cache/babel-loader/
-            // directory for faster rebuilds.
             cacheDirectory: true,
-            // See #6846 for context on why cacheCompression is disabled
             cacheCompression: false,
             compact: isEnvProduction,
           },
@@ -163,9 +148,11 @@ module.exports = {
 };
 ```
 
-# 常见优化构建
 ## 优化loader配置
-通过减少loader作用范围，大大缩短构建时间。例如Babel，由于Babel 会将代码转为字符串生成 AST，然后对 AST 继续进行转变最后再生成新的代码，项目越大，转换代码越多，效率就越低。因此我们直接指定哪些文件不通过loader处理,或者指定哪些文件通过loader处理：
+通过减少loader作用范围，大大缩短构建时间。
+
+例如Babel，由于Babel 会将代码转为字符串生成 AST，然后对 AST 继续进行转变最后再生成新的代码，项目越大，转换代码越多，效率就越低。<br/>
+因此我们直接指定哪些文件不通过loader处理,或者指定哪些文件通过loader处理：
 ```js
 const path = require('path')
 module.exports = {
@@ -190,4 +177,126 @@ module.exports = {
 module.exports = {
   loader: 'babel-loader?cacheDirectory=true'
 }
+```
+
+## Loader负责文件转换，Plugin负责功能扩展
+webpack基于发布订阅模式，在运行的生命周期中会广播出许多事件，插件通过监听这些事件，就可以在特定的阶段执行自己的插件任务，从而实现自己想要的功能。
+
+compiler和compilation是Webpack两个非常核心的对象，其中compiler暴露了和 Webpack整个生命周期相关的钩子（compiler-hooks），而compilation则暴露了与模块和依赖有关的粒度更小的事件钩子（Compilation Hooks）。
+
+* webpack-merge
+```
+随着我们业务逻辑的增多，图片、字体、css、ES6以及CSS预处理器和后处理器逐渐的加入到我们的项目中来，进而导致配置文件的增多，使得配置文件书写起来比较繁琐，更严重者（书写特定文件的位置会出现错误）。更由于项目中不同的生产环境和开发环境的配置，使得配置文件变得更加糟糕。
+分离配置文件
+我们在根目录下创建config文件夹，并创建四个配置文件：
+
+webpack.comm.js 公共环境的配置文件
+webpack.development.js 开发环境下的配置文件
+webpack.production.js 生产环境下的配置文件
+webpack.parts.js 各个配置零件的配置文件
+```
+
+```js
+const merge = require("webpack-merge");
+const parts = require("./webpack.parts")    //引入配置零件文件
+const config = {
+    //书写公共配置
+}
+module.exports = merge([
+    config,
+    parts......
+])
+```
+
+* webpack4.0 默认是使用 terser-webpack-plugin 这个压缩插件，在此之前是使用 uglifyjs-webpack-plugin
+
+* optimize-css-assets-webpack-plugin 插件来压缩 css，其默认使用的压缩引擎是 cssnano。
+
+* webpack默认会将css当做一个模块打包到一个chunk中，extract-text-webpack-plugin的作用就是将css提取成独立的css文件
+```js
+// 首先安装和引入：
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+// 注册：
+new ExtractTextPlugin({
+    filename: 'css/[name].css',
+})
+
+// 注册之后，还要在css的loader中使用：
+{
+    test: /\.css$/,
+    use: ExtractTextPlugin.extract({
+        use: ['css-loader','postcss-loader','less-loader'],
+        // 使用vue时要用这个配置
+        fallback: 'vue-style-loader',  
+    })
+},
+```
+
+
+* 借助 image-webpack-loader 帮助我们来实现。它是基于 imagemin 这个 Node 库来实现图片压缩的。只要在 file-loader 之后加入 image-webpack-loader 即可
+
+* webpack.optimize.UglifyJsPlugin
+
+* html-webpack-plugin:webpack 打包后自动生成 html 页面
+```js
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, './dist'),
+  },
+  module: {
+    rules: [
+      {
+        // 用正则去匹配要用该 loader 转换的 css 文件
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          // 转换 .css 文件需要使用的 Loader
+          use: ['css-loader'],
+        }),
+      }
+    ]
+  },
+  plugins: [
+    new ExtractTextPlugin({
+      // 从 .js 文件中提取出来的 .css 文件的名称
+      filename: `[name]_[contenthash:8].css`,
+    }),
+  ]
+};
+```
+
+Webpack 内置的插件，如下所示：
+```
+webpack.DefinePlugin：定义全局常量插件；
+webpack.EnvironmentPlugin：定义环境变量插件；
+webpack.BannerPlugin：在代码中添加版权注释等；
+webpack.DllPlugin：使用 DLL 思想来加快编译速度的插件；
+webpack.HashedModuleIdsPlugin：可以修改文件 Hash 算法的插件；
+webpack.optimize.SplitChunksPlugin：代码拆分优化插件；
+webpack.HotModuleReplacementPlugin：开启模块热替换功能，通过监听文件变化并自动加载被修改的文件来减少烦人的浏览器手动重新加载；
+webpack.ProgressPlugin：构建进度插件；
+webpack.ProvidePlugin：自动加载模块，例如出现 $ 则加载 jQuery 等常用库；
+webpack.IgnorePlugin：用于忽略部分文件
+
+非内置的插件，如下所示：
+mini-css-extract-plugin：CSS 文件提取，并且在生产环境构建是可以用于优化 CSS 文件大小；
+optimize-css-assets-webpack-plugin：压缩 CSS 文件；
+clean-webpack-plugin：在编译之前清理指定目录指定内容；
+html-webpack-plugin：html 插件，可以根据 JavaScript模板文件生成 HTML；
+preload-webpack-plugin：html-webpack-plugin 的插件，给页面添加 <link rel="preload"> 资源；
+i18n-webpack-plugin：帮助网页做国际化的插件；
+webpack-manifest-plugin：生成 Webpack 打包文件清单的插件；
+html-webpack-inline-source-plugin：在 HTML 中内联打包出来的资源；
+webpack-bundle-analyzer：webpack bundle 分析插件；
+copy-webpack-plugin：文件拷贝插件，可以指定文件夹的文件复制到 output文件夹，方便打包上线；
+terser-webpack-plugin：JavaScript代码压缩插件，这个插件兼容 ES6 语法，推荐使用这个插件，而不是用 uglifyjs；
+serviceworker-webpack-plugin：生成 PWA service worker 插件；
+hard-source-webpack-plugin：通过缓存提升非首次编译速度；
+friendly-errors-webpack-plugin：减少 Webpack 无用的构建 log；
+stylelint-webpack-plugin：StyleLint 的插件。
 ```

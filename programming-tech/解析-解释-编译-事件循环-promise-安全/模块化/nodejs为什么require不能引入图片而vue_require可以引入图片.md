@@ -1,5 +1,5 @@
 ---
-title: 前端 require
+title: 前端require
 sidebar_position: 9
 ---
 

@@ -43,20 +43,6 @@ React使用的是babel
 
 8. Vue2 和 Vue3 都使用了双端对比算法，而 React 的 Fiber 由于是单向链表的结构，所以在 React 不设置由右向左的链表之前，都无法实现双端对比。
 
-## 优化方式
-
-### 在渲染期间执行了高开销的计算，可以使用 `useMemo` 来进行优化
-参考：[api-memo和shouldComponentUpdate](../React/api-memo()和shouldComponentUpdate())
-
-### 减少嵌套节点/组件
-因为react 每个节点都会触发beginWork;
-
-vue中,创建好vnode,调用patch进行组件内容的渲染,vnode.children递归调用 patch(null,child,container)
-
-* 所以减少嵌套组件，嵌套节点很重要
-
-* 或则使用虚拟列表
-
 ## 优化.useState同步还是异步? 
 参考：[React/setState的异步和同步问题](./React/setState异步-同步)
 

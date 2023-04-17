@@ -20062,6 +20062,7 @@
       // we will add them all to the child before it gets rendered. That means
       // we can optimize this reconciliation pass by not tracking side-effects.
       console.log('%c=reconcileChildren mount', 'blueviolet');
+      // 对于 mount 的组件
       workInProgress.child = mountChildFibers(workInProgress, null, nextChildren, renderLanes);
       console.log('%c=reconcileChildren mount 返回值workInProgress.child', 'blueviolet', workInProgress.child);
     } else {
@@ -20071,6 +20072,7 @@
       // If we had any progressed work already, that is invalid at this point so
       // let's throw it out.
       console.log('%c=reconcileChildren update', 'yellow');
+      // 对于 update 的组件
       workInProgress.child = reconcileChildFibers(workInProgress, current.child, nextChildren, renderLanes);
     }
   }
@@ -25964,7 +25966,7 @@
         root.finishedWork = finishedWork;
         root.finishedLanes = lanes;
 
-        // debugger
+        debugger
         console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan')
         finishConcurrentRender(root, exitStatus, lanes);
       }
@@ -29517,6 +29519,7 @@
       }
     }
     updateContainer(children, root, null, null);
+    console.log('render结束==>')
   };
 
   ReactDOMHydrationRoot.prototype.unmount = ReactDOMRoot.prototype.unmount = function () {

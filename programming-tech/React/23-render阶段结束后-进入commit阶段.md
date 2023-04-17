@@ -40,7 +40,7 @@ commit阶段的工作（patch）把本次更新中的所有DOM change应用到DO
 
 `提示:commit流程开log会比较清晰理解`
 
-## 流程图-commit阶段之beforeMutation和mutation阶段
+## 流程图-commit阶段-beforeMutation和mutation阶段
 ```mermaid
 flowchart TD
 A1(finishConcurrentRender)-->A2("commitRoot")-->A3("commitRootImpl(root,")
@@ -48,7 +48,7 @@ A1(finishConcurrentRender)-->A2("commitRoot")-->A3("commitRootImpl(root,")
 A3-->2A
 A3(commitRootImpl)-->3A
 
-subgraph befor[beforeMutation阶段]
+subgraph before[beforeMutation阶段]
   2A(commitBeforeMutationEffects)--18或高版本-->2B(commitBeforeMutationEffects_begin)-->2C(commitBeforeMutationEffects_complete)-->2D(commitBeforeMutationEffectsOnFiber)
 end
 
@@ -66,7 +66,7 @@ subgraph Mutation[mutation阶段]
 end
 ```
 
-## 流程图-commit阶段之layout最后阶段
+## 流程图-commit阶段-layout最后阶段
 ```mermaid
 flowchart TD
 C1(commitRootImpl)

@@ -3,10 +3,141 @@ title: jsx-ast-render阶段
 sidebar_position: 1
 ---
 
-## 构建AST
-### jsx语的html结构通过babel将结构解析转换为ast语法树结构
-* react 18中：使用 babel将jsx代码转换为root.render()调用,此时得到转化后的Ast树结构
+## 调用流程图
+基于18
+```mermaid
+flowchart TD
+A1("ReactDOM.createRoot(document.getElementById('root'))")--1FiberRoot创建-->A2("return new ReactDOMRoot(root)")-->1FiberRoot-->A6("root=createContainer(container")-->A7("return createFiberRoot(containerInfo")--1FiberRoot初始化相关只调用一次-->A8("root=new FiberRootNode(containerInfo")
 
+A7--2root.current=uninitializedFiber-->A11("uninitializedFiber=createHostRootFiber(tag,isStrictMode)")-->A12("return createFiber(HostRoot")
+
+A1--2开启render-->A3("root.render(<组件>)")-->A4("ReactDOMRoot.prototype.render")
+A4--开始渲染,注意非批量-->A5("updateContainer(children, root")
+```
+
+## 接上面updateContainer
+fiber 协调过程,构建fiber树的阶段可中断
+### 流程图
+```mermaid
+flowchart TD
+A1("updateContainer(children, root")-->A2("root=scheduleUpdateOnFiber(current$1,lane")--> A3("ensureRootIsScheduled(root,eventTime)")
+
+A3--"ensureRootIsScheduled(root,currentTime)函数中"-->ifB{{"更新方式?newCallbackPriority ===SyncLane"}}
+
+D1("scheduleLegacySyncCallback(performSyncWorkOnRoot.bind(null,root))")
+D2("newCallbackNode=scheduleCallback$1(schedulerPriorityLevel, performConcurrentWorkOnRoot.bind(null,root))")
+
+ifB--true异步更新legacy模式-->D1
+ifB--初次渲染默认false,同步更新concurrent模式-->D2
+
+D2-->D3("scheduleCallback$1")-->D4("performConcurrentWorkOnRoot(root, didTimeout){<br> exitStatus = renderRootSync(root,lanes)}")
+
+D4--1-->D5("renderRootSync(root,lanes)")
+
+D4--"2.exitStatus!==RootInProgress"-->C1("finishConcurrentRender(root,exitStatus)render阶段结束,commit阶段前")
+
+D5(workLoopSync开始循环-beginWork开始)-->A0Aif
+A0Aif{{workInProgress!=null?}}--不为null-->E1
+A0Aif--为null-->endW(结束当前循环)
+
+subgraph render1[构建fiber树/协调阶段:render是一个深度优先遍历的过程核心函数beginWork和completeUnitOfWork]
+
+  E1(performUnitOfWork:深度遍历)
+
+  E1--1.遍历到的节点执行beginWork创建子fiber节点-->E2(beginWork$1处理完返回next)
+
+  E1--2.若当前节点不存在子节点:next=null-->E6B(completeUnitOfWork)
+  
+  E2--current=null初始化:tag进入不同case-->E6A(case:HostComponent为例)-->E6A1(updateHostComponent$1)-->E6A2(reconcileChildren-diff算法)--current!=null-->E6A3(reconcileChildFibers)
+
+	%% subgraph beginWork2[beginWork第二阶段]
+	E6A2--current==null-->z1("mountChildFibers:beginWork第二阶段")-->z2(ChildReconciler)--case-->z3(placeSingleChild)
+	%% end
+
+  E2-.current!=null更新流程.->E51(attemptEarlyBailoutIfNoScheduledUpdate)-->E52(bailoutOnAlreadyFinishedWork)-->E53(cloneChildFibers)
+
+  E6B-->E6B1[为传入的节点执行completeWork:执行不同tag]--case:HostComponent并且current!=null-->E6B2(update流程:updateHostComponent)-->E6A1A(prepareUpdate:对比props)-->E6A1B(diffProperties)-->E6A1C(markUpdate:赋值更新的flags也叫update)
+
+  E6B1--case:HostComponent-current=null-->E6B3(为fiber创建dom:createInstance)
+  E6B3--case:HostComponent-current=null-->E6B4(add child dom:appendAllChildren)
+  E6B3-->E6B3A(createElement)-->E6B3B(document.createElement)
+
+  E53-->createWorkInProgress
+  E53-.tag类型进入不同case.->E6A
+
+	%% subgraph render2[构建FiberNode]
+	E6A3-.根据子节点类型创建fiber节点.->o1(reconcileSingleElement) -->o2(createFiberFromElement) --> o3(createFiberFromTypeAndProps) --fiber.type也是在这里赋值--> o4(createFiber)--> o5(return new FiberNode)
+	%% end
+end
+```
+
+### beginWork前置工作和beginWork进行中
+* performConcurrentWorkOnRoot(root, didTimeout)-->renderRootSync<br/>
+beginWork前置工作
+```js
+function renderRootSync(root, lanes) {
+  // 省略
+    do {
+    try {
+      console.log('%c=render阶段准备:', 'color:red', 'renderRootSync()调用workLoopSync()-root:', { root });
+      workLoopSync();
+      break;
+    } catch (thrownValue) {
+      handleError(root, thrownValue);
+    }
+  } while (true);
+  // 省略
+}
+
+function workLoopSync() {
+  // Already timed out, so perform work without checking if we need to yield.
+  while (workInProgress !== null) {
+    performUnitOfWork(workInProgress);
+  }
+}
+```
+
+* performUnitOfWork-->`beginWork$1`开启beginWork
+* `mountChildFibers`与`reconcileChildFibers`这两个方法的逻辑基本一致。唯一的区别是：reconcileChildFibers 会为生成的 Fiber 节点带上effectTag属性，而 mountChildFibers 不会。
+```js
+function reconcileChildren(current, workInProgress, nextChildren, renderLanes) {
+  if (current === null) {
+    // If this is a fresh new component that hasn't been rendered yet, we
+    // won't update its child set by applying minimal side-effects. Instead,
+    // we will add them all to the child before it gets rendered. That means
+    // we can optimize this reconciliation pass by not tracking side-effects.
+    // 对于 mount 的组件
+    workInProgress.child = mountChildFibers(workInProgress, null, nextChildren, renderLanes);
+  } else {
+    // If the current child is the same as the work in progress, it means that
+    // we haven't yet started any work on these children. Therefore, we use
+    // the clone algorithm to create a copy of all the current children.
+    // If we had any progressed work already, that is invalid at this point so
+    // let's throw it out.
+    // 对于 update 的组件
+    workInProgress.child = reconcileChildFibers(workInProgress, current.child, nextChildren, renderLanes);
+  }
+}
+```
+
+### render阶段completeUnitOfWork
+
+### render阶段结束,commit阶段前:此时fiber树生成
+```js
+function performConcurrentWorkOnRoot(root, didTimeout) {
+  // 上面的render阶段流程
+  var exitStatus = shouldTimeSlice ? renderRootConcurrent(root, lanes) : renderRootSync(root, lanes);
+
+  // 省略
+  // 这里将会开启commit阶段的前置工作
+  finishConcurrentRender(root, exitStatus, lanes)
+  // 省略
+}
+```
+
+## 构建AST
+### jsx语法的html结构通过babel将结构解析转换为ast语法树结构
+* react 18中：使用 babel将jsx代码转换为root.render()调用,此时得到转化后的Ast树结构
 * react17中 使用 babel将jsx代码转换为React.createElement()调用,此时得到转化后的Ast树结构
 
 ### 简单实例1:babel将jsx代码转换为React.createElement()调用
@@ -323,73 +454,6 @@ ReactDOMHydrationRoot.prototype.render = ReactDOMRoot.prototype.render = functio
 }
 ```
 
-## 调用流程图
-基于18
-```mermaid
-flowchart TD
-A1("ReactDOM.createRoot(document.getElementById('root'))")--1FiberRoot创建-->A2("return new ReactDOMRoot(root)")-->1FiberRoot-->A6("root=createContainer(container")-->A7("return createFiberRoot(containerInfo")--1FiberRoot初始化相关只调用一次-->A8("root=new FiberRootNode(containerInfo")
-
-A7--2root.current=uninitializedFiber-->A11("uninitializedFiber=createHostRootFiber(tag,isStrictMode)")-->A12("return createFiber(HostRoot")
-
-A1--2开启render-->A3("root.render(<组件>)")-->A4("ReactDOMRoot.prototype.render")
-A4--开始渲染,注意非批量-->A5("updateContainer(children, root")
-```
-
-## 接上面updateContainer
-fiber 协调过程,构建fiber树的阶段可中断
-```mermaid
-flowchart TD
-A1("updateContainer(children, root")-->A2("root=scheduleUpdateOnFiber(current$1,lane")--> A3("ensureRootIsScheduled(root,eventTime)")
-
-A3--"ensureRootIsScheduled(root,currentTime)函数中"-->ifB{{"更新方式?newCallbackPriority ===SyncLane"}}
-
-D1("scheduleLegacySyncCallback(performSyncWorkOnRoot.bind(null,root))")
-D2("newCallbackNode=scheduleCallback$1(schedulerPriorityLevel, performConcurrentWorkOnRoot.bind(null,root))")
-
-ifB--true异步更新legacy模式-->D1
-ifB--初次渲染默认false,同步更新concurrent模式-->D2
-
-D2-->D3("scheduleCallback$1")-->D4("performConcurrentWorkOnRoot(root, didTimeout){<br> exitStatus = renderRootSync(root,lanes)}")
-
-D4--1-->D5("renderRootSync(root,lanes)")
-
-D4--"2.exitStatus!==RootInProgress"-->C1("finishConcurrentRender(root,exitStatus)render阶段结束,commit阶段前")
-
-D5(workLoopSync)-->A0Aif
-A0Aif{{workInProgress!=null?}}--不为null-->E1
-A0Aif--为null-->endW(结束当前循环)
-
-subgraph render1[构建fiber树/协调阶段:render是一个深度优先遍历的过程核心函数beginWork和completeUnitOfWork]
-
-  E1(performUnitOfWork:深度遍历)
-
-  E1--1.遍历到的节点执行beginWork创建子fiber节点-->E2(beginWork$1处理完返回next)
-
-  E1--2.若当前节点不存在子节点:next=null-->E6B(completeUnitOfWork)
-  
-  E2--current=null初始化:tag进入不同case-->E6A(case:HostComponent为例)-->E6A1(updateHostComponent$1)-->E6A2(reconcileChildren)--current!=null-->E6A3(reconcileChildFibers)
-
-	%% subgraph beginWork2[beginWork第二阶段]
-	E6A2--current==null-->z1("mountChildFibers:beginWork第二阶段")-->z2(ChildReconciler)--case-->z3(placeSingleChild)
-	%% end
-
-  E2-.current!=null更新流程.->E51(attemptEarlyBailoutIfNoScheduledUpdate)-->E52(bailoutOnAlreadyFinishedWork)-->E53(cloneChildFibers)
-
-  E6B-->E6B1[为传入的节点执行completeWork:执行不同tag]--case:HostComponent并且current!=null-->E6B2(update流程:updateHostComponent)-->E6A1A(prepareUpdate:对比props)-->E6A1B(diffProperties)-->E6A1C(markUpdate:赋值更新的flags也叫update)
-
-  E6B1--case:HostComponent-current=null-->E6B3(为fiber创建dom:createInstance)
-  E6B3--case:HostComponent-current=null-->E6B4(add child dom:appendAllChildren)
-  E6B3-->E6B3A(createElement)-->E6B3B(document.createElement)
-
-  E53-->createWorkInProgress
-  E53-.tag类型进入不同case.->E6A
-
-	%% subgraph render2[构建FiberNode]
-	E6A3-.根据子节点类型创建fiber节点.->o1(reconcileSingleElement) -->o2(createFiberFromElement) --> o3(createFiberFromTypeAndProps) --fiber.type也是在这里赋值--> o4(createFiber)--> o5(return new FiberNode)
-	%% end
-end
-```
-
 ## 17版本入口函数和18不一样
 在18中直接调用以下函数，是不用走下面的流程的,18直接流程图的流程构建fiber和更新
 ```js
@@ -515,6 +579,7 @@ legacyCreateRootFromDOMContainer(){
 
 ### React.createElement 旧api
 https://cloud.tencent.com/developer/article/2135083
+
 react17 之后我们可以不再依赖 React.createElement 这个 api 了，但是实际场景中以及很多开源包中可能会有很多通过 React.createElement 手动创建元素的场景:
 
 React.createElement 其接收三个或以上参数：

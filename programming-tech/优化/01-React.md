@@ -5,6 +5,20 @@ sidebar_position: 1
 
 React 组件性能优化的核心是减少渲染真实 DOM 节点的频率，减少 Virtual DOM 比对的频率。
 
+## 优化方式
+
+### 在渲染期间执行了高开销的计算，可以使用 `useMemo` 来进行优化
+参考：[api-memo和shouldComponentUpdate](../React/api-memo()和shouldComponentUpdate())
+
+### 减少嵌套节点/组件
+因为react 每个节点都会触发beginWork;
+
+vue中,创建好vnode,调用patch进行组件内容的渲染,vnode.children递归调用 patch(null,child,container)
+
+* 所以减少嵌套组件，嵌套节点很重要
+
+* 或则使用虚拟列表
+
 ## 使用组件懒加载可以减少bundle文件大小
 ```
 见webpack

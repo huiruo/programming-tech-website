@@ -7,7 +7,11 @@
 let str = "  天气真好    ,太幸福了  ";
 // \s表示空白符，+表示多个空白符
 let strNew = str.replace(/\s+/g, "");
-console.log(`str:${strNew},old:${str}`);
+console.log(`str:${strNew},old:${str}`); // str:天气真好,太幸福了,old:  天气真好    ,太幸福了  
+
+// trim只能去掉收尾
+console.log('trim:',str.trim()); // trim: 天气真好    ,太幸福了
+console.log('old',str)
 ```
 
 * 模式可以是一个字符串或者一个正则表达式，替换值可以是一个字符串或者一个每次匹配都要调用的回调函数。如果pattern是字符串，则仅替换第一个匹配项。 

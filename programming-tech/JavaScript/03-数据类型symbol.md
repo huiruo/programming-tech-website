@@ -21,7 +21,12 @@ console.log('可以这样输出：',id.description); // id
 ## symbol特点
 * symbol 属性不参与 for..in 循环
 * Object.keys(user)和getOwnPropertyNames 也会忽略它们。这是一般“隐藏符号属性”原则的一部分。
+```
+Object.getOwnPropertyNames() 返回一个数组，该数组对元素是 obj自身拥有的枚举或不可枚举属性名称字符串
+```
 * Object.assign 可以浅拷贝 
+* getOwnPropertySymbols能获取symbol key
+* Reflect.ownKeys方法可以返回所有类型的键名，包括常规键名和Symbol键名
 * 如果我们要在对象字面量 {...} 中使用 symbol，则需要使用方括号把它括起来。例如下面：
 
 ```js
@@ -39,6 +44,7 @@ for (let key in user){
 
 console.log('obj:',Object.keys(user)) // ['name', 'age']
 console.log('obj:',Object.getOwnPropertyNames(user)) // ['name', 'age']
+console.log('obj:', Object.getOwnPropertySymbols(user)) // [Symbol(id)]
 
 // 使用 symbol 任务直接访问
 console.log("Direct: ",user,'--',user[id]); // Direct: 123

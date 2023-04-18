@@ -4,11 +4,6 @@
 <head>
   <meta charset="UTF-8">
 </head>
-<style>
-  .red {
-    color: red;
-  }
-</style>
 
 <body>
   <script src="./react.development18.js"></script>
@@ -21,7 +16,6 @@
         super(props);
         this.state = { liked: false };
       }
-
 
       render() {
         console.log('render start')
@@ -39,33 +33,12 @@
         );
       }
     }
-
-    // const element = React.createElement(
-    //   'div',
-    //   { className: 'red' },
-    //   'Click Me'
-    // )
-
-    // function MyApp() {
-    //   return <h1>Hello, world!</h1>;
-    // }
-
     const container = document.getElementById('root');
     const astTree = React.createElement(LikeButton)
-    // test 2
-    // const astTree = React.createElement(MyApp)
-
-    // test 3
-    // const astTree = element
-
     console.log('createElement 转化后ast树的结构:', astTree)
-
-    // 这样18渲染报错？
+    // debugger
     const root = ReactDOM.createRoot(container);
     root.render(astTree);
-
-    // 或则这样渲染,ReactDOM.render 在17可以用，18会弃用
-    // ReactDOM.render(astTree, container);
   </script>
 </body>
 

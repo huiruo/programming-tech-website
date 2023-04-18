@@ -26,6 +26,7 @@ const sidebars = {
         'React/useEffect',
         'React/fiber',
         'React/diff',
+        'React/类组件',
         'React/基础-高阶组件',
         'React/基础-无状态组件和HOC-容器组件-展示组件',
         'React/库-redux-mobx',

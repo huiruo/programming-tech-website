@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+</head>
+<style>
+  .red {
+    color: red;
+  }
+</style>
+
+<body>
+  <script src="./react.development18.js"></script>
+  <script src="./react-dom.development18.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <div id="root"></div>
+  <script type="text/babel">
+    class LikeButton extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { liked: false };
+      }
+
+
+      render() {
+        console.log('render start')
+        if (this.state.liked) {
+          return (
+            <div onClick={() => this.setState({ liked: !this.state.liked })}>click me again</div>);
+        }
+        return (
+          <div>
+            <button onClick={() => this.setState({ liked: !this.state.liked })}>
+              Like1
+            </button>
+            <p>这是兄弟节点</p>
+          </div>
+        );
+      }
+    }
+
+    // const element = React.createElement(
+    //   'div',
+    //   { className: 'red' },
+    //   'Click Me'
+    // )
+
+    // function MyApp() {
+    //   return <h1>Hello, world!</h1>;
+    // }
+
+    const container = document.getElementById('root');
+    const astTree = React.createElement(LikeButton)
+    // test 2
+    // const astTree = React.createElement(MyApp)
+
+    // test 3
+    // const astTree = element
+
+    console.log('createElement 转化后ast树的结构:', astTree)
+
+    // 这样18渲染报错？
+    const root = ReactDOM.createRoot(container);
+    root.render(astTree);
+
+    // 或则这样渲染,ReactDOM.render 在17可以用，18会弃用
+    // ReactDOM.render(astTree, container);
+  </script>
+</body>
+
+</html>

@@ -20658,6 +20658,7 @@
     ReactCurrentOwner$1.current = workInProgress;
     var nextChildren;
 
+    // debugger
     if (didCaptureError && typeof Component.getDerivedStateFromError !== 'function') {
       // If we captured an error, but getDerivedStateFromError is not defined,
       // unmount all the children. componentDidCatch will schedule an update to
@@ -22586,7 +22587,9 @@
         {
           var _Component = workInProgress.type;
           var _unresolvedProps = workInProgress.pendingProps;
-
+          console.log('_Component', { _Component })
+          console.log('_Component', _Component.toString())
+          // debugger
           var _resolvedProps = workInProgress.elementType === _Component ? _unresolvedProps : resolveDefaultProps(_Component, _unresolvedProps);
           console.log('%c=beginWork()=end 5 updateClassComponent', 'color:magenta')
           return updateClassComponent(current, workInProgress, _Component, _resolvedProps, renderLanes);
@@ -25966,7 +25969,6 @@
         root.finishedWork = finishedWork;
         root.finishedLanes = lanes;
 
-        debugger
         console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan')
         finishConcurrentRender(root, exitStatus, lanes);
       }
@@ -26606,6 +26608,7 @@
     do {
       try {
         console.log('%c=render阶段准备:', 'color:red', 'renderRootSync()调用workLoopSync()-root:', { root });
+        // debugger
         workLoopSync();
         break;
       } catch (thrownValue) {

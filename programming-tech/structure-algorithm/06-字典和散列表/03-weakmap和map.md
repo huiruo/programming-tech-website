@@ -7,6 +7,10 @@ sidebar_position: 1
 基本上，Map和Set与其弱化版本之间仅有的区别是：
 * WeakSet或WeakMap类没有entries、keys和values等方法；
 * 只能用对象作为键。
+```
+weakmap键名是弱引用，键值可以是任意的，键名所指向的对象可以被垃圾回收，此时键名是无效的
+weakset成员都是弱引用，可以被垃圾回收机制回收，可以用来保存DOM节点，不容易造成内存泄漏
+```
 
 由于WeakSet或WeakMap类没有强引用的键，能够提升JavaScript垃圾回收的性能，并且因为没有迭代器方法，在不知道键的情况下，无法取出值。
 

@@ -1,4 +1,6 @@
 ## 订阅一件事，当这件事发生的时候，触发对应的函数
+当在executor中执行resolve或者reject的时候, 此时是异步操作，会先执行then/catch等，当主栈完成后，才会去调用resolve/reject中存放的方法执行:
+
 promise 内部基于发布订阅的,传入fn()
 ```js
 new Promise((resolve, reject) => {

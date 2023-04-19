@@ -116,8 +116,90 @@ function Child(props) {
   1. `componentWillUnmount`
 
 React从v16.3开始废弃 componentWillMount componentWillReceiveProps componentWillUpdate 三个钩子函数
-```
-shouldComponentUpdate(nextProps, nextState),有两个参数nextProps和nextState，表示新的属性和变化之后的state，返回一个布尔值，true表示会触发重新渲染，false表示不会触发重新渲染，默认返回true,我们通常利用此生命周期来优化React程序性能
 
-getDerivedStateFromProps:static getDerivedStateFromProps(nextProps, prevState),这是个静态方法,当我们接收到新的属性想去修改我们state，可以使用getDerivedStateFromProps
+
+
+## React 16中的生命周期方法与之前版本的生命周期方法有所变化
+1. constructor(props)在组件创建时调用，初始化state或绑定事件处理程序。
+
+2. static getDerivedStateFromProps(props, state),此生命周期方法在组件实例化和更新时都会被调用，用于计算和返回新的状态值。当我们接收到新的属性想去修改我们state，可以使用getDerivedStateFromProps
+
+3. render(),此生命周期方法在组件实例化和更新时都会被调用，用于渲染组件。
+
+4. componentDidMount() 在组件挂载后调用，通常用于执行异步操作或从服务器获取数据。
+
+5. shouldComponentUpdate(nextProps, nextState)在组件更新前调用，true表示会触发重新渲染，false表示不会触发重新渲染，默认返回true。
+
+6. getSnapshotBeforeUpdate(prevProps, prevState) 此生命周期方法在组件更新前调用，用于获取更新前的DOM状态。
+```
+该方法自React 17.0版本开始已被废弃。如果您尝试在React应用程序中使用getSnapshotBeforeUpdate方法，将会收到一个警告。
+
+在React 17.0版本之后，建议使用componentDidUpdate生命周期方法替代getSnapshotBeforeUpdate方法，因为这个方法有更好的可读性和更清晰的用法。
+
+如果您在React 17.0版本之前编写了代码，并且仍然需要使用getSnapshotBeforeUpdate方法，则可以继续使用它。然而，建议在未来的版本中尽早更新代码，以避免可能的问题和错误。
+```
+
+7. componentDidUpdate(prevProps, prevState, snapshot) 在组件更新后调用，通常用于更新DOM或执行一些副作用操作。
+
+8. componentWillUnmount() 在组件卸载时调用，用于清除定时器、取消订阅等操作。
+
+注意：在React 17中，`getDerivedStateFromProps`已被废弃，并且组件的不安全生命周期方法（如`componentWillMount`、`componentWillReceiveProps`和`componentWillUpdate`）已被删除。
+
+### getDerivedStateFromProps
+/dəˈrīv/
+父组件是否传递props，getDerivedStateFromProps()都会被执行。Derived，英文翻译为“衍生的”。顾名思义，就是对props进行加工，然后生成新的state数据。
+
+在React 17中，官方推荐使用静态方法getDerivedStateFromProps替代原来的生命周期方法componentWillReceiveProps。而在React 18中，官方已经将getDerivedStateFromProps标记为弃用方法，建议使用其他替代方案，如组合、状态提升或钩子函数等。
+```js
+import React, { useState, useEffect } from 'react';
+
+function MyComponent(props) {
+  const [state, setState] = useState(props.initialState);
+
+  useEffect(() => {
+    setState(props.initialState);
+  }, [props.initialState]);
+}
+```
+
+在挂载角度来看的话，排在render之前。
+```js
+constructor => getDerivedStateFromProps => render => componentDidMount
+```
+
+在更新角度（无论state/props引起的更新）来看的话，排在shouldComponentUpdate之前。
+```js
+getDerivedStateFromProps => shouldComponentUpdate => render => getSnapshotBeforeUpdate => componentDidUpdate
+```
+
+使用例子：组件会根据传入的props更新内部的state状态。在getDerivedStateFromProps方法中，检查props.count是否与state.count相同，如果不同，则返回一个新的状态对象，将props.count更新到组件的状态中。在render方法中，组件会根据最新的state状态来渲染组件。
+
+如果props传入的内容不需要影响到你的state，那么就需要返回一个null
+```js
+class MyComponent extends React.Component {
+  static getDerivedStateFromProps(props, state) {
+    // 根据props更新state中的count状态
+    if (props.count !== state.count) {
+      return {
+        count: props.count,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: props.count,
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        Count: {this.state.count}
+      </div>
+    );
+  }
+}
 ```

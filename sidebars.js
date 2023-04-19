@@ -315,7 +315,6 @@ const sidebars = {
           items: [
             '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
             '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/event-loop',
-            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/js的任务队列',
           ]
         },
         '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',

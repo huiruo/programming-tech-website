@@ -1,5 +1,6 @@
 
 ## 生成器+promise=async function
+Async/Await就是一个自执行的generate函数
 
 测试方式1：[es6-to-es5-本地测试](https://github.com/huiruo/es6-to-es5)
 

@@ -38,7 +38,7 @@ const sidebars = {
         'React/api-memo()和shouldComponentUpdate()',
         'React/api-useCallback',
         'React/api-useContext',
-        'React/api-useLayoutEffect和useEffect',
+        'React/api-useLayoutEffect',
         'React/api-useMemo',
         'React/api-useReducer',
         'React/api-useRef',

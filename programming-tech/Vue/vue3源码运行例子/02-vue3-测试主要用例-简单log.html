@@ -27,7 +27,7 @@
   <script>
     const { ref, reactive, nextTick } = Vue
 
-    Vue.createApp({
+    const app = Vue.createApp({
       data() {
         return {
           msg: '改变我',
@@ -36,7 +36,6 @@
       },
       methods: {
         onClickText() {
-          // console.log('test:', this, '-', this.refData)
           this.msg = '努力'
           this.showDiv = !this.showDiv
           this.info.msg2 = this.showDiv ? '直接点' : '其他选择'
@@ -47,19 +46,13 @@
       },
 
       setup(props) {
-        console.log('start响应式=>代码中setup:调用reactive', 'color:chartreuse')
         const refData = ref({
           myName: 'Ruo'
         })
 
-        console.log('start响应式=>代码中setup:调用reactive', 'color:chartreuse')
         const info = reactive({
           msg2: 'hello',
         });
-        console.log('end响应式=>代码中setup:调用reactive返回值', 'color:chartreuse', info, info.msg2)
-
-        const ins = Vue.getCurrentInstance();
-        console.log('--0:setup-在组件被挂载之前被调用')
 
         nextTick(() => {
           console.log('--nextTick--');
@@ -71,28 +64,7 @@
 
         Vue.onMounted(() => {
           console.log('--2:组件挂载后 onMounted-->')
-          console.log('this-ins:', ins, 'this:', this)
-
-          // 注意数据b和a的使用方法
-          console.log('msg:', ins.data.msg)
-          console.log('info:', info.msg2)
         });
-
-        Vue.onBeforeUpdate(() => {
-          console.log('a1-组件更新前-onBeforeUpdate')
-        })
-
-        Vue.onUpdated(() => {
-          console.log('a2-组件更新后-onUpdated')
-        })
-
-        Vue.onBeforeUnmount(() => {
-          console.log('c1-组件销毁前-onBeforeUnmount')
-        })
-
-        Vue.onUnmounted(() => {
-          console.log('c2-组件销毁后-onUnmounted')
-        })
 
         return {
           info,
@@ -100,7 +72,10 @@
         };
       },
 
-    }).mount('#root')
+    })
+
+    console.log('app:', app)
+    app.mount('#root')
   </script>
 </body>
 

@@ -671,7 +671,6 @@ fiberP.sibling.child
   }
 })
 ```
-你不需要很了解useLayoutEffect，我们会在下一节详细介绍。你只需要知道在mutation 阶段会执行useLayoutEffect 的销毁函数。
 
 ### HostComponent mutation
 当 fiber.tag 为HostComponent，会调用commitUpdate，你可以在 这里 看到commitUpdate 源码。

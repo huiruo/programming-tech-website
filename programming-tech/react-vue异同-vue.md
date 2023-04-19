@@ -30,21 +30,38 @@ react: setState(x);
 
 4. 模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom 运行时+编译时 都是找出差异修改;
 
-## 编译模板阶段生成render函数:
-参考：[编译AST-转换AST为render](./Vue/编译AST-转换AST为render)
 
+## 宏观流程
+* compiler表示template-->AST抽象语法树
+
+* reactivity表示响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
+```
+1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
+
+2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
+3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
+```
+* runtime表示运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
+
+## 首次渲染流程
 renderComponentRoot 执行构建ast生成的render() 生成vnode
 	组件挂载前:onBeforeMount在什么时候执行?
 
 ```mermaid
 flowchart TD
-A1("createAppAPI")-->A2("mount(rootContainer")-->A3("render=(vnode,container,")-->A4("patch()patch阶段")-->B1
+z1(createApp)-->z2("ensureRenderer()")-->z3("createRenderer(rendererOptions)")-->z4("baseCreateRenderer(options, createHydrationFns)")
+
+z4-->z6("return {render,createApp:createAppAPI(render, hydrate)}")
+
+z6-->A1("createAppAPI(render, hydrate){return app}")
+
+A1("createAppAPI")-->A1A("重点:页面上的.mount('#root')调用createAppAPI返回的mount")-->A2("mount(rootContainer")-->A3("render=(vnode,container,开始创建code等一系列流程")-->A4("patch()patch阶段")-->B1
 
 B1("processComponent()")-->B2("mountComponent(n2, container")
 
-B2--初始化构建ast-code函数-->B31("setupComponent(instance)")-->B33("见:baseCompile生成ast-静态提升-vnode-patch.md")
+B2--1初始化构建ast-code函数-->B31("setupComponent(instance)")-->B33("见:baseCompile生成ast-静态提升-vnode-patch.md")
 
-B2-->B32("setupRenderEffect(instance, initialVNode")-->C1("effect.run()触发依赖收集")-->C2("componentUpdateFn()重点函数")--1创建vnode-->C3("renderComponentRoot(instance)返回vnode")-->C4
+B2--2构建vnode等流程-->B32("setupRenderEffect(instance, initialVNode")-->C1("effect.run()触发依赖收集")-->C2("componentUpdateFn()重点函数")--1创建vnode-->C3("renderComponentRoot(instance)返回vnode")-->C4
 
 C4("render.call(proxyToUse,..)调用ast生成的render生成vnode")-->C41("执行ast render函数也会触发依赖收集")
 

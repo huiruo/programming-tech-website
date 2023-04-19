@@ -6118,6 +6118,7 @@ var Vue = (function (exports) {
           return app;
         },
         mount(rootContainer, isHydrate, isSVG) {
+          console.log("调用mount", { rootContainer })
           // 未挂载执行
           if (!isMounted) {
             // #5571

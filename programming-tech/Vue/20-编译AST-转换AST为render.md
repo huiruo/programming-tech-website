@@ -1118,46 +1118,14 @@ export const helperNameMap: any = {
 }
 ```
 
-## 总结
-* 生成ast对象
-* 将ast对象作为参数传入transform函数，对 ast 节点进行转换操作
-* 将ast对象作为参数传入generate函数，返回编译结果
-```mermaid
-flowchart TD
-A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(generate根据变换后的ast生成code并返回)
-
-其他--组件挂载和更新的逻辑-->A5("patch()用vnode对象构建的DOM元素")-->A6("根据VNode类型的不同使用不同的函数进行处理")
-```
+## 编译AST-转换AST为render总结
+baseCompile生成ast-静态提升-vnode-patch.md
 
 ## 接`初始化流程`,finishComponentSetup()开始执行
-[接上面的`baseCompile生成ast-静态提升-vnode-patch`](./baseCompile生成ast-静态提升-vnode-patch),finishComponentSetup()开始执行，去构建ast:
-```mermaid
-flowchart TD
+baseCompile生成ast-静态提升-vnode-patch.md
 
-A0(`finishComponentSetup-开始`)--传入模板字符串-->A1(compileToFunction)-->A2("compile$1(template, options = {}){<br/>return baseCompile(template,...")-->A4("baseCompile(template, options = {})")
-
-A4--生成Ast-->A5("ast = baseParse(template, options)")-->A6("return createRoot(parseChildren(context")
-
-A6-->A7("parseChildren{")
-
-A7--解析案例1则当做插值表达式进行解析-->b1("node = parseInterpolation(context, mode)")
-
-A7--解析案例2解析元素或组件-->b2("node = parseElement(context, ancestors)")-->b3("const element = parseTag(context, 0")--调用parseAttributes解析属性_特性_指令-->b4("props = parseAttributes(context, type)")
-
-b4--循环调用-->b5("attr = parseAttribute(context, attributeNames)")
-```
-
-### 第二步编译,根据ast-->生成code字符串
-```mermaid
-flowchart TD
-A1("baseCompile(template, options")--第二步编译_ast进行变换-->A2("transform(ast, extend({}, options")-->A3("traverseNode(root, context)")
-
-A1--最后一步变换之后生成code字符串-->c1("generate(ast, extend({}")-->c2("genNode")
-
-A3--变换例子v_once-->b2("getBaseTransformPreset()")-->b3("transformOnce = (node, context)")
-
-A2--静态提升-->b1("hoistStatic(root, context)")
-```
+## 第二步编译,根据ast-->生成code字符串
+baseCompile生成ast-静态提升-vnode-patch.md
 
 ## 例子
 ### 探究初始化:compile调用baseParse返回ast

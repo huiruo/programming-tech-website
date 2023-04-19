@@ -3,46 +3,76 @@ title: baseCompile生成ast-静态提升-vnode-patch
 sidebar_position: -3
 ---
 
-## 前言
-* compiler表示template-->AST抽象语法树
-
-* reactivity表示响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
-```
-1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
-
-2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
-3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
-```
-* runtime表示运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
 
 ## 应用入口
-```mermaid
-flowchart TD
-A1(createApp)-->A2("ensureRenderer()")-->a3("createRenderer(rendererOptions)")-->a4("baseCreateRenderer(options, createHydrationFns)")
+```js
+<script>
+  const { ref, reactive, nextTick } = Vue
 
-a4-->a6("return {render,createApp:createAppAPI(render, hydrate)}")
+  Vue.createApp({
+    data() {
+      return {
+        msg: '改变我',
+        showDiv: false
+      }
+    },
+    methods: {
+      onClickText() {
+        this.msg = '努力'
+        this.showDiv = !this.showDiv
+        this.info.msg2 = this.showDiv ? '直接点' : '其他选择'
+        nextTick(() => {
+          console.log('--nextTick--', this.showDiv, this.msg);
+        })
+      }
+    },
 
-a6-->a7("createAppAPI(render, hydrate){return app}")-->a8("mount(rootContainer, isHydrate)")--调用render-->a9(render)
+    setup(props) {
+      const refData = ref({
+        myName: 'Ruo'
+      })
 
+      const info = reactive({
+        msg2: 'hello',
+      });
 
-%% createVNode
-%% a9("const vnode = createVNode(rootComponent, rootProps);<br> render(vnode, rootContainer, isSVG)")
-a9--创建vnode-->b1("见react-vue异同")
-%% -->b2("return createBaseVNode(type, props, children,...")
-%% b2-->b3("createBaseVNode(type, props,...")
+      nextTick(() => {
+        console.log('--nextTick--');
+      })
 
-%% render
-a9--创建或者更新节点-->b4("patch(container._vnode,vnode,container,...")
+      Vue.onBeforeMount(() => {
+        console.log('--1:组件挂载前 onBeforeMount-->')
+      })
 
-%% 调用patch处理组件元素为例
-b4--重点-初始化-->b51("接下面初始化")
-b4--处理dom元素为例-->b5("processElement(n1, n2, container,...")
-b5--创建-->b6("mountElement(n2, container, anchor")
-b5--更新-->b7("patchElement(n1, n2, parentComponent)")
+      Vue.onMounted(() => {
+        console.log('--2:组件挂载后 onMounted-->')
+      });
+
+      return {
+        info,
+        refData
+      };
+    },
+
+  }).mount('#root')
+</script>
 ```
 
 ## 初始化
 ![](../assets/img-vue/compileToFunction生成code.png)
+
+接：[首次渲染流程-patch函数](../../react-vue异同-vue)
+```mermaid
+flowchart TD
+A1("patch(container._vnode,vnode,container,...")--处理组件元素为例-->A2("processComponent(n1, n2, container")
+
+A2--创建-->b6("mountComponent(n2, container, anchor")-->A-2
+A2--更新-->b7("updateComponent(n1, n2,optimized)")
+
+A-2("mountComponent = (initialVNode, container")-->A-1("setupComponent(instance,")-->B0("setupStatefulComponent(instance,")-->B1("handleSetupResult()")-->B2("finishComponentSetup(instance")
+
+B2--开始构建传入模板字符串-->接下面流程图
+```
 
 这个阶段`finishComponentSetup()`是重点函数，调用`compileToFunction()`返回了ast生成的函数
 ```js
@@ -102,16 +132,48 @@ b5--更新-->b7("patchElement(n1, n2, parentComponent)")
   }
 ```
 
+## 编译AST-转换AST为render总结
+* 生成ast对象
+* 将ast对象作为参数传入transform函数，对 ast 节点进行转换操作
+* 将ast对象作为参数传入generate函数，返回编译结果
 ```mermaid
 flowchart TD
-A1("patch(container._vnode,vnode,container,...")--处理组件元素为例-->A2("processComponent(n1, n2, container")
+A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(generate根据变换后的ast生成code并返回)
 
-A2--创建-->b6("mountComponent(n2, container, anchor")-->A-2
-A2--更新-->b7("updateComponent(n1, n2,optimized)")
+其他--组件挂载和更新的逻辑-->A5("patch()用vnode对象构建的DOM元素")-->A6("根据VNode类型的不同使用不同的函数进行处理")
+```
 
-A-2("mountComponent = (initialVNode, container")-->A-1("setupComponent(instance,")-->B0("setupStatefulComponent(instance,")-->B1("handleSetupResult()")-->B2("finishComponentSetup(instance")
+### 接`初始化流程`,finishComponentSetup()开始执行
+接上面的finishComponentSetup()开始执行，去构建ast:
+```mermaid
+flowchart TD
 
-B2--开始构建传入模板字符串-->B3("compileToFunction(template, options)")
+A0(`finishComponentSetup-开始`)--传入模板字符串-->A1(compileToFunction)-->A2("compile$1(template, options = {}){<br/>return baseCompile(template,...")-->A4("baseCompile(template, options = {})")
+
+A4--1生成Ast-->A5("ast = baseParse(template, options)")-->A6("return createRoot(parseChildren(context")
+
+A4--2编译_ast进行变换-->A4A("transform(ast, extend({}, options")
+A4--3变换之后生成code字符串-->A4B("generate(ast, extend({}")
+
+A6-->A7("parseChildren{")
+
+A7--解析案例1则当做插值表达式进行解析-->b1("node = parseInterpolation(context, mode)")
+
+A7--解析案例2解析元素或组件-->b2("node = parseElement(context, ancestors)")-->b3("const element = parseTag(context, 0")--调用parseAttributes解析属性_特性_指令-->b4("props = parseAttributes(context, type)")
+
+b4--循环调用-->b5("attr = parseAttribute(context, attributeNames)")
+```
+
+### 第二步编译,根据ast-->生成code字符串
+```mermaid
+flowchart TD
+A1("baseCompile(template, options")--第二步编译_ast进行变换-->A2("transform(ast, extend({}, options")-->A3("traverseNode(root, context)")
+
+A1--最后一步变换之后生成code字符串-->c1("generate(ast, extend({}")-->c2("return code函数")
+
+A3--变换例子v_once-->b2("getBaseTransformPreset()")-->b3("transformOnce = (node, context)")
+
+A2--静态提升-->b1("hoistStatic(root, context)")
 ```
 
 ### 初始化源码
@@ -206,9 +268,6 @@ function handleSetupResult(instance, setupResult, isSSR) {
   finishComponentSetup(instance, isSSR);
 }
 ```
-
-## 渲染流程-编译AST,转换AST为render()
-参考：[编译AST-转换AST为render](./编译AST-转换AST为render)
 
 ## 收集和更新副作用：
 调用patch处理组件元素为例

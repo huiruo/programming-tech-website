@@ -5,6 +5,7 @@ sidebar_position: -3
 
 
 ## 应用入口
+流程图参考：[Vue概览](../Vue概览)
 ```js
 <script>
   const { ref, reactive, nextTick } = Vue
@@ -61,7 +62,7 @@ sidebar_position: -3
 ## 初始化
 ![](../assets/img-vue/compileToFunction生成code.png)
 
-接：[首次渲染流程-patch函数](../../react-vue异同-vue)
+接：[首次渲染流程-patch函数](../../Vue概览)
 ```mermaid
 flowchart TD
 A1("patch(container._vnode,vnode,container,...")--处理组件元素为例-->A2("processComponent(n1, n2, container")

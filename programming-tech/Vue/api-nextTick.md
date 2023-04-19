@@ -3,18 +3,11 @@ title: api-nextTick
 sidebar_position: 9
 ---
 
-# nextTick
-```
-01-vue3-reactive-ref-nextTick-生命周期.html
-```
-
-### 使用场景
-```
+## nextTick使用场景
 1. 有时需要根据数据动态的为页面某些dom元素添加事件，这就要求在dom元素渲染完毕时去设置，但是created与mounted函数执行时一般dom并没有渲染完毕，
 所以就会出现获取不到，添加不了事件的问题，这回就要用到nextTick处理,
 2. 数据改变后获取焦点
 3. 获取元素宽度
-```
 
 例子
 ```js

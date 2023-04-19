@@ -81,6 +81,7 @@ const sidebars = {
         'Vue/编译AST-转换AST为render',
         'Vue/render生成之后-vnode构建',
         'Vue/VNode构建之后-开始渲染',
+        'Vue/渲染时依赖收集-data改变trigger',
         'Vue/data发生改变dom更新流程',
         'Vue/mockData-生成的code函数',
         'Vue/响应式原理与reactive',

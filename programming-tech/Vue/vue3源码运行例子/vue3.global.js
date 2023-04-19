@@ -754,8 +754,8 @@ var Vue = (function (exports) {
     }
   }
   function trigger(target, type, key, newValue, oldValue, oldTarget) {
-    console.log('%c=track&trigger=trigger触发副作用:1开始判断', 'color:chartreuse', { target, type, key, newValue, oldValue, oldTarget })
     const depsMap = targetMap.get(target);
+    console.log('%c=track&trigger=trigger触发副作用:1开始判断', 'color:chartreuse', { target, type, key, newValue, oldValue, oldTarget, depsMap })
     if (!depsMap) {
       // never been tracked
       return;
@@ -842,7 +842,7 @@ var Vue = (function (exports) {
     }
   }
   function triggerEffects(dep, debuggerEventExtraInfo) {
-    console.log('%c=triggerEffects=触发更新=开始判断=triggerEffects接收一个dep和用于调试的额外信息。遍历dep中的effect，逐一使用triggerEffect来执行副作用', 'color:chartreuse', 'dep:', dep)
+    console.log('%c=triggerEffects=触发更新=开始判断=triggerEffects接收一个dep和用于调试的额外信息。遍历dep中的effect，逐一使用triggerEffect来执行副作用', 'color:chartreuse', { dep })
     // spread into array for stabilization
     const effects = isArray(dep) ? dep : [...dep];
     for (const effect of effects) {
@@ -924,9 +924,9 @@ var Vue = (function (exports) {
     return instrumentations;
   }
   function createGetter(isReadonly = false, shallow = false) {
-    console.log(`%c响应式陷阱触发==>:createGetter`, 'color:red')
+    console.log(`%c响应式get陷阱触发==>:createGetter`, 'color:red')
     return function get(target, key, receiver) {
-      console.log(`%c响应式触发=>get:1开始判断`, 'color:red', target, 'key:', key)
+      console.log(`%c响应式触发=>get-开始判断`, 'color:red', target, 'key:', key)
       // 如果 get 访问的 key 是 '__v_isReactive'，返回 createGetter 的 isReadonly 参数取反结果
       if (key === "__v_isReactive" /* ReactiveFlags.IS_REACTIVE */) {
         console.log(`%c响应式触发=>get:2=如果 get 访问的 key 是 '__v_isReactive'`, 'color:red')
@@ -955,7 +955,7 @@ var Vue = (function (exports) {
         return target;
       }
 
-      // 判断 taeget 是否是数组
+      // 判断 target 是否是数组
       const targetIsArray = isArray(target);
       // 如果不是只读对象，并且目标对象是个数组，访问的 key 又在数组需要劫持的方法里，直接调用修改后的数组方法执行
       if (!isReadonly && targetIsArray && hasOwn(arrayInstrumentations, key)) {
@@ -1425,7 +1425,7 @@ var Vue = (function (exports) {
       return target;
     }
     // 创建一个代理对象并返回
-    console.log('%c响应式=>1:reactive->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
+    console.log('%c响应式A=>3:reactive->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
     return createReactiveObject(target, false, mutableHandlers, mutableCollectionHandlers, reactiveMap);
   }
   /**
@@ -1434,7 +1434,7 @@ var Vue = (function (exports) {
    * root level).
    */
   function shallowReactive(target) {
-    console.log('%c响应式=>1:shallowReactive->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
+    console.log('%c响应式=A>4:shallowReactive->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
     return createReactiveObject(target, false, shallowReactiveHandlers, shallowCollectionHandlers, shallowReactiveMap);
   }
   /**
@@ -1442,7 +1442,7 @@ var Vue = (function (exports) {
    * made reactive, but `readonly` can be called on an already reactive object.
    */
   function readonly(target) {
-    console.log('%c响应式=>1:readonly->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
+    console.log('%c响应式=A>1:readonly->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
     return createReactiveObject(target, true, readonlyHandlers, readonlyCollectionHandlers, readonlyMap);
   }
   /**
@@ -1452,7 +1452,7 @@ var Vue = (function (exports) {
    * This is used for creating the props proxy object for stateful components.
    */
   function shallowReadonly(target) {
-    console.log('%c响应式=>1:shallowReadonly->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
+    console.log('%c响应式=A>2:shallowReadonly->createReactiveObject创建一个代理对象并返回', 'color:chartreuse')
     return createReactiveObject(target, true, shallowReadonlyHandlers, shallowReadonlyCollectionHandlers, shallowReadonlyMap);
   }
   function createReactiveObject(target, isReadonly, baseHandlers, collectionHandlers, proxyMap) {
@@ -1487,7 +1487,7 @@ var Vue = (function (exports) {
       return target;
     }
 
-    console.log('%c响应式=>2:正式开始createReactiveObject执行new Proxy', 'color:chartreuse')
+    console.log('%c响应式=>2:正式开始createReactiveObject执行new Proxy', 'color:chartreuse', { targetType: targetType === 2 })
     const proxy = new Proxy(target, targetType === 2 /* TargetType.COLLECTION */ ? collectionHandlers : baseHandlers);
     proxyMap.set(target, proxy);
     return proxy;
@@ -1601,6 +1601,7 @@ var Vue = (function (exports) {
     }
   };
   function proxyRefs(objectWithRefs) {
+    console.log('%c响应式=>:proxyRefs执行new Proxy', 'color:chartreuse')
     return isReactive(objectWithRefs)
       ? objectWithRefs
       : new Proxy(objectWithRefs, shallowUnwrapHandlers);
@@ -9008,6 +9009,7 @@ var Vue = (function (exports) {
     instance.accessCache = Object.create(null);
     // 1. create public instance / render proxy
     // also mark it raw so it's never observed
+    console.log('%c响应式=>:markRaw执行new Proxy', 'color:chartreuse')
     instance.proxy = markRaw(new Proxy(instance.ctx, PublicInstanceProxyHandlers));
     {
       exposePropsOnRenderContext(instance);
@@ -9100,6 +9102,7 @@ var Vue = (function (exports) {
     console.log('探究初始化==>registerRuntimeCompiler')
     compile = _compile;
     installWithProxy = i => {
+      console.log('%c响应式=>:withProxy执行new Proxy', 'color:chartreuse')
       if (i.render._rc) {
         i.withProxy = new Proxy(i.ctx, RuntimeCompiledPublicInstanceProxyHandlers);
       }
@@ -9170,6 +9173,7 @@ var Vue = (function (exports) {
     }
   }
   function createAttrsProxy(instance) {
+    console.log('%c响应式=>:createAttrsProxy执行new Proxy', 'color:chartreuse')
     return new Proxy(instance.attrs, {
       get(target, key) {
         markAttrsAccessed();
@@ -9213,6 +9217,7 @@ var Vue = (function (exports) {
     }
   }
   function getExposeProxy(instance) {
+    console.log('%c响应式=>:getExposeProxy执行new Proxy', 'color:chartreuse')
     if (instance.exposed) {
       return (instance.exposeProxy ||
         (instance.exposeProxy = new Proxy(proxyRefs(markRaw(instance.exposed)), {

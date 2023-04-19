@@ -29,6 +29,7 @@ let obj = { name: 'iphone', price: 99 }
 
 let proxyObj = new Proxy(obj, {
   get: function (target, key) {
+    console.log('get触发',{target, key})
     // 对象中不存在属性名时返回0
     return key in target ? target[key] : 0
   },

@@ -306,7 +306,7 @@ A1("createReactiveObject(target,isReadonly,baseHandlers,collectionHandlers,proxy
 
 流程
 ```
-初始化-->get-->track(追踪，依赖)
+初始化-->get-->track(追踪，依赖)-->
 data改变-->set-->trigger(触发器)
 ```
 

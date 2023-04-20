@@ -1,5 +1,5 @@
 ---
-title: 注意点-hook-setState的interval-问题
+title: 注意点-hook-setState的interval
 sidebar_position: 15
 ---
 

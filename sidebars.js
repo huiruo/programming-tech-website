@@ -12,11 +12,11 @@ const sidebars = {
       items: [
         'React/jsx-ast-render阶段',
         'React/render阶段1-beginWork',
+        'React/mountIndeterminateComponent执行构建fiber树',
         'React/beginWork第3步-Reconciliation-双缓存-diff',
         'React/render阶段2-completeWork',
         'React/render阶段结束后-进入commit阶段',
         'React/commit阶段-useLayoutEffect-useEffect',
-        'React/workInProgress构建',
         'React/mockData-babel返回code函数',
         'React/类组件渲染流程-组件分类',
         'React/基础-高阶组件',

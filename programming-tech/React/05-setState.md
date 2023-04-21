@@ -3,33 +3,7 @@ title: setState
 sidebar_position: 5
 ---
 
-对于
-```js
-const [state, updateState] = useState(initialState)
-```
-memoizedState保存state的值
-
-* mount 时：把传进来的 value 包装成一个含有 current 属性的对象，然后放在 memorizedState 属性上。
-```
-mount 时：将初始值存放在memoizedState 中，queue.pending用来存调用 setValue（即 dispatch）时创建的最后一个 update ，是个环状链表，最终返回一个数组，包含初始值和一个由dispatchState创建的函数。
-```
-
-* update 时：可以看到，其实调用的是 updateReducer，只是 reducer 是固定好的，作用就是用来直接执行 setValue（即 dispatch） 函数传进来的 action，即 useState 其实是对 useReducer 的一个封装，只是 reducer 函数是预置好的。
-
-
-## 不同类型hook的memoizedState保存不同类型数据，具体如下：
-比对是依赖项是否一致的时候，用的是Object.is：
-
-Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
-
-### updateReducer 主要工作：
-1. 将 baseQueue 和  pendingQueue 首尾合并形成新的链表
-
-2. baseQueue 为之前因为某些原因导致更新中断从而剩下的 update 链表，pendingQueue 则是本次产生的 update链表。会把 baseQueue 接在 pendingQueue 前面。
-3. 从 baseQueue.next 开始遍历整个链表执行 update，每次循环产生的 newState，作为下一次的参数，直到遍历完整个链表。即整个合并的链表是先执行上一次更新后再执行新的更新，以此保证更新的先后顺序。
-4. 最后更新 hook 上的参数，返回 state 和 dispatch。
-
-# 流程图
+## 复习渲染流程
 ```mermaid
 flowchart TD
 d1("ReactDOMRoot.prototype.render")-->d2(updateContainer)-->d3(scheduleUpdateOnFiber)-->d4("ensureRootIsScheduled")-->d5
@@ -48,8 +22,7 @@ e3--2-->e5("completeUnitOfWork")-->e6("completeWork")
 c2--3commit-->c4("finishConcurrentRender")-->c5("commitRoot")
 ```
 
-## useState 挂载hooks函数;生成dispatch;挂载链表
-接上面beginWork
+## 接上面beginWork,useState挂载hooks函数;生成dispatch;挂载链表
 ```mermaid
 flowchart TD
 a1(beginWork)--case_IndeterminateComponent-->a2("return mountIndeterminateComponent()")-->a3(renderWithHooks)
@@ -89,6 +62,34 @@ b9-->b10("updateReducer(reducer)返回最新[hook.memoizedState, dispatch]")
 b10--1-->b11("hook=updateWorkInProgressHook(),hook:最新状态值和setState()")-->b13("拿到拷贝后的hook，可以计算新状态值了")
 b10--2-->b12("读取队列,计算出最新状态，更新hook的状态")
 ```
+
+
+
+对于
+```js
+const [state, updateState] = useState(initialState)
+```
+memoizedState保存state的值
+
+* mount 时：把传进来的 value 包装成一个含有 current 属性的对象，然后放在 memorizedState 属性上。
+```
+mount 时：将初始值存放在memoizedState 中，queue.pending用来存调用 setValue（即 dispatch）时创建的最后一个 update ，是个环状链表，最终返回一个数组，包含初始值和一个由dispatchState创建的函数。
+```
+
+* update 时：可以看到，其实调用的是 updateReducer，只是 reducer 是固定好的，作用就是用来直接执行 setValue（即 dispatch） 函数传进来的 action，即 useState 其实是对 useReducer 的一个封装，只是 reducer 函数是预置好的。
+
+
+## 不同类型hook的memoizedState保存不同类型数据，具体如下：
+比对是依赖项是否一致的时候，用的是Object.is：
+
+Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
+
+### updateReducer 主要工作：
+1. 将 baseQueue 和  pendingQueue 首尾合并形成新的链表
+
+2. baseQueue 为之前因为某些原因导致更新中断从而剩下的 update 链表，pendingQueue 则是本次产生的 update链表。会把 baseQueue 接在 pendingQueue 前面。
+3. 从 baseQueue.next 开始遍历整个链表执行 update，每次循环产生的 newState，作为下一次的参数，直到遍历完整个链表。即整个合并的链表是先执行上一次更新后再执行新的更新，以此保证更新的先后顺序。
+4. 最后更新 hook 上的参数，返回 state 和 dispatch。
 
 
 

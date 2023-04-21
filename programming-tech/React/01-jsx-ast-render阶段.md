@@ -2,7 +2,6 @@
 title: jsx-ast-render阶段
 sidebar_position: 1
 ---
-
 ## 调用流程图
 基于18
 ```mermaid
@@ -14,6 +13,31 @@ A7--2root.current=uninitializedFiber-->A11("uninitializedFiber=createHostRootFib
 A1--2开启render-->A3("root.render(<组件>)")-->A4("ReactDOMRoot.prototype.render")
 A4--开始渲染,注意非批量-->A5("updateContainer(children, root")
 ```
+
+### workInProgress构建步骤1
+* beginWork第一次会调用updateHostRoot进行初始化:updateHostRoot
+* 第二次才走 mountIndeterminateComponent 执行code()函数,此时的workInProgress.type 才有值;
+```js
+  function beginWork(current, workInProgress, renderLanes) {
+    console.log('workInProgress', workInProgress, root)
+    debugger
+    workInProgress.lanes = NoLanes;
+    console.log('%c=beginWork()===start1-初始化', 'color:magenta', { getFiberName: getFiberName(workInProgress), current, renderLanes, workInProgress })
+    switch (workInProgress.tag) {
+      case IndeterminateComponent:
+        {
+          console.log('%c=beginWork()==end 2 mountIndeterminateComponent', 'color:magenta', workInProgress)
+          console.log(`%c=探究初始和hook=调用mountIndeterminateComponent`, 'color:blueviolet', workInProgress.type)
+          return mountIndeterminateComponent(current, workInProgress, workInProgress.type, renderLanes);
+      }
+      case HostRoot:
+        console.log('%c=beginWork()=end 6第一次会走这里初始化workInProgress', 'color:magenta')
+        console.log('%c=beginWork()=end 6 updateHostRoot', 'color:magenta')
+        return updateHostRoot(current, workInProgress, renderLanes);
+    }
+  }
+```
+
 
 ## 接上面updateContainer
 fiber 协调过程,构建fiber树的阶段可中断
@@ -37,8 +61,8 @@ D4--1-->D5("renderRootSync(root,lanes)")
 D4--"2.exitStatus!==RootInProgress"-->C1("finishConcurrentRender(root,exitStatus)render阶段结束,commit阶段前")
 
 D5(workLoopSync开始循环-beginWork开始)-->A0Aif
-A0Aif{{workInProgress!=null?}}--不为null-->E1
-A0Aif--为null-->endW(结束当前循环)
+A0Aif{{workInProgress!=null? 为null结束当前循环,进入commit}}--不为null-->E1
+%% A0Aif--为null-->endW(结束当前循环)
 
 subgraph render1[构建fiber树/协调阶段:render是一个深度优先遍历的过程核心函数beginWork和completeUnitOfWork]
 
@@ -48,11 +72,21 @@ subgraph render1[构建fiber树/协调阶段:render是一个深度优先遍历�
 
   E1--2.若当前节点不存在子节点:next=null-->E6B(completeUnitOfWork)
   
-  E2--current=null初始化:tag进入不同case-->E6A(case:HostComponent为例)-->E6A1(updateHostComponent$1)-->E6A2(reconcileChildren-diff算法)--current!=null-->E6A3(reconcileChildFibers)
+  E2--current=null初始化:tag进入不同case-->workCase("switch (workInProgress.tag)")
+  
+  workCase--1-->HostRoot("首次进入HostRoot<br/>更新updateHostRoot")
+
+  workCase--2-->mountIndeterminateComponent("第二次case IndeterminateComponent<br/>调用mountIndeterminateComponent")
+
+  mountIndeterminateComponent-->q1("renderWithHooks(null, workInProgress, Component<br/>这个函数初始化hook函数并执行code函数")
+
+  q1--1-->hooks("ReactCurrentDispatcher$1.current=HooksDispatcherOnMountInDEV")
+  q1--2-->code("children=Component(props,secondArg)<br/>执行ast生成的code")
+
+  workCase--3-->E6A(case:HostComponent为例)-->E6A1(updateHostComponent$1)-->E6A2(reconcileChildren-diff算法)--current!=null-->E6A3(reconcileChildFibers)
 
 	%% subgraph beginWork2[beginWork第二阶段]
 	E6A2--current==null-->z1("mountChildFibers:beginWork第二阶段")-->z2(ChildReconciler)--case-->z3(placeSingleChild)
-	%% end
 
   E2-.current!=null更新流程.->E51(attemptEarlyBailoutIfNoScheduledUpdate)-->E52(bailoutOnAlreadyFinishedWork)-->E53(cloneChildFibers)
 
@@ -63,7 +97,7 @@ subgraph render1[构建fiber树/协调阶段:render是一个深度优先遍历�
   E6B3-->E6B3A(createElement)-->E6B3B(document.createElement)
 
   E53-->createWorkInProgress
-  E53-.tag类型进入不同case.->E6A
+  E53-.tag类型进入不同case.->workCase
 
 	%% subgraph render2[构建FiberNode]
 	E6A3-.根据子节点类型创建fiber节点.->o1(reconcileSingleElement) -->o2(createFiberFromElement) --> o3(createFiberFromTypeAndProps) --fiber.type也是在这里赋值--> o4(createFiber)--> o5(return new FiberNode)

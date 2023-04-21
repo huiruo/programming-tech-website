@@ -16156,7 +16156,6 @@
 
   function renderWithHooks(current, workInProgress, Component, props, secondArg, nextRenderLanes) {
     renderLanes = nextRenderLanes;
-
     console.log(`%c=探究初始和hook=renderWithHooks workInProgress,可以看到memoizedState 保存不同类型数据构成hooks的链表结构:`, 'color:blueviolet', workInProgress)
     // 1. 将workInProgress 赋值给全局变量 currentlyRenderingFiber
     // 这样在调用 Hook 时就能知道对应的 fiber 是谁
@@ -16203,7 +16202,10 @@
     }
 
     // 3. 调用函数组件，里面执行各种 React Hook，并返回 ReactElement
-    console.log(`%c=探究初始和hook=renderWithHooks重点，调用函数组件，里面执行各种 React Hook==start并返回 ReactElement`, 'color:blueviolet', Component)
+    console.log(`%c=探究初始和hook=renderWithHooks重点，调用函数组件，里面执行各种 React Hook==start并返回ReactElement`, 'color:blueviolet', { Component })
+
+    // debugger
+
     var children = Component(props, secondArg); // Check if there was a render phase update
     console.log(`%c=探究初始和hook=renderWithHooks重点,返回 ReactElement==end`, 'color:blueviolet', { children })
 
@@ -16289,6 +16291,7 @@
       throw new Error('Rendered fewer hooks than expected. This may be caused by an accidental ' + 'early return statement.');
     }
 
+    // debugger
     return children;
   }
 
@@ -22559,6 +22562,7 @@
 
     workInProgress.lanes = NoLanes;
     console.log('%c=beginWork()===start1-初始化', 'color:magenta', { getFiberName: getFiberName(workInProgress), current, renderLanes, workInProgress })
+    // debugger
     switch (workInProgress.tag) {
       case IndeterminateComponent:
         {
@@ -28265,7 +28269,7 @@
   }
 
   function FiberNode(tag, pendingProps, key, mode) {
-    console.log('%c=FiberNode,fiber的协调,最底部开始赋值===', 'color:yellow')
+    console.log('%c=FiberNode,fiber的协调,最底部开始赋值===', 'color:yellow', { tag, ...pendingProps })
     // Instance
     this.tag = tag;
     this.key = key;
@@ -28707,6 +28711,9 @@
     var key = element.key;
     var pendingProps = element.props;
     console.log('%c=createFiberFromElement 调用 createFiberFromTypeAndProps-->return fiber：', 'color:yellow')
+
+    // debugger
+
     var fiber = createFiberFromTypeAndProps(type, key, pendingProps, owner, mode, lanes);
     console.log('%c=return fiber：', 'color:yellow', { fiber })
     {

@@ -1610,11 +1610,10 @@
     return dispatcher.useContext(Context);
   }
   function useState(initialState) {
+    // debugger
     var dispatcher = resolveDispatcher();
-    console.log('=useState=dev=调用dom定义的useState', { initialState, dispatcher })
-    const dispatcherRes = dispatcher.useState(initialState)
-    console.log('=useState=dev=调用dom定义的useState最后返回值===', dispatcherRes)
-    return dispatcherRes;
+    console.log('=调用dom定义的useState', { initialState, dispatcher })
+    return dispatcher.useState(initialState);
   }
   function useReducer(reducer, initialArg, init) {
     var dispatcher = resolveDispatcher();

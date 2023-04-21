@@ -3,6 +3,171 @@ title: fiber
 sidebar_position: 12
 ---
 
+## Fiber 数据结构:
+主要分下面几块：
+* 节点基础信息的描述
+* 描述与其它 fiber 节点连接的属性
+* 状态更新相关的信息:hook
+```
+hook 关联比较大的主要是 memoizedState 和 updateQueue 属性。函数组件会将内部用到的所有的 hook 通过单向链表的形式，保存在组件对应 fiber 节点的 memoizedState 属性上。
+
+useEffect：memoizedState保存包含useEffect回调函数、依赖项等的链表数据结构effect。effect链表同时会保存在fiber.updateQueue中。
+
+updateQueue 是 useEffect 产生的 effect 连接成的环状单向链表。
+```
+* 优先级调度相关
+
+```js
+function FiberNode(
+  tag: WorkTag,
+  pendingProps: mixed,
+  key: null | string,
+  mode: TypeOfMode,
+) {
+  // 作为静态数据结构的属性
+  this.tag = tag;      // Fiber对应组件的类型 Function/Class/Host...
+  this.key = key;      // key属性
+  this.elementType = null; // 大部分情况同type，某些情况不同，比如FunctionComponent使用React.memo包裹
+  this.type = null;     // 对于 FunctionComponent，指函数本身，对于ClassComponent，指class，对于HostComponent，指DOM节点tagName
+  this.stateNode = null;  // Fiber对应的真实DOM节点
+
+  // 用于连接其他Fiber节点形成Fiber树
+  this.return = null;  // 指向父级Fiber节点
+  this.child = null;  // 指向子Fiber节点
+  this.sibling = null; // 指向右边第一个兄弟Fiber节点
+  this.index = 0;
+
+  this.ref = null;
+
+  // 作为动态的工作单元的属性 —— 保存本次更新造成的状态改变相关信息
+  this.pendingProps = pendingProps;
+  this.memoizedProps = null;
+  this.updateQueue = null;  // class 组件 Fiber 节点上的多个 Update 会组成链表并被包含在 fiber.updateQueue 中。 函数组件则是存储 useEffect 的 effect 的环状链表。
+  this.memoizedState = null; // hook 组成单向链表挂载的位置
+  this.dependencies = null;
+
+  this.mode = mode;
+
+  // Effects
+  this.flags = NoFlags;
+  this.subtreeFlags = NoFlags;
+  this.deletions = null;
+
+  // 调度优先级相关
+  this.lanes = NoLanes;
+  this.childLanes = NoLanes;
+
+  // 指向该fiber在另一次更新时对应的fiber
+  this.alternate = null;
+}
+```
+
+hook 的 memoizedState 存的是当前 hook 自己的值。
+```js
+const hook: Hook = {
+  memoizedState: null, // 当前需要保存的值
+
+  baseState: null,
+  baseQueue: null, // 由于之前某些高优先级任务导致更新中断，baseQueue 记录的就是尚未处理的最后一个 update
+  queue: null, // 内部存储调用 setValue 产生的 update 更新信息，是个环状单向链表
+
+  next: null,  // 下一个hook
+};
+```
+
+### 例子1
+```js
+function Test() {
+  console.log('test-render')
+  const [data, setData] = React.useState('改变我')
+  const [showDiv, setShowDiv] = React.useState(false)
+
+  const onClickText = () => {
+    console.log('=useState=onClick');
+    setData('努力哦')
+    setShowDiv(!showDiv)
+  }
+
+  const onClickText2 = () => {
+    console.log('=useState=onClick:', data);
+  }
+
+  React.useEffect(() => {
+    console.log('=副作用-useEffect-->运行');
+  }, [])
+
+  React.useLayoutEffect(() => {
+    console.log('=副作用-useLayoutEffect-->运行');
+  }, [])
+
+  return (
+    <div id='div1' className='c1'>
+      <button onClick={onClickText} className="btn">Hello world,Click me</button>
+      <span>{data}</span>
+      {showDiv && <div>被你发现了</div>}
+      <div id='div2' className='c2'>
+        <p>测试子节点</p>
+      </div>
+    </div>
+  )
+}
+```
+![](../assets/img-react/hook连接成链表-实例.png)
+圈起来1和2表示以下函数
+```js
+React.useLayoutEffect(() => {
+  console.log('=副作用-useLayoutEffect-->运行');
+}, [])
+
+React.useEffect(() => {
+  console.log('=副作用-useEffect-->运行');
+}, [])
+```
+
+### 示例2
+```js
+function App() {
+  const [value, setValue] = useState(0);
+  const ref = useRef();
+  ref.current = "some value";
+
+  return (
+    <div className="App">
+      <h1>目前值：{value}</h1>
+      <div>
+        <button onClick={() => { 
+          setValue(v => v + 1)
+        }}>增加</button>
+      </div>
+    </div>
+  );
+}
+```
+可以从截图中看到，代码中使用的 useState 和 useRef 两个 hook 通过 next 连接成链表。另外 useState 的 hook 对象的 queue 中存储了调用 setValue 时用到的函数。
+
+![](../assets/img-react/hook连接成链表.png)
+
+
+```js
+function App() {
+  const [value, setValue] = useState(0);
+  const ref = useRef();
+  ref.current = "some value";
+
+  return (
+    <div className="App">
+      <h1>目前值：{value}</h1>
+      <div>
+        <button onClick={() => { 
+          setValue(v => v + 1)
+        }}>增加</button>
+      </div>
+    </div>
+  );
+}
+```
+
+
 ## 手动操作DOM带来的性能缺陷
 在使用原生的js api或者jquery等一些方法直接去操作dom的时候，可能会引起页面的reflow-回流，而页面的回流耗时和消耗性能。
 

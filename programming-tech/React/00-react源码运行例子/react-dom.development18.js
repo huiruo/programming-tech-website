@@ -16168,7 +16168,6 @@
 
       ignorePreviousDependencies = current !== null && current.type !== workInProgress.type;
     }
-
     workInProgress.memoizedState = null;
     workInProgress.updateQueue = null;
     workInProgress.lanes = NoLanes; // The following should have already been reset
@@ -16182,6 +16181,8 @@
     // Using memoizedState to differentiate between mount/update only works if at least one stateful hook is used.
     // Non-stateful hooks (e.g. context) don't get added to memoizedState,
     // so memoizedState would be null during updates and mounts.
+
+    // debugger
 
     // 2. 根据是挂载还是更新阶段，选择对应 hook 调度器
     {
@@ -16894,6 +16895,9 @@
   }
 
   function mountState(initialState) {
+
+    // debugger
+
     var hook = mountWorkInProgressHook();
 
     if (typeof initialState === 'function') {
@@ -17369,6 +17373,8 @@
       }
     }
 
+    // debugger
+
     var lane = requestUpdateLane(fiber);
     var update = {
       lane: lane,
@@ -17400,6 +17406,7 @@
       }
     }
 
+    debugger
     console.log('=useState=app=dispatchSetState:', { fiber, queue, action })
 
     var lane = requestUpdateLane(fiber);
@@ -17891,6 +17898,8 @@
         updateHookTypesDev();
         var prevDispatcher = ReactCurrentDispatcher$1.current;
         ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnUpdateInDEV;
+
+        debugger
 
         try {
           console.log('=updateState=4', { initialState })
@@ -26242,6 +26251,9 @@
     if ((executionContext & (RenderContext | CommitContext)) !== NoContext) {
       throw new Error('Should not already be working.');
     }
+
+    // debugger
+
     console.log(`%c=副作用:performSyncWorkOnRoot调用flushPassiveEffects-7`, 'color:yellow')
     flushPassiveEffects();
     var lanes = getNextLanes(root, NoLanes);
@@ -26316,6 +26328,7 @@
       if (executionContext === NoContext && // Treat `act` as if it's inside `batchedUpdates`, even in legacy mode.
         !(ReactCurrentActQueue$1.isBatchingLegacy)) {
         resetRenderTimer();
+        // debugger
         flushSyncCallbacksOnlyInLegacyMode();
       }
     }

@@ -386,8 +386,8 @@ const componentUpdateFn = () => {
 
 <br />
 
-## data发生改变dom更新流程
-参考：[data发生改变dom更新流程](./Vue/data发生改变dom更新流程)
+## 响应时和data发生改变dom更新流程
+参考：[渲染时track-data发生改变trigger-dom更新流程](./Vue/渲染时track-data发生改变trigger-dom更新流程)
 
 ## v-for的`:key`
 参考：[v-for的key](./Vue/v-for的key)

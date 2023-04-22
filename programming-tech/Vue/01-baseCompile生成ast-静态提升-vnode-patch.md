@@ -274,7 +274,7 @@ function handleSetupResult(instance, setupResult, isSSR) {
 调用patch处理组件元素为例
 * 在mountComponent走reactive流程
 
-参考：[响应式原理与reactive](./响应式原理与reactive)
+参考：[渲染时track-data发生改变trigger-dom更新流程](./渲染时track-data发生改变trigger-dom更新流程)
 
 * 在 componentUpdateFn 函数中，进行了组件的初始挂载和更新，生命周期函数就是在这些操作的前后触发执行的，在上面的源码中，使用 invokeArrayFns 函数进行生命周期函数的触发执行
 ```mermaid

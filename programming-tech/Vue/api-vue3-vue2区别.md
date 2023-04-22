@@ -3,13 +3,74 @@ title: api-vue3-vue2区别
 sidebar_position: 10
 ---
 
-# 总结
-* 性能提升：Vue.js 3 通过更好的模板编译器和优化算法，在性能方面有了大幅度的提升。
-* 更好的响应式系统：Vue.js 3 的响应式系统进行了升级，现在支持 Proxy，可以更加精细地控制响应式数据。
+## 总结
+* 性能提升1：Vue.js 3 通过更好的模板编译器和优化算法，Vue3编译器中增加了静态提升技术。
+* 性能提升2：Vue.js 3 的响应式系统进行了升级，现在支持 Proxy，可以更加精细地控制响应式数据。
 * 更好的 TypeScript 支持
-* 更好的组合 API
+* 更好的组合 API,Vue3 的设计模式给予开发者们按需引入需要使用的依赖包。这样一来就不需要多余的引用导致性能或者打包后太大的问题。<br/>
+全新的合成式API（Composition API）可以提升代码的解耦程度 —— 特别是大型的前端应用，效果会更加明显。还有就是按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制。
+* Tree-shaking优化：Vue3中对于Tree-shaking做了优化，使得只有使用到的代码会被打包，减小应用程序的体积。
+* Fragments（片段）：Vue3中支持使用Fragments（片段）来包裹多个子组件，而无需创建额外的包装器div。只需要在template中使用`<template>`标签来包裹即可
+```js
+<template>
+  <div>
+    <h1>Hello World</h1>
+    <template v-if="showSubTitle">
+      <h2>Sub Title</h2>
+    </template>
+    <p>Some content here</p>
+  </div>
+</template>
+```
+* Teleport组件：Vue3中增加了Teleport组件，它可以让你将组件插入到DOM的任意位置，这对于模态框和弹出菜单等组件非常有用。<br/>
+  Teleport组件有两个属性：to和disabled。to属性指定了Teleport组件的目标元素，可以是CSS选择器字符串、DOM元素或一个返回DOM元素的函数。
+```js
+<template>
+  <div>
+    <button @click="showModal = true">Show Modal</button>
+    <teleport to="body" v-if="showModal">
+      <div class="modal">
+        <h2>Modal Title</h2>
+        <p>Modal Content</p>
+        <button @click="showModal = false">Close Modal</button>
+      </div>
+    </teleport>
+  </div>
+</template>
+```
 
-## vue3 响应式
+## 注意响应式更新
+当父组件重新渲染时，其子组件依赖项没变化的话，子组件不会重新渲染。
+
+测试实例：
+05-vue3-测试父子组件-更新.html
+
+## vue3响应式-Reactive
+
+— 所以我们需要访问这个反应状态来获取数据值。
+
+使用以下三步来建立反应性数据:
+
+1.从vue引入reactive
+2.使用reactive()方法来声名我们的数据为反应性数据
+3.使用setup()方法来返回我们的反应性数据，从而我们的template可以获取这些反应性数据
+```js
+import { reactive } from 'vue'
+
+export default {
+  props: {
+    title: String
+  },
+  setup () {
+    const state = reactive({
+      username: '',
+      password: ''
+    })
+
+    return { state }
+  }
+}
+```
 ### Object.defineProperty缺点:
 1. Object.defineProperty无法监控到数组下标的变化，导致直接通过数组的下标给数组设置值，不能实时响应。 为了解决这个问题，经过vue内部处理后可以使用以下几种方法来监听数组:
 ```
@@ -27,6 +88,7 @@ reverse()
 Object.defineProperty只能劫持对象的属性,因此我们需要对每个对象的每个属性进行遍历
 
 ### vue3 Proxy有以下优点:
+Vue 3 将使用 ES2015 Proxy 作为其观察机制。这消除了以前存在的警告，使速度加倍，并减少使用了一半的内存。
 1. 可以劫持整个对象，并返回一个新对象,有13种劫持操作
 2. 利用reactive注册响应式对象，对函数返回值操作
 3. 利用Proxy劫持数据的get,set,deleteProperty,has,own
@@ -36,10 +98,7 @@ Object.defineProperty只能劫持对象的属性,因此我们需要对每个对�
 
 Proxy 和 Reflect是ES6新增的两个类，Proxy相比Object.defineProperty更加好用，解决了后者不能监听数组改变的缺点，并且还支持劫持整个对象,并返回一个新对象,不管是操作便利程度还是底层功能上都远强于Object.defineProperty，Reflect的作用是可以拿到Object内部的方法，并且在操作对象出错时返回false不会报错。
 
-<br />
-
-
-## 1. vue2和vue3生命周期钩子不同 — 提供了类似react Hooks
+## vue2和vue3生命周期钩子不同 — 提供了类似react Hooks
 vue2:
 beforeCreate-->created-->beforeMount-->mounted
 
@@ -115,15 +174,9 @@ onBeforeMount()/beforeMount() 表示模板已经在内存中编辑完成了，�
 执行完这个函数表示 整个vue实例已经初始化完成了，组件脱离了创建阶段，进入运行阶段。
 ```
 
-## 2. 接收 Props 不同,setup,this
-## 3. 按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制。
-## 4. vue3与vue2响应式的区别:使用 基于 Proxy 提升性能
-###  1-1.基于 Proxy 的 Observation
-目前，Vue 的响应式系统是使用带有 Object.defineProperty 的getter 和 setter。但是，Vue 3 将使用 ES2015 Proxy 作为其观察机制。这消除了以前存在的警告，使速度加倍，并使用了一半的内存。
+## 按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制。
 
-<br />
-
-## 2.接收 Props 不同,setup,this
+## 接收 Props 不同,setup,this
 接收组件props参数传递这一块为我们带来了Vue2和Vue3之间最大的区别。
 —this在vue3中与vue2代表着完全不一样的东西。
 
@@ -138,48 +191,51 @@ mounted () {
 1. props - 不可变的组件参数
 2. context - Vue3 暴露出来的属性（emit，slots，attrs）
 ```js
- // 使用props 接收父组件传过来的值,是一个数组，多个参数可以使用逗号分开
-props:["title","home"],
-// 或则
-props: {
-  listSubProject: {
-    type: Array,
-    default: () => [],
+<template>
+  <div>{{ props.text }}</div>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    text: { type: String, required: true },
+    listSubProject: {
+      type: Array,
+      default: () => [],
+    },
+    isPm: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isPm: {
-    type: Boolean,
-    default: false,
-  },
-},
-methods:{
-    getTitle(){
-        // 方法中使用父组件传过来的参数，可以使用 this
-        alert(this.title)
-    }
-},
-setup (props) {
-    // ...
+  setup(props) {
+    // do something with `props.text` here
     onMounted(() => {
-      console.log('title: ' + props.title)
+      console.log('title: ' + props.type)
     })
-    // ...
-}
+  }
+})
+</script>
 ```
 
-## 事件 - Emitting Events 
+## 事件-emit 
 在 Vue2 中自定义事件是非常直接的，但是在 Vue3 的话，我们会有更多的控制的自由度。
 举例，现在我们想在点击提交按钮时触发一个login的事件。
-在 Vue2 中我们会调用到this.$emit然后传入事件名和参数对象。
+### 在Vue2中我们会调用到`this.$emit`然后传入事件名和参数对象
 ```js
 login () {
-      this.$emit('login', {
-        username: this.username,
-        password: this.password
-      })
+  this.$emit('login', {
+    username: this.username,
+    password: this.password
+  })
 }
 ```
 
-但是在 Vue3中，我们刚刚说过this已经不是和vue2代表着这个组件了，所以我们需要不一样的自定义事件的方式
+### Vue3中使用emit
+this已经不是和vue2代表着这个组件了，所以我们需要不一样的自定义事件的方式
+
 在setup()中的第二个参数content对象中就有emit，这个是和this.$emit是一样的。那么我们只要在setup()接收第二个参数中使用分解对象法取出emit就可以在setup方法中随意使用了。
 ```js
 setup (props, { emit }) {
@@ -191,38 +247,6 @@ setup (props, { emit }) {
     }
 }
 ```
-
-## 不同在于数据获取:Vue3中的反应数据:Reactive Data
-```
-Vue3 的设计模式给予开发者们按需引入需要使用的依赖包。这样一来就不需要多余的引用导致性能或者打包后太大的问题。
-全新的合成式API（Composition API）可以提升代码的解耦程度 —— 特别是大型的前端应用，效果会更加明显。还有就是按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制。
-```
-
-— 所以我们需要访问这个反应状态来获取数据值。
-
-使用以下三步来建立反应性数据:
-
-1.从vue引入reactive
-2.使用reactive()方法来声名我们的数据为反应性数据
-3.使用setup()方法来返回我们的反应性数据，从而我们的template可以获取这些反应性数据
-```js
-import { reactive } from 'vue'
-
-export default {
-  props: {
-    title: String
-  },
-  setup () {
-    const state = reactive({
-      username: '',
-      password: ''
-    })
-
-    return { state }
-  }
-}
-```
-
 
 ## 路由方面,非重点
 1.需要安装 router4
@@ -282,9 +306,6 @@ const router = new VueRouter({
 
 export default router
 ```
-
-## 优化 slots 的生成
-目前在 Vue 中，当父组件重新渲染时，其子组件也必须重新渲染。使用Vue 3，可以单独重新渲染父级和子级
 
 ## keep-alive
 ### keep-alive平时在哪里使用?原理是什么?

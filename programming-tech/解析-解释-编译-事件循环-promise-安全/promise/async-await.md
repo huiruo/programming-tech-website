@@ -1,3 +1,53 @@
+## promise和async/await区别
+### 错误处理
+1. Promise使用catch()方法处理失败状态下的结果
+2. async/await 中，使用 try/catch 语句来处理异步操作的错误
+
+```js
+// Promise 的错误处理
+function example() {
+  return somePromise()
+    .then(result => {
+      console.log(result)
+    })
+    .catch(error => {
+      console.error(error)
+    })
+}
+
+// async/await 的错误处理
+async function example() {
+  try {
+    const result = await somePromise()
+    console.log(result)
+  } catch (error) {
+    console.error(error)
+  }
+}
+```
+
+### 执行顺序
+1. Promise链式调用`.then()`方法来处理多个异步操作的结果，从而形成一条执行链。但是，这种方法有时会导致代码难以阅读和维护。
+2. async/await 中，使用更加直观的同步代码形式来处理异步操作。async/await 中的异步操作会被自动转换为 Promise 对象,从而可以使用 Promise 的链式调用方法。
+```js
+// Promise 的链式调用
+function example() {
+  return somePromise1()
+    .then(result1 => {
+      return somePromise2(result1)
+    })
+    .then(result2 => {
+      console.log(result2)
+    })
+}
+
+// async/await 的同步代码形式
+async function example() {
+  const result1 = await somePromise1()
+  const result2 = await somePromise2(result1)
+  console.log(result2)
+}
+```
 
 ## 生成器+promise=async function
 Async/Await就是一个自执行的generate函数

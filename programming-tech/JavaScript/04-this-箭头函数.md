@@ -139,19 +139,33 @@ fn(1);
 ### 作为某个对象方法调用时，this 指向该对象。
 ### 在调用函数时使用 new 关键字
 this 指向 new 出来的实例对象。如果构造函数不返回任何东西，那么就会默认 return this
-1. 创建一个新的空的对象
-2. 把这个对象链接到原型对象上
-3. 这个对象被绑定为 this
-4. 如果这个函数不返回任何东西，那么就会默认 return this
+1. 创建一个新的空对象，该对象的原型指向构造函数的prototype属性。
+2. 将构造函数的作用域赋值给新对象（因此this指向新对象）。
+3. 执行构造函数中的代码，以初始化新对象。
+4. 如果构造函数有返回值并且返回值是一个对象，则返回该对象；如果这个函数不返回任何东西，那么就会默认 return this,即这个新对象。
+```
+如果不写，直接返回默认创建的新对象
+return的是this，直接返回默认创建的新对象
+return的是null或基本数据类型，则返回新创建的对象。
+return的是对象，则直接返回该对象，取而代之本该默认返回的新对象
+```
 ```js
-function Normal() {
-  console.log(this); // => Normal {}
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
 }
 
-Normal.prototype.a1 = 1
-// debugger
-var normal = new Normal(); // normal: Normal {}
-console.log('normal:',normal)
+// 使用new关键字创建了一个新对象person1
+// 它的原型指向Person.prototype，并调用Person构造函数来初始化新对象。
+var person1 = new Person('John', 30);
+console.log(person1.name); // "John"
+console.log(person1.age); // 30
+```
+
+### 通过对象字面量创建对象的过程
+除了写法上区别,new关键字创建对象时，可以继承原型链上的属性和方法，而使用对象字面量创建对象则不支持继承原型链。而是从Object.prototype继承而来的属性和方法
+```js
+var person = {};
 ```
 
 ### 如果 apply、call 或 bind 方法

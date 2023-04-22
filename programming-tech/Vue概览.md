@@ -28,7 +28,7 @@ vue: this.data = x;
 react: setState(x);
 ```
 
-4. 模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom 运行时+编译时 都是找出差异修改;
+4. 模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom编译时+运行时 都是找出差异修改
 
 
 ## 宏观流程
@@ -37,7 +37,6 @@ react: setState(x);
 * reactivity表示响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
 ```
 1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
-
 2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
 3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
 ```

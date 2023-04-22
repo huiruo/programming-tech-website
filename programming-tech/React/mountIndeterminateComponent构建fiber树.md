@@ -1,4 +1,10 @@
-## workInProgress 构建1
+---
+title: mountIndeterminateComponent构建fiber树
+sidebar_position: -2
+---
+
+## beginWork前置工作
+### beginWork之前workInProgress根节点构建
 ```js
   function createWorkInProgress(current, pendingProps) {
     var workInProgress = current.alternate;
@@ -99,46 +105,89 @@
   }
 ```
 
-赋值：调用 prepareFreshStack
+### 为workInProgress赋值-renderRootSync-->prepareFreshStack
 ```js
-  function renderRootSync(root, lanes) {
+function renderRootSync(root, lanes) {
+  var prevExecutionContext = executionContext;
+  executionContext |= RenderContext;
+  var prevDispatcher = pushDispatcher(); // If the root or lanes have changed, throw out the existing stack
+  // and prepare a fresh one. Otherwise we'll continue where we left off.
 
-    var prevExecutionContext = executionContext;
-    executionContext |= RenderContext;
-    var prevDispatcher = pushDispatcher(); // If the root or lanes have changed, throw out the existing stack
-    // and prepare a fresh one. Otherwise we'll continue where we left off.
+  if (workInProgressRoot !== root || workInProgressRootRenderLanes !== lanes) {
+    {
+      if (isDevToolsPresent) {
+        var memoizedUpdaters = root.memoizedUpdaters;
 
-    if (workInProgressRoot !== root || workInProgressRootRenderLanes !== lanes) {
-      {
-        if (isDevToolsPresent) {
-          var memoizedUpdaters = root.memoizedUpdaters;
-
-          if (memoizedUpdaters.size > 0) {
-            restorePendingUpdaters(root, workInProgressRootRenderLanes);
-            memoizedUpdaters.clear();
-          } // At this point, move Fibers that scheduled the upcoming work from the Map to the Set.
-          // If we bailout on this work, we'll move them back (like above).
-          // It's important to move them now in case the work spawns more work at the same priority with different updaters.
-          // That way we can keep the current update and future updates separate.
+        if (memoizedUpdaters.size > 0) {
+          restorePendingUpdaters(root, workInProgressRootRenderLanes);
+          memoizedUpdaters.clear();
+        } // At this point, move Fibers that scheduled the upcoming work from the Map to the Set.
+        // If we bailout on this work, we'll move them back (like above).
+        // It's important to move them now in case the work spawns more work at the same priority with different updaters.
+        // That way we can keep the current update and future updates separate.
 
 
-          movePendingFibersToMemoized(root, lanes);
-        }
-
+        movePendingFibersToMemoized(root, lanes);
       }
 
-      workInProgressTransitions = getTransitionsForLanes();
-
-      console.log('workInProgress', workInProgress, root)
-      debugger
-      console.log('render调用 prepareFreshStack前',workInProgress)
-      prepareFreshStack(root, lanes);
-      console.log('workInProgress', workInProgress, root)
-      console.log('render调用 prepareFreshStack后',workInProgress)
     }
+
+    workInProgressTransitions = getTransitionsForLanes();
+
+    console.log('workInProgress', workInProgress, root)
+    debugger
+    console.log('render调用 prepareFreshStack前',workInProgress)
+    prepareFreshStack(root, lanes);
+    console.log('workInProgress', workInProgress, root)
+    console.log('render调用 prepareFreshStack后',workInProgress)
+  }
+
+function prepareFreshStack(root, lanes) {
+  root.finishedWork = null;
+  root.finishedLanes = NoLanes;
+  var timeoutHandle = root.timeoutHandle;
+
+  if (timeoutHandle !== noTimeout) {
+    // The root previous suspended and scheduled a timeout to commit a fallback
+    // state. Now that we have additional work, cancel the timeout.
+    root.timeoutHandle = noTimeout; // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
+
+    cancelTimeout(timeoutHandle);
+  }
+
+  if (workInProgress !== null) {
+    var interruptedWork = workInProgress.return;
+
+    while (interruptedWork !== null) {
+      var current = interruptedWork.alternate;
+      unwindInterruptedWork(current, interruptedWork);
+      interruptedWork = interruptedWork.return;
+    }
+  }
+
+  console.log('=render阶段:prepareFreshStack=处理workInProgressRoot:workInProgressRoot = root')
+  workInProgressRoot = root;
+  var rootWorkInProgress = createWorkInProgress(root.current, null);
+  workInProgress = rootWorkInProgress;
+  workInProgressRootRenderLanes = subtreeRenderLanes = workInProgressRootIncludedLanes = lanes;
+  workInProgressRootExitStatus = RootInProgress;
+  workInProgressRootFatalError = null;
+  workInProgressRootSkippedLanes = NoLanes;
+  workInProgressRootInterleavedUpdatedLanes = NoLanes;
+  workInProgressRootPingedLanes = NoLanes;
+  workInProgressRootConcurrentErrors = null;
+  workInProgressRootRecoverableErrors = null;
+  enqueueInterleavedUpdates();
+
+  {
+    ReactStrictModeWarnings.discardPendingWarnings();
+  }
+
+  return rootWorkInProgress;
+}
 ```
 
-## beginWork 第一次会调用updateHostRoot进行初始化:updateHostRoot
+## 第一次beginWork调用updateHostRoot进行初始化:updateHostRoot
 updateHostRoot-->reconcileChildren(current, workInProgress, nextChildren, renderLanes)-->reconcileChildren
 ```js
   function beginWork(current, workInProgress, renderLanes) {
@@ -301,7 +350,7 @@ function ChildReconciler(shouldTrackSideEffects) {
 }
 ```
 
-## 流程图:第二次beginWork case:mountIndeterminateComponent 执行code()
+## 第二次beginWork-case:mountIndeterminateComponent 执行code()
 执行完code()此时的workInProgress.type 才有值;
 
 第二次beginWork进入case IndeterminateComponent 执行 mountIndeterminateComponent(),可见深度遍历从父级组件开始

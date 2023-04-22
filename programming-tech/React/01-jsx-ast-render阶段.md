@@ -2,7 +2,7 @@
 title: jsx-ast-render阶段
 sidebar_position: 1
 ---
-## 调用流程图
+## 流程图-应用入口
 基于18
 ```mermaid
 flowchart TD
@@ -38,10 +38,8 @@ A4--开始渲染,注意非批量-->A5("updateContainer(children, root")
   }
 ```
 
-
-## 接上面updateContainer
+## 流程图-接上面updateContainer
 fiber 协调过程,构建fiber树的阶段可中断
-### 流程图
 ```mermaid
 flowchart TD
 A1("updateContainer(children, root")-->A2("root=scheduleUpdateOnFiber(current$1,lane")--> A3("ensureRootIsScheduled(root,eventTime)")

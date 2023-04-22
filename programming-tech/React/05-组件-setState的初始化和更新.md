@@ -703,6 +703,13 @@ function updateWorkInProgressHook() {
 ```
 
 ## 流程图-data更新之后-获取state-调度更新
+1. 当执行setState("努力哦")-->dispatchSetState 其中对比新旧值：
+```js
+objectIs(eagerState, currentState)
+```
+
+2. 需要更新组件的时候，重新执行函数组件-->updateReducer(reducer)返回最新[hook.memoizedState, dispatch]
+
 总结：
 ```mermaid
 flowchart LR

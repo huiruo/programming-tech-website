@@ -9,7 +9,7 @@
 
 commit阶段的工作（patch）把本次更新中的所有DOM change应用到DOM树，是一连串的DOM操作。DOM操作虽然看起来也可以拆分，但这样做一方面可能造成DOM实际状态与维护的内部状态不一致，另外还会影响体验。
 
-## commit阶段:可以分为3个阶段
+## commit阶段分为3个阶段
 主要是去依据workInProgress树中有变化的那些节点（render阶段的completeWork过程收集到的effect链表）,去完成DOM操作，将更新应用到页面上，除此之外，还会异步调度useEffect以及同步执行useLayoutEffect。
 
 1. Before mutation 阶段（执行DOM操作前的一些相关操作）-commitBeforeMutationEffects

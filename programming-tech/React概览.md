@@ -43,11 +43,12 @@ React使用的是babel
 
 8. Vue2 和 Vue3 都使用了双端对比算法，而 React 的 Fiber 由于是单向链表的结构，所以在 React 不设置由右向左的链表之前，都无法实现双端对比。
 
-## 优化.useState同步还是异步? 
-参考：[React/setState的异步和同步问题](./React/setState异步-同步)
-
 ## 两大阶段：render和commit
 ## render构建fiber树:beginWork阶段和completeWork阶段
+参考1：[render总览](./React/jsx-ast-render阶段)
+
+参考2：重点beginWork流程：[mountIndeterminateComponent构建fiber树-流程图-构建fiber树流程](./React/mountIndeterminateComponent构建fiber树)
+
 render阶段是在内存中构建一棵新的fiber树（称为workInProgress树）,构建过程是依照现有fiber树（current树）从root开始深度优先遍历再回溯到root的过程，这个过程中每个fiber节点都会经历两个阶段：beginWork和completeWork。
 1. beginWork阶段:将ast树转换为fiber 树。
 2. completeWork阶段:生成实例
@@ -68,7 +69,9 @@ while (nextUnitOfWork !== null && !shouldYieldToRenderer()) {
 }
 ```
 
-## commit阶段:可以分为3个阶段：
+## commit阶段分为3个阶段
+参考：[render阶段结束后-进入commit阶段](./React/render阶段结束后-进入commit阶段)
+
 在render阶段结束后，会进入commit阶段，该阶段不可中断,commit阶段的调度优先级采用的是最高优先级，以保证commit阶段同步执行不可被打断。
 
 相应的节点进行提交，渲染到页面上,在commit阶段就会操作真实节点，将它们插入到dom树中:
@@ -102,44 +105,11 @@ workInProgress节点的completeWork阶段主要做的:
 * DOM属性的处理,次要理解
 * 错误处理,次要理解
 
-## hook之state
-beginWork-->children=Component(props,secondArg)--执行函数组件-->dev.useState(initialState)
+## hooks初始化
+参考：[组件-setState的初始化和更新-流程图-初始化hook-state-接上面beginWork](./React/组件-setState的初始化和更新)
 
-初始化state:
-1. 第一步处理链表
-2. 绑定dispatch
-3. 返回[hook.memoizedState,dispatch]
+## 执行setState(xx)组件更新,重点在dispatchSetState
+参考：[组件-setState的初始化和更新-流程图-data更新之后-获取state-调度更新](./React/组件-setState的初始化和更新)
 
-## setState 更新,重点在dispatchSetState
-当执行setState("努力哦")-->dispatchSetState 其中对比新旧值：
-```js
-objectIs(eagerState, currentState)
-// 如果有更新：调度更新
-performSyncWorkOnRoot()
-```
-
-1. 重新执行函数组件，updateReducer(reducer)返回最新[hook.memoizedState, dispatch]
-
-2. reconcileChildren 走上面的更新逻辑
-```mermaid
-flowchart TD
-A1("setData('努力哦')")-->a1(dispatchSetState)
-
-
-a1--1update添加到环形链表-->a1a("enqueueUpdate$1")
-a1--2对比新旧若无更新return-->a2a("objectIs(eagerState, currentState)")
-a1--3调度更新-->a2("scheduleUpdateOnFiber()")-->a3("performSyncWorkOnRoot()")--暂时省略步骤-->b1
-
-b1("beginWork(current,workInProgress,renderLanes)")--case_FunctionComponent-->b2("return updateFunctionComponent(current,workInProgress,..")
-b2--1-->b3("renderWithHooks(current,workInProgress,Component,..")
-
-b2--2-->b4("reconcileChildren")
-
-b3--重点执行函数组件获取新值-->b5("children=Component(props,secondArg)")
-
-b5--重新运行函数组件-->b6(useState)-->b7("updateState(initialState)")-->b8("return updateReducer")-->b9("return updateReducer(basicStateReducer)")
-
-b9-->b10("updateReducer(reducer)返回最新[hook.memoizedState, dispatch]")
-b10--1-->b11("hook=updateWorkInProgressHook(),hook:最新状态值和setState()")-->b13("拿到拷贝后的hook，可以计算新状态值了")
-b10--2-->b12("读取队列,计算出最新状态，更新hook的状态")
-```
+## 优化.useState同步还是异步? 
+参考：[React/setState的异步和同步问题](./React/setState异步-同步)

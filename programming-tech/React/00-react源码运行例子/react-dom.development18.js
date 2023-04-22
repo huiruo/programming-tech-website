@@ -16363,11 +16363,11 @@
 
   function mountWorkInProgressHook() {
     var hook = {
-      memoizedState: null,
-      baseState: null,
-      baseQueue: null,
-      queue: null,
-      next: null
+      memoizedState: null, // 上次渲染时所用的 state
+      baseState: null, // 已处理的 update 计算出的 state
+      baseQueue: null, // 未处理的 update 队列（一般是上一轮渲染未完成的 update）
+      queue: null, // 当前出发的 update 队列
+      next: null // 指向下一个 hook，形成链表结构
     };
 
     if (workInProgressHook === null) {
@@ -16480,8 +16480,12 @@
   }
 
   function updateReducer(reducer, initialArg, init) {
+    // 拷贝 hook（current -> workInProcess），并返回这个 hook
     var hook = updateWorkInProgressHook();
     console.log('%c=updateState=updateReducer调用updateWorkInProgressHook,拷贝hook(current->workInProcess),并返回这个hook', 'color:cyan', { hook })
+
+    // 读取队列，计算出最新状态，更新 hook 的状态 
+    // 取出 hook.queue 链表，添加到 current.baseQueue 末尾
     var queue = hook.queue;
 
     console.log('%c=updateState=updateReducer读取队列,计算出最新状态，更新hook的状态', 'color:cyan')
@@ -16519,6 +16523,7 @@
       queue.pending = null;
     }
 
+    // 处理更新队列
     if (baseQueue !== null) {
       // We have a queue to process.
       var first = baseQueue.next;
@@ -16528,6 +16533,7 @@
       var newBaseQueueLast = null;
       var update = first;
 
+      // 循环，根据 baseQueue 链表下的 update 对象计算新状态
       do {
         var updateLane = update.lane;
 
@@ -16578,6 +16584,7 @@
             // 状态已经计算过，那就直接用
             newState = update.eagerState;
           } else {
+            // 计算新状态
             var action = update.action;
             newState = reducer(newState, action);
           }
@@ -16599,6 +16606,7 @@
         markWorkInProgressReceivedUpdate();
       }
 
+      // 更新 hook 状态
       hook.memoizedState = newState;
       hook.baseState = newBaseState;
       hook.baseQueue = newBaseQueueLast;
@@ -16932,12 +16940,12 @@
 
   function pushEffect(tag, create, destroy, deps) {
     var effect = {
-      tag: tag,
-      create: create,
-      destroy: destroy,
-      deps: deps,
+      tag: tag, // 标记是否有 effect 需要执行 
+      create: create, // 回调函数
+      destroy: destroy, // 销毁时触发的回调
+      deps: deps, // 依赖的数组
       // Circular
-      next: null
+      next: null  // 下一个要执行的 Effect
     };
     var componentUpdateQueue = currentlyRenderingFiber$1.updateQueue;
 
@@ -25982,7 +25990,7 @@
         root.finishedWork = finishedWork;
         root.finishedLanes = lanes;
 
-        console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan')
+        console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan', { root })
         finishConcurrentRender(root, exitStatus, lanes);
       }
     }
@@ -26910,7 +26918,7 @@
     // layout phases. Should be able to remove.
     var previousUpdateLanePriority = getCurrentUpdatePriority();
     var prevTransition = ReactCurrentBatchConfig$3.transition;
-    console.log(`%c=commit阶段=0=commit阶段开始`, 'color:cyan', { root, recoverableErrors })
+    console.log(`%c=commit阶段=0=commit阶段开始`, 'color:cyan', { root })
     try {
       ReactCurrentBatchConfig$3.transition = null;
       setCurrentUpdatePriority(DiscreteEventPriority);

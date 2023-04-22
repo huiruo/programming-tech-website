@@ -2,6 +2,7 @@
 title: 组件-setState的初始化和更新
 sidebar_position: 5
 ---
+
 ## 前言
 
 ### 如果state和从父组件传过来的props都没变化，那他就一定不会发生重渲染吗？
@@ -11,8 +12,22 @@ sidebar_position: 5
 子组件更新的条件是其 props 或 state 发生变化。如果父组件重新渲染时，传递给子组件的 props 没有发生变化，那么子组件不会更新。
 
 1. 当父组件更新，props没改变，sub组件不会更新
-2. 当父组件更新，props 对象里面的值改变，sub组件会更新
+```js
+const [obj, setObj] = React.useState({ test: 1, test2: 2 })
 
+const changeSubData = () => {
+  console.log('changeSubData')
+  // 并不会更新子组件
+  obj.test1 = 5
+  // 重新生成对象，子组件更新
+  // setObj({ ...obj, test1: 3 })
+}
+
+return (
+  <Sub obj={obj} />
+)
+```
+2. 当父组件更新，props 引用地址改变，如上面的例子`setObj`,sub组件会更新
 
 React采用了基于值比较的浅比较（shallow comparison）策略，只有当props和state的引用发生变化时，React才会重新渲染组件。但如果props和state是复杂对象（如数组和对象），浅比较将只比较它们的引用，而不是它们的内容。如果父组件每次重新渲染时都会创建新的props对象，子组件也会被重新渲染，即使props的值没有改变。
 
@@ -258,9 +273,9 @@ function renderWithHooks(current, workInProgress, Component, props, secondArg, n
 }
 ```
 
-页面上初始化和更新阶段调用的都是`function useState(initialState)`;但是`resolveDispatcher()`的返回是不一样的，也就是初始化和更新最终调用还是不一样的：
-* 初始化最终调用mountState
-* 更新最终调用mountState
+页面初始化和更新阶段调用的都是`function useState(initialState)`;但是`resolveDispatcher()`的返回是不一样的，也就是初始化和更新最终调用还是不一样的：
+* 初始化最终调用 mountState
+* 更新最终调用 updateReducer
 ```js
 // react.development18.js
 function useState(initialState) {
@@ -444,26 +459,28 @@ function updateState(initialState) {
 
 ### 更新阶段-updateReducer
 updateReducer作用:更新 hook 上的参数，返回 state 和 dispatchSetState
-* 从 current.memorizedState 拷贝 hook 到 workInProcess 下（updateWorkInProgressHook 方法）
+```
+updateReducer返回的数组中，第一个值就是memoizedState。hooks值，就缓存在hook.memoizedState这个值里。
+```
 
-* 将 hook.queue.pending 队列合并到 currentHook.baseQueue 下，然后遍历队列中的 update 对象，使用 action 和 reducer 计算出最新的状态，更新到 hook 上，最后返回新状态和新 setState。
+updateReducer-->updateWorkInProgressHook：见下一节;
+
+updateReducer步骤:
+1. 从 current.memorizedState 拷贝 hook 到 workInProcess 下（updateWorkInProgressHook 方法）
+2. 将 hook.queue.pending 队列合并到 currentHook.baseQueue 下，然后遍历队列中的 update 对象，使用 action 和 reducer 计算出最新的状态，更新到 hook 上，最后返回新状态和新 setState。
+3. baseQueue 为之前因为某些原因导致更新中断从而剩下的 update 链表，pendingQueue 则是本次产生的 update链表。会把 baseQueue 接在 pendingQueue 前面。
+4. 从 baseQueue.next 开始遍历整个链表执行 update，每次循环产生的 newState，作为下一次的参数，直到遍历完整个链表。即整个合并的链表是先执行上一次更新后再执行新的更新，以此保证更新的先后顺序。
+5. 最后更新 hook 上的参数，返回 state 和 dispatch。
 
 ```js
 // 返回的数组第一个就算是更新后的值，第二个是setXX函数
 function updateReducer(reducer, initialArg, init) {
-  // 1.拷贝 hook（current -> workInProcess），并返回这个 hook
-  const hook = updateWorkInProgressHook();
-
-  // 2.读取队列，计算出最新状态，更新 hook 的状态
-
-  // 最后返回
-  return [hook.memoizedState, dispatch];
-}
-```
-```js
-function updateReducer(reducer, initialArg, init) {
+  // 拷贝 hook（current -> workInProcess），并返回这个 hook
   var hook = updateWorkInProgressHook();
   console.log('%c=updateState=updateReducer调用updateWorkInProgressHook,拷贝hook(current->workInProcess),并返回这个hook', 'color:cyan', { hook })
+
+  // 读取队列，计算出最新状态，更新 hook 的状态 
+  // 取出 hook.queue 链表，添加到 current.baseQueue 末尾
   var queue = hook.queue;
 
   console.log('%c=updateState=updateReducer读取队列,计算出最新状态，更新hook的状态', 'color:cyan')
@@ -501,6 +518,7 @@ function updateReducer(reducer, initialArg, init) {
     queue.pending = null;
   }
 
+  // 处理更新队列
   if (baseQueue !== null) {
     // We have a queue to process.
     var first = baseQueue.next;
@@ -510,6 +528,7 @@ function updateReducer(reducer, initialArg, init) {
     var newBaseQueueLast = null;
     var update = first;
 
+    // 循环，根据 baseQueue 链表下的 update 对象计算新状态
     do {
       var updateLane = update.lane;
 
@@ -560,6 +579,7 @@ function updateReducer(reducer, initialArg, init) {
           // 状态已经计算过，那就直接用
           newState = update.eagerState;
         } else {
+          // 计算新状态
           var action = update.action;
           newState = reducer(newState, action);
         }
@@ -581,6 +601,7 @@ function updateReducer(reducer, initialArg, init) {
       markWorkInProgressReceivedUpdate();
     }
 
+    // 更新 hook 状态
     hook.memoizedState = newState;
     hook.baseState = newBaseState;
     hook.baseQueue = newBaseQueueLast;
@@ -610,6 +631,74 @@ function updateReducer(reducer, initialArg, init) {
   var dispatch = queue.dispatch;
   console.log('%c=updateState=updateReducer最终返回值', 'color:cyan', [hook.memoizedState, dispatch])
   return [hook.memoizedState, dispatch];
+}
+```
+
+### updateReducer-->updateWorkInProgressHook
+继续观察updateWorkInProgressHook方法，发现该方法在内部修改了很多外部的变量，workInProgressHook，nextWorkInProgressHook，currentHook等。而memoizedState: currentHook.memoizedState。
+```js
+var hook = updateWorkInProgressHook();
+```
+在updateWorkInProgressHook方法，hook是包含了memoizedState, baseState, queue, baseUpdate, next属性的一个对象。
+```js
+function updateWorkInProgressHook() {
+  // This function is used both for updates and for re-renders triggered by a
+  // render phase update. It assumes there is either a current hook we can
+  // clone, or a work-in-progress hook from a previous render pass that we can
+  // use as a base. When we reach the end of the base list, we must switch to
+  // the dispatcher used for mounts.
+  var nextCurrentHook;
+
+  if (currentHook === null) {
+    var current = currentlyRenderingFiber$1.alternate;
+
+    if (current !== null) {
+      nextCurrentHook = current.memoizedState;
+    } else {
+      nextCurrentHook = null;
+    }
+  } else {
+    nextCurrentHook = currentHook.next;
+  }
+
+  var nextWorkInProgressHook;
+
+  if (workInProgressHook === null) {
+    nextWorkInProgressHook = currentlyRenderingFiber$1.memoizedState;
+  } else {
+    nextWorkInProgressHook = workInProgressHook.next;
+  }
+
+  if (nextWorkInProgressHook !== null) {
+    // There's already a work-in-progress. Reuse it.
+    workInProgressHook = nextWorkInProgressHook;
+    nextWorkInProgressHook = workInProgressHook.next;
+    currentHook = nextCurrentHook;
+  } else {
+    // Clone from the current hook.
+    if (nextCurrentHook === null) {
+      throw new Error('Rendered more hooks than during the previous render.');
+    }
+
+    currentHook = nextCurrentHook;
+    var newHook = {
+      memoizedState: currentHook.memoizedState,
+      baseState: currentHook.baseState,
+      baseQueue: currentHook.baseQueue,
+      queue: currentHook.queue,
+      next: null
+    };
+
+    if (workInProgressHook === null) {
+      // This is the first hook in the list.
+      currentlyRenderingFiber$1.memoizedState = workInProgressHook = newHook;
+    } else {
+      // Append to the end of the list.
+      workInProgressHook = workInProgressHook.next = newHook;
+    }
+  }
+
+  return workInProgressHook;
 }
 ```
 
@@ -652,160 +741,6 @@ b10--2-->b12("读取队列,计算出最新状态，更新hook的状态")
 Effect同理:updateEffect->updateEffectImpl
 
 无论useState, useEffect, 内部调用updateWorkInProgressHook获取一个 hook.
-
-```js
-function updateReducer(reducer, initialArg, init) {
-  var hook = updateWorkInProgressHook();
-  console.log('%c=updateState=updateReducer调用updateWorkInProgressHook,拷贝hook(current->workInProcess),并返回这个hook', 'color:cyan', { hook })
-  var queue = hook.queue;
-
-  console.log('%c=updateState=updateReducer读取队列,计算出最新状态，更新hook的状态', 'color:cyan')
-  if (queue === null) {
-    throw new Error('Should have a queue. This is likely a bug in React. Please file an issue.');
-  }
-
-  queue.lastRenderedReducer = reducer;
-  var current = currentHook; // The last rebase update that is NOT part of the base state.
-
-  var baseQueue = current.baseQueue; // The last pending update that hasn't been processed yet.
-
-  var pendingQueue = queue.pending;
-
-  if (pendingQueue !== null) {
-    // We have new updates that haven't been processed yet.
-    // We'll add them to the base queue.
-    if (baseQueue !== null) {
-      // Merge the pending queue and the base queue.
-      var baseFirst = baseQueue.next;
-      var pendingFirst = pendingQueue.next;
-      baseQueue.next = pendingFirst;
-      pendingQueue.next = baseFirst;
-    }
-
-    {
-      if (current.baseQueue !== baseQueue) {
-        // Internal invariant that should never happen, but feasibly could in
-        // the future if we implement resuming, or some form of that.
-        error('Internal error: Expected work-in-progress queue to be a clone. ' + 'This is a bug in React.');
-      }
-    }
-
-    current.baseQueue = baseQueue = pendingQueue;
-    queue.pending = null;
-  }
-
-  if (baseQueue !== null) {
-    // We have a queue to process.
-    var first = baseQueue.next;
-    var newState = current.baseState;
-    var newBaseState = null;
-    var newBaseQueueFirst = null;
-    var newBaseQueueLast = null;
-    var update = first;
-
-    do {
-      var updateLane = update.lane;
-
-      if (!isSubsetOfLanes(renderLanes, updateLane)) {
-        // Priority is insufficient. Skip this update. If this is the first
-        // skipped update, the previous update/state is the new base
-        // update/state.
-        var clone = {
-          lane: updateLane,
-          action: update.action,
-          hasEagerState: update.hasEagerState,
-          eagerState: update.eagerState,
-          next: null
-        };
-
-        if (newBaseQueueLast === null) {
-          newBaseQueueFirst = newBaseQueueLast = clone;
-          newBaseState = newState;
-        } else {
-          newBaseQueueLast = newBaseQueueLast.next = clone;
-        } // Update the remaining priority in the queue.
-        // TODO: Don't need to accumulate this. Instead, we can remove
-        // renderLanes from the original lanes.
-
-
-        currentlyRenderingFiber$1.lanes = mergeLanes(currentlyRenderingFiber$1.lanes, updateLane);
-        markSkippedUpdateLanes(updateLane);
-      } else {
-        // This update does have sufficient priority.
-        if (newBaseQueueLast !== null) {
-          var _clone = {
-            // This update is going to be committed so we never want uncommit
-            // it. Using NoLane works because 0 is a subset of all bitmasks, so
-            // this will never be skipped by the check above.
-            lane: NoLane,
-            action: update.action,
-            hasEagerState: update.hasEagerState,
-            eagerState: update.eagerState,
-            next: null
-          };
-          newBaseQueueLast = newBaseQueueLast.next = _clone;
-        } // Process this update.
-
-
-        if (update.hasEagerState) {
-          // If this update is a state update (not a reducer) and was processed eagerly,
-          // we can use the eagerly computed state
-          // 状态已经计算过，那就直接用
-          newState = update.eagerState;
-        } else {
-          var action = update.action;
-          newState = reducer(newState, action);
-        }
-      }
-
-      update = update.next;
-      // 终止条件是指针为空 或 环已遍历完
-    } while (update !== null && update !== first);
-
-    if (newBaseQueueLast === null) {
-      newBaseState = newState;
-    } else {
-      newBaseQueueLast.next = newBaseQueueFirst;
-    } // Mark that the fiber performed work, but only if the new state is
-    // different from the current state.
-
-
-    if (!objectIs(newState, hook.memoizedState)) {
-      markWorkInProgressReceivedUpdate();
-    }
-
-    hook.memoizedState = newState;
-    hook.baseState = newBaseState;
-    hook.baseQueue = newBaseQueueLast;
-    queue.lastRenderedState = newState;
-  } // Interleaved updates are stored on a separate queue. We aren't going to
-  // process them during this render, but we do need to track which lanes
-  // are remaining.
-
-
-  var lastInterleaved = queue.interleaved;
-
-  if (lastInterleaved !== null) {
-    var interleaved = lastInterleaved;
-
-    do {
-      var interleavedLane = interleaved.lane;
-      currentlyRenderingFiber$1.lanes = mergeLanes(currentlyRenderingFiber$1.lanes, interleavedLane);
-      markSkippedUpdateLanes(interleavedLane);
-      interleaved = interleaved.next;
-    } while (interleaved !== lastInterleaved);
-  } else if (baseQueue === null) {
-    // `queue.lanes` is used for entangling transitions. We can set it back to
-    // zero once the queue is empty.
-    queue.lanes = NoLanes;
-  }
-
-  var dispatch = queue.dispatch;
-  console.log('%c=updateState=updateReducer最终返回值', 'color:cyan', [hook.memoizedState, dispatch])
-  return [hook.memoizedState, dispatch];
-}
-```
-
 
 ## 更新阶段1
 memoizedState保存state的值
@@ -989,9 +924,11 @@ function ensureRootIsScheduled(root, currentTime) {
 
     newCallbackNode = null;
   }
+  // 省略
+}
 ```
 
-## 更新阶段3-会重新执行renderWithHooks,重新挂载hooks:
+## 更新阶段3-重新执行renderWithHooks,重新挂载hooks:
 ```js
 if (current !== null && current.memoizedState !== null) {
   ReactCurrentDispatcher$1.current = HooksDispatcherOnUpdateInDEV;
@@ -1199,82 +1136,6 @@ function updateWorkInProgressHook() {
 首先将 hook.queue.pending 队列合并到 currentHook.baseQueue 下。该队列包含了一系列 update 对象（因为可能调用了多次 setState），里面保存有 setState 传入的最新状态值（函数或其他值）。
 
 然后遍历 update 计算出最新状态，保存回 hook，并返回最新状态值和 setState 方法。
-
-
-### updateReducer 主要工作：
-1. 将 baseQueue 和  pendingQueue 首尾合并形成新的链表
-
-2. baseQueue 为之前因为某些原因导致更新中断从而剩下的 update 链表，pendingQueue 则是本次产生的 update链表。会把 baseQueue 接在 pendingQueue 前面。
-3. 从 baseQueue.next 开始遍历整个链表执行 update，每次循环产生的 newState，作为下一次的参数，直到遍历完整个链表。即整个合并的链表是先执行上一次更新后再执行新的更新，以此保证更新的先后顺序。
-4. 最后更新 hook 上的参数，返回 state 和 dispatch。
-```js
-function updateReducer(reducer, initialArg, init) {
-  // ----- 【1】 拷贝 hook（current -> workInProcess），并返回这个 hook ----
-  const hook = updateWorkInProgressHook();
-  
-  // ----- 【2】 读取队列，计算出最新状态，更新 hook 的状态 -----
-  // 取出 hook.queue 链表，添加到 current.baseQueue 末尾
-  const queue = hook.queue;
-  queue.lastRenderedReducer = reducer;
-  const current = currentHook;
-  let baseQueue = current.baseQueue;
-  const pendingQueue = queue.pending;
-  if (pendingQueue !== null) {
-    if (baseQueue !== null) {
-      const baseFirst = baseQueue.next;
-      const pendingFirst = pendingQueue.next;
-      baseQueue.next = pendingFirst;
-      pendingQueue.next = baseFirst;
-    }
-    current.baseQueue = baseQueue = pendingQueue;
-    queue.pending = null;
-  }
-
-  // 处理更新队列
-  if (baseQueue !== null) {
-    const first = baseQueue.next;
-    let newState = current.baseState;
-
-    let newBaseState = null;
-    let newBaseQueueFirst = null;
-    let newBaseQueueLast = null;
-    let update = first;
-  
-    // 循环，根据 baseQueue 链表下的 update 对象计算新状态
-    do {   
-      // 删掉了一些跳过更新的逻辑
-
-      if (update.hasEagerState) {
-        // 为了对比新旧状态来决定是否更新，所计算的新状态。
-        // 如果不同，给 update.hasEagerState 设置为 true
-        // 新状态赋值给 update.eagerState
-        newState = update.eagerState;
-      } else {
-        // 计算新状态
-        const action = update.action;
-        newState = reducer(newState, action);
-      }     
-      update = update.next;
-    } while (update !== null && update !== first);   
-    if (newBaseQueueLast === null) {
-      newBaseState = newState;
-    } else {
-      newBaseQueueLast.next = newBaseQueueFirst;
-    }
-    if (!is(newState, hook.memoizedState)) {
-      markWorkInProgressReceivedUpdate();
-    }
-  // 更新 hook 状态
-    hook.memoizedState = newState;
-    hook.baseState = newBaseState;
-    hook.baseQueue = newBaseQueueLast;
-    queue.lastRenderedState = newState;
-  }
-  const dispatch = queue.dispatch;
-  return [hook.memoizedState, dispatch];
-}
-```
-
 
 ## 关于hooks问题
 ### Hooks为什么不能写在条件语句中？

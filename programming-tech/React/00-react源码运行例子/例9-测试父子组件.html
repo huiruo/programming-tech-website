@@ -25,6 +25,17 @@
       const [showDiv, setShowDiv] = React.useState(false)
       const [obj, setObj] = React.useState({ test: 1, test2: 2 })
 
+      React.useEffect(() => {
+        console.log('=副作用-useEffect-->运行');
+        return () => {
+          console.log('useEffect销毁时触发的回调');
+        };
+      }, [])
+
+      React.useLayoutEffect(() => {
+        console.log('=副作用-useLayoutEffect-->运行');
+      }, [])
+
       const onClickText = () => {
         console.log('=useState=onClick=例5-没有导致state的值发生变化的setState是否会导致重渲染?',);
         setData('努力')
@@ -32,20 +43,13 @@
 
       const changeSubData = () => {
         console.log('changeSubData')
-        setObj({ ...obj, test1: 3 })
+        obj.test1 = 5
+        // setObj({ ...obj, test1: 3 })
       }
 
       const onClickText2 = () => {
         console.log('=useState=onClick:', data);
       }
-
-      React.useEffect(() => {
-        console.log('=副作用-useEffect-->运行');
-      }, [])
-
-      React.useLayoutEffect(() => {
-        console.log('=副作用-useLayoutEffect-->运行');
-      }, [])
 
       return (
         <div id='div1' className='c1'>
@@ -79,7 +83,6 @@
 
     const root = ReactDOM.createRoot(document.getElementById('root'))
     root.render(<Test />);
-  </script>
   </script>
 </body>
 

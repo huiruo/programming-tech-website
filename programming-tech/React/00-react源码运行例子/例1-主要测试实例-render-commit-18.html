@@ -44,6 +44,9 @@
 
       React.useEffect(() => {
         console.log('=副作用-useEffect-->运行');
+        return () => {
+          console.log('useEffect销毁时触发的回调');
+        };
       }, [])
 
       React.useLayoutEffect(() => {

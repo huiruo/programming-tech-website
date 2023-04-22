@@ -3,7 +3,51 @@ title: fiber
 sidebar_position: 12
 ---
 
+## 查看fiber树
+初始化阶段这个函数看log
+```js
+// 重点函数performConcurrentWorkOnRoot,这个函数在render结束会开启commit阶段
+function performConcurrentWorkOnRoot(root, didTimeout) {
+    var exitStatus = shouldTimeSlice ? renderRootConcurrent(root, lanes) : renderRootSync(root, lanes);
+
+    if (exitStatus === RootDidNotComplete) {
+        markRootSuspended$1(root, lanes);
+    } else {
+        root.finishedWork = finishedWork;
+        root.finishedLanes = lanes;
+
+        console.log(`%c=commit阶段=前=render阶段结束=performConcurrentWorkOnRoot调用finishConcurrentRender-->commitRoot`, 'color:cyan', { root })
+        finishConcurrentRender(root, exitStatus, lanes);
+    }
+}
+```
+
+更新阶段这个函数看log
+```js
+function commitRoot(root, recoverableErrors, transitions) {
+// TODO: This no longer makes any sense. We already wrap the mutation and
+// layout phases. Should be able to remove.
+var previousUpdateLanePriority = getCurrentUpdatePriority();
+var prevTransition = ReactCurrentBatchConfig$3.transition;
+console.log(`%c=commit阶段=0=commit阶段开始`, 'color:cyan', { root })
+try {
+    ReactCurrentBatchConfig$3.transition = null;
+    setCurrentUpdatePriority(DiscreteEventPriority);
+    commitRootImpl(root, recoverableErrors, transitions, previousUpdateLanePriority);
+} finally {
+    ReactCurrentBatchConfig$3.transition = prevTransition;
+    setCurrentUpdatePriority(previousUpdateLanePriority);
+}
+
+return null;
+}
+```
+
+![](../assets/img-react/fiber树结构实例.png)
+
 ## Fiber 数据结构:
+React Fiber 树由多个 Fiber 节点组成，每个节点代表了一个组件。Fiber 节点包含了组件的相关信息，例如组件类型、props、state 等，同时还包括了与调度相关的信息，例如优先级、任务状态、父子关系等。
+
 主要分下面几块：
 * 节点基础信息的描述
 * 描述与其它 fiber 节点连接的属性

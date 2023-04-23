@@ -13,7 +13,7 @@ const sidebars = {
         'React/jsx-ast-render阶段',
         'React/mountIndeterminateComponent构建fiber树',
         'React/render阶段1-beginWork',
-        'React/组件-setState的初始化和更新',
+        'React/hooks的初始化和setState组件更新',
         'React/beginWork第3步-Reconciliation-双缓存-diff',
         'React/render阶段2-completeWork',
         'React/render阶段结束后-进入commit阶段',

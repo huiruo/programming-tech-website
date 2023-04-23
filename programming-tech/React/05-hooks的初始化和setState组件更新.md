@@ -1,5 +1,5 @@
 ---
-title: 组件-setState的初始化和更新
+title: hooks的初始化和setState组件更新
 sidebar_position: 5
 ---
 

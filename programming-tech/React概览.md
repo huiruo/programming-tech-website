@@ -106,10 +106,10 @@ workInProgress节点的completeWork阶段主要做的:
 * 错误处理,次要理解
 
 ## hooks初始化
-参考：[组件-setState的初始化和更新-流程图-初始化hook-state-接上面beginWork](./React/组件-setState的初始化和更新)
+参考：[hooks的初始化和setState组件更新-流程图-初始化hook-state-接上面beginWork](./React/hooks的初始化和setState组件更新)
 
 ## 执行setState(xx)组件更新,重点在dispatchSetState
-参考：[组件-setState的初始化和更新-流程图-data更新之后-获取state-调度更新](./React/组件-setState的初始化和更新)
+参考：[hooks的初始化和setState组件更新-流程图-data更新之后-获取state-调度更新](./React/hooks的初始化和setState组件更新)
 
 ## 优化.useState同步还是异步? 
 参考：[React/setState的异步和同步问题](./React/setState异步-同步)

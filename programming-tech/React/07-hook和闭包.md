@@ -29,7 +29,7 @@ React.createElement(Sub, { obj: obj })
 ### updateReducer
 接下来updateReducer，逻辑比较复杂
 
-参考：[组件-setState的初始化和更新-更新阶段-updateReducer](./组件-setState的初始化和更新)
+参考：[hooks的初始化和setState组件更新-更新阶段-updateReducer](./hooks的初始化和setState组件更新)
 
 
 ## Hooks是以单向链表的数据结构存储在 Fiber memoizedState 属性身上

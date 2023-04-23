@@ -90,8 +90,8 @@ for (let key in man) {
 * */
 ```
 
-### 例子2
-为了遍历一个对象的所有属性时忽略掉继承属性，使用 hasOwnProperty()来过滤该对象上的继承属性。
+### 例子2-使用 hasOwnProperty()来过滤该对象上的继承属性
+遍历一个对象的所有属性时忽略掉继承属性
 ```js
 // 测试for in 借助hasOwnProperty()遍历对象
 const object1 = {

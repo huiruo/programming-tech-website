@@ -48,6 +48,19 @@ const arr = ['apple', 'banana', 'apple', 'pear', 'strawberry'];
 console.log('在数组去重中使用:', unique(arr));
 ```
 
+```js
+let myArray = [1, 2, 2, 3, 4, 4, 5];
+
+// 将数组转换为Set
+let mySet = new Set(myArray);
+
+// 将Set转换回数组
+let uniqueArray = Array.from(mySet);
+
+// 输出去重后的数组
+console.log(uniqueArray); // [1, 2, 3, 4, 5]
+```
+
 ## 使用 Set 可以很容易地实现并集（Union）、交集（Intersect）和差集
 
 ### 并集

@@ -133,7 +133,7 @@ B2--开始构建传入模板字符串-->接下面流程图
   }
 ```
 
-## 编译AST-转换AST为render总结
+## 流程图-编译AST-转换AST为render总结
 * 生成ast对象
 * 将ast对象作为参数传入transform函数，对 ast 节点进行转换操作
 * 将ast对象作为参数传入generate函数，返回编译结果

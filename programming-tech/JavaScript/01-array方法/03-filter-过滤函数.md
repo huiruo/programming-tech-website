@@ -1,5 +1,7 @@
 ## JS中filter()方法的使用
-Array.filter(function(currentValue, indedx, arr), thisValue)
+并不会改变原始数组，而是返回一个新数组
+
+Array.filter(function(currentValue, index, arr), thisValue)
 
 callback:用来测试数组的每个元素的函数。返回 true 表示该元素通过测试，保留该元素，false 则不保留。
 ```

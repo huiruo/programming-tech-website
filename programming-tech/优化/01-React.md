@@ -14,9 +14,8 @@ React 组件性能优化的核心是减少渲染真实 DOM 节点的频率，减
 因为react 每个节点都会触发beginWork;
 
 vue中,创建好vnode,调用patch进行组件内容的渲染,vnode.children递归调用 patch(null,child,container)
-
+* 拆分组件:当触发更新的时候节点都会beginWork-->completeWork,所以尽量把大组件抽离成组件
 * 所以减少嵌套组件，嵌套节点很重要
-
 * 或则使用虚拟列表
 
 ## 使用组件懒加载可以减少bundle文件大小

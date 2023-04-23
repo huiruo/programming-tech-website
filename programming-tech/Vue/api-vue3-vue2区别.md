@@ -46,14 +46,10 @@ sidebar_position: 10
 05-vue3-测试父子组件-更新.html
 
 ## vue3响应式-Reactive
-
-— 所以我们需要访问这个反应状态来获取数据值。
-
 使用以下三步来建立反应性数据:
-
-1.从vue引入reactive
-2.使用reactive()方法来声名我们的数据为反应性数据
-3.使用setup()方法来返回我们的反应性数据，从而我们的template可以获取这些反应性数据
+1. 从vue引入reactive
+2. 使用reactive()方法来声名我们的数据为反应性数据
+3. 使用setup()方法来返回我们的反应性数据，从而我们的template可以获取这些反应性数据
 ```js
 import { reactive } from 'vue'
 
@@ -98,7 +94,7 @@ Vue 3 将使用 ES2015 Proxy 作为其观察机制。这消除了以前存在的
 
 Proxy 和 Reflect是ES6新增的两个类，Proxy相比Object.defineProperty更加好用，解决了后者不能监听数组改变的缺点，并且还支持劫持整个对象,并返回一个新对象,不管是操作便利程度还是底层功能上都远强于Object.defineProperty，Reflect的作用是可以拿到Object内部的方法，并且在操作对象出错时返回false不会报错。
 
-## vue2和vue3生命周期钩子不同 — 提供了类似react Hooks
+## vue2和vue3生命周期钩子不同
 vue2:
 beforeCreate-->created-->beforeMount-->mounted
 

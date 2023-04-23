@@ -134,7 +134,7 @@ const sidebars = {
         'JavaScript/bind-call-apply',
         'JavaScript/原型-原型链',
         'JavaScript/题1-prototype能否取到值吗',
-        'JavaScript/js数据类型-类型转换',
+        'JavaScript/数据类型-类型转换',
         'JavaScript/深-浅-拷贝',
         'JavaScript/判断是否是数组-判断对象-空对象',
         'JavaScript/数据类型symbol',
@@ -144,6 +144,7 @@ const sidebars = {
         'JavaScript/运算符i++表示先赋值',
         'JavaScript/高阶函数-函数式编程-纯函数',
         'JavaScript/高阶函数-函数式编程-柯里化实现就是return fn',
+        'JavaScript/自执行函数',
         {
           label: 'es6',
           type: 'category',
@@ -311,8 +312,8 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
-            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
             '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/event-loop',
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
           ]
         },
         '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
@@ -340,6 +341,7 @@ const sidebars = {
         'html-css/css-1-块级元素-css',
         'html-css/css-2-块级格式化上下文BFC',
         'html-css/css-4-为什么需要清除浮动',
+        'html-css/less和scss的区别',
         'html-css/em和rem',
         'html-css/html5属性',
         'html-css/重要的html-dom属性',
@@ -446,7 +448,6 @@ const sidebars = {
         'build-AST-Babel/babel-编译构建之modules',
         'build-AST-Babel/babel-standalone使用',
         'build-AST-Babel/transform-runtime',
-        'build-AST-Babel/less和scss的区别',
         'build-AST-Babel/断点调试要领',
         {
           label: '代码格式化',

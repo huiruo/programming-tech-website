@@ -13,7 +13,10 @@ sidebar_position: 5
 
 ## 二者不同
 ### 1. 编译环境不一样
-Sass是在服务端处理的，以前是Ruby，现在是Dart-Sass或Node-Sass，而Less是需要引入less.js来处理Less代码输出CSS到浏览器，也可以在开发服务器将Less语法编译成css文件，输出CSS文件到生产包目录，有npm less, Less.app、SimpleLess、CodeKit.app这样的工具，也有在线编译地址。
+Less和Sass都是CSS预处理器
+
+* Sass是在服务端处理的，以前是Ruby，现在是Dart-Sass或Node-Sass
+* Less是需要引入less.js来处理Less代码输出CSS到浏览器，也可以在开发服务器将Less语法编译成css文件，输出CSS文件到生产包目录，有npm less, Less.app、SimpleLess、CodeKit.app这样的工具，也有在线编译地址。
 
 ### 2. 变量符不一样，Less是@，而Scss是$
 ```css
@@ -34,10 +37,10 @@ $color: #00c; /* 蓝色 */
 Less没有输出设置，Sass提供4中输出选项：nested, compact, compressed 和 expanded。
 输出样式的风格可以有四种选择，默认为nested
 
-nested：嵌套缩进的css代码
-expanded：展开的多行css代码
-compact：简洁格式的css代码
-compressed：压缩后的css代码
+* nested：嵌套缩进的css代码
+* expanded：展开的多行css代码
+* compact：简洁格式的css代码
+* compressed：压缩后的css代码
 
 ### 4.Sass支持条件语句
 可以使用if{}else{},for{}循环等等。

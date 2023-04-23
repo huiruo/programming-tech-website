@@ -144,7 +144,7 @@ const sidebars = {
         'JavaScript/运算符i++表示先赋值',
         'JavaScript/高阶函数-函数式编程-纯函数',
         'JavaScript/高阶函数-函数式编程-柯里化实现就是return fn',
-        'JavaScript/自执行函数',
+        'JavaScript/立即执行函数',
         {
           label: 'es6',
           type: 'category',

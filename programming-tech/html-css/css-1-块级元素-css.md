@@ -7,8 +7,8 @@ sidebar_position: 1
 ![](../assets/img-html/01-css盒子模型.png)
 ```
 Content(内容) - 盒子的内容，显示文本和图像。
-Border(边框) - 围绕在内边距和内容外的边框。
 Padding(内边距) - 清除内容周围的区域，内边距是透明的。
+Border(边框) - 围绕在内边距和内容外的边框。
 Margin(外边距) - 清除边框外的区域，外边距是透明的。
 ```
 
@@ -18,9 +18,7 @@ margin 是用来隔开元素与元素的间距；
 padding 是用来隔开元素与内容的间隔，让内容（文字）与（包裹）元素之间有一段 呼吸距离。
 
 ## box-sizing
-通过修改box-sizing 属性可以改变计算盒子大小的方式
-
-W3C的标准Box Model: 元素的宽度(width) 和高度(height)计算方式如下：
+### W3C的标准Box Model
 ```
 width(宽度) + padding(内边距) + border(边框) = 元素实际宽度
 height(高度) + padding(内边距) + border(边框) = 元素实际高度
@@ -31,9 +29,12 @@ height(高度) + padding(内边距) + border(边框) = 元素实际高度
 默认值:	box-sizing: content-box;
 ```
 
-### IE怪异盒模型:box-sizing:border-box
-border-box：指定盒模型为 IE模型，设置 border、padding 不会影响元素 width 与 height 的尺寸，即 border 与 padding 由元素已设空间转变。
-即空间还是这个空间，只是将部分空余的地方，转变成了其他空间用法而已，为内部转变
+### box-sizing:border-box
+border-box：指定盒模型为IE模型
+```
+设置 border、padding 不会影响元素 width 与 height 的尺寸，即 border 与 padding 由元素已设空间转变。
+```
+
 ```html
 <style type="text/css">
 .box {
@@ -178,7 +179,6 @@ absolute元素:
 @media (max-width: 1366px) {
   .room-item {
     width: calc((100% - 56px) / 4);
-    //background:yellow;
   }
 }
 ```
@@ -207,20 +207,3 @@ absolute元素:
 display:none;的元素会直接从页面消失，因此定义transition效果完全无效。
 visibility:hidden;的元素会在transition设置的时间内消失，但是没有动画效果。
 opacity:0;的元素可以和正常元素一样，从页面以动画效果消失。
-
-
-## 未知宽度：水平居中
-父级元素设置text-align:center;自身元素设置display: inline-block;即可水平居中
-
-## BFC
-[块级格式化上下文BFC](./css-2-块级格式化上下文BFC)
-
-### margin 穿透及解决
-子元素设置margin-top或者margin-bottom会影响其父元素，这就是所谓的margin穿透。
-
-margin重叠是指两个同级元素之间。margin穿透指的是，子元素margin超出父元素而未被父元素包含的现象。
-```
-出现margin重叠的原因: 同一个BFC里面两个块级元素会出现margin折叠。
-
-解决方式：让两个块级元素不在一个BFC内。
-```

@@ -1,7 +1,51 @@
 ---
-title: flex基础-三个属性-等分布局
-sidebar_position: 5
+title: flex
+sidebar_position: 7
 ---
+
+## flex实现左右浮动-justifyContent:space-between
+左边一个div，右边一个div，
+
+父元素只需要
+```
+display:flex;
+justify-content:space-between
+```
+
+```html
+.cell-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+<div class="cellBottom">
+    <div>{{ cell.price }}</div>
+    <div class="cell-bottom">aa</div>
+</div>
+```
+
+## flex-flow 属性是 flex-direction 和 flex-wrap 属性的复合属性
+###  flex-direction 属性规定灵活项目的方向
+flex-direction值：
+```
+row
+row-reverse
+column
+column-reverse
+initial
+inherit
+默认值是 "row"。
+规定灵活项目的方向。
+```
+
+###  flex-wrap 属性规定灵活项目是否拆行或拆列
+```
+nowrap  默认值。规定灵活的项目不拆行或不拆列。
+wrap  规定灵活的项目在必要的时候拆行或拆列。
+wrap-reverse  规定灵活的项目在必要的时候拆行或拆列，但是以相反的顺序。
+initial 设置该属性为它的默认值。请参阅 initial。
+inherit 从父元素继承该属性。请参阅 inherit。
+```
 
 ## flex是:flex-grow,flex-shrink,flex-basis
 
@@ -44,10 +88,10 @@ flex: 8;  // === flex: 8 1 0%;
 }
 ```
 
-## 2.flex-basis
+### 1.flex-basis
 basis英文意思是<主要成分>，所以他和width放在一起时,肯定把width干掉，basis遇到width时就会说我才是最主要的成分，你是次要成分，所以见到我的时候你要靠边站
 
-#### 2-1.flex-basis 和width 如果同时设置， 以flex-basis为准
+flex-basis 和width 如果同时设置， 以flex-basis为准
 ```css
 item {
 	width: 30px;
@@ -65,7 +109,7 @@ item1 {
 最后宽度为100px (即max-width最大宽度或最小宽度)
 ```
 
-## 3.flex-grow
+### 2.flex-grow
 ```
 grow英文意思是<扩大，扩展，增加>,这就代表当父元素的宽度大于子元素宽度之和时，并且父元素有剩余，这时，flex-grow就会说我要成长，我要长大，怎么样才能成长呢，当然是分享父元素的空间了
 ```
@@ -110,7 +154,7 @@ grow英文意思是<扩大，扩展，增加>,这就代表当父元素的宽度�
 }
 ```
 
-## 4.flex-shrink
+### 3.flex-shrink
 ```
 flex-shrink， shrink英文意思是<收缩>，这就代表当父元素的宽度小于子元素宽度之和时，并且超出了父元素的宽度，这时，flex-shrink就会说外面的世界太苦了，我还是回到父亲的怀抱中去吧！因此，flex-shrink就会按照一定的比例进行收缩
 ```
@@ -175,3 +219,113 @@ flex-shrink， shrink英文意思是<收缩>，这就代表当父元素的宽度
     flex-shrink:2;
 }
 ```
+
+## flex实现:头部底部固定-中间自适应并可滚动
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		html,
+		body {
+			height: 100%;
+			margin: 0px;
+		}
+
+		.wrap {
+			width: 100%;
+			/* 很重要，如果设置成100%，页面内容过多时不会固定 */
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			font-size: 16px;
+		}
+
+		.header {
+			background: aquamarine;
+			height: 60px;
+		}
+
+		.content {
+			display: block;
+			/* 很重要，否则当该内容超过一屏时，尾部区域不会固定 */
+			overflow-y: auto;
+			background: #4CAF50;
+		}
+
+		.footer {
+			background: tan;
+			height: 40px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="wrap">
+		<div class="header">头部</div>
+		<div class="content">
+			<div style='height:600px'>test</div>
+			<div style='height:600px'>test</div>
+			<div style='height:600px'>test</div>
+			<div style='height:600px'>test</div>
+		</div>
+		<div class="footer">尾部</div>
+	</div>
+</body>
+
+</html>
+```
+
+## flex实现上-中-下-布局
+```html
+<html>
+<style type="text/css">
+	body {
+		margin: 0;
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		background: grey;
+	}
+
+	.header {
+		width: 100%;
+		height: 88px;
+		background: yellow;
+	}
+
+	.content {
+		width: 100%;
+		flex: 1 1 auto;
+		background: red;
+	}
+
+	.footer {
+		height: 100px;
+		width: 100%;
+		background: gold;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<div class="header"></div>
+		<div class="content">
+			<div>hello world</div>
+			<div>msg</div>
+		</div>
+		<div class="footer"></div>
+	</div>
+</body>
+
+</html>
+```
+
+## 头部底部固定-中间自适应-绝对定位
+略

@@ -4,35 +4,43 @@
 <head>
   <meta charset="UTF-8">
   <title>Z-one</title>
+  <style>
+    .parent {
+      border: 1px solid black;
+      overflow: hidden;
+      /* 创建BFC */
+    }
+
+    .child1,
+    .child2 {
+      float: left;
+      width: 50%;
+      height: 200px;
+      background-color: yellow;
+    }
+
+    .child3 {
+      margin-top: 20px;
+      height: 100px;
+      background-color: pink;
+    }
+
+    .grandchild {
+      height: 50px;
+      background-color: green;
+    }
+  </style>
 </head>
 
 <body>
-  <p id="p1" class="p">测试</p>
-  <p id="p2" class="p">测试</p>
-  <p id="p3" class="p">测试</p>
-  <script>
-    var a = document.getElementById("p1") // 获取上面那个例子的p1元素.
-    console.log('1:', a.id)  // 获取该元素的id... "p1" (貌似就是通过p1找到的他- -)
-    console.log('2:', a.nodeName) // 获取到节点的名字(就是标签名字) 这里是"p"
-    console.log('3:', a.className) // 获取节点的class名字，这里因为关键字的原因，只能用className;
-
-    // 另外还有一些
-    console.log('4:', a.child) // 获取子元素  这里没有
-    console.log('5:', a.lastchild) // 最后一个子元素.
-    console.log('6:', a.firstchild) // 第一个子元素.
-    console.log('7:', a.nextSibling) // 下一个兄弟元素.
-    console.log('8:', a.previousSibing) // 上一个兄弟元素.
-    /*
-    1: p1
-    2: P
-    3: p
-    4: undefined
-    5: undefined
-    6: undefined
-    7: #text
-    8: undefined
-    */
-  </script>
+  <div class="parent">
+    <div class="child1">Child 1</div>
+    <div class="child2">Child 2</div>
+    <div class="child3">
+      Child 3
+      <div class="grandchild">Grandchild</div>
+    </div>
+  </div>
 </body>
 
 </html>

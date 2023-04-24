@@ -1,22 +1,13 @@
----
-title: router
-sidebar_position: 100
----
-
-# router原理
+## router原理
 ## BrowserRouter 和 HashRouter
-### 1. BrowserRouter：h5路由(history API),url的pathname段
+### BrowserRouter：h5路由(history API),url的pathname
 window.history是一个堆栈，里面存放了当前浏览器Tab的所有浏览url并依照浏览顺序存放在堆栈中。
-
-BrowserRouter：http://127.0.0.1:3000/article/num1
 
 HashRouter相当于锚点定位，因此不论#后面的路径怎么变化，请求的都相当于是#之前的那个页面。可以很容易的进行前后端不分离的部署(也就是把前端打包后的文件放到服务器端的public或static里)，
 
 因为请求的链接都是ip地址:端口/#/xxxx，因此请求的资源路径永远为/，相当于index.html，而其他的后端API接口都可以正常请求，不会和/冲突，由于前后端不分离也不会产生跨域问题。
 
-BrowserRouter进行组件跳转时可以传递任意参数实现组件间的通信
-而HashRouter不能(除非手动拼接URL字符串)，因此一般配合Redux使用，实现组件间的数据通信。
-
+BrowserRouter进行组件跳转时可以传递任意参数实现组件间的通信而HashRouter不能(除非手动拼接URL字符串)，因此一般配合Redux使用，实现组件间的数据通信。
 
 因为BrowserRouter模式下请求的链接都是ip地址:端口/xxxx/xxxx，因此相当于每个URL都会访问一个不同的后端地址，如果后端没有覆盖到路由就会产生404错误。
 
@@ -26,15 +17,6 @@ BrowserRouter进行组件跳转时可以传递任意参数实现组件间的通�
 
 解决方法:
 进行前后端分离的部署，比如前端地址ip1:端口1，后端接口地址ip2:端口2，使用Nginx反向代理服务器进行请求分发。前端向后端发起请求的URL为nginx所在的服务器+/api/xxx，通过NGINX的配置文件判断，如果URL以api开头则转发至后端接口，否则转发至前端的地址，访问项目只需访问Nginx服务器即可
-
-### 2. HashRouter：在路径中包含了#，相当于HTML的锚点定位
-
-HashRouter：http://127.0.0.1:3000/#/article/num1
-
-HashRouter 只会修改URL中的哈希值部分；而 BrowserRouter 修改的是URL本身
-HashRouter 是纯前端路由，可以通过输入URL直接访问；
-
-使用时 BrowserRouter 直接输入URL会显示404，除非配置Nginx将请求指向对应的HTML文件。初次进入 / 路径时或点击 Link 组件跳转时不会发送请求
 
 ## router和context组件级的数据共享
 如果组件的功能不能单靠组件自身来完成，还需要依赖额外的子组件，那么可以利用`Context`构建一个由多个子组件组合的组件。例如，react-router。
@@ -63,172 +45,6 @@ react-router的`<Router />`自身并不能独立完成路由的操作和管理�
 
 * 设计开发一个组件，如果这个组件需要多个组件关联组合的，使用`Context`或许可以更加优雅。
 
-
-## 源码
-### Router.js
-尽管源码还有其他的逻辑，但<Router />的核心就是为子组件提供一个带有router属性的Context，同时监听history，一旦history发生变化，便通过setState()触发组件重新渲染。
-```js
-/**
- * The public API for putting history on context.
- */
-class Router extends React.Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-    children: PropTypes.node
-  };
-
-  static contextTypes = {
-    router: PropTypes.object
-  };
-
-  static childContextTypes = {
-    router: PropTypes.object.isRequired
-  };
-
-  getChildContext() {
-    return {
-      router: {
-        ...this.context.router,
-        history: this.props.history,
-        route: {
-          location: this.props.history.location,
-          match: this.state.match
-        }
-      }
-    };
-  }
-  
-  // ......
-  
-  componentWillMount() {
-    const { children, history } = this.props;
-    
-    // ......
-    
-    this.unlisten = history.listen(() => {
-      this.setState({
-        match: this.computeMatch(history.location.pathname)
-      });
-    });
-  }
-
-  // ......
-}
-```
-
-
-### Link.js
-`<Link />`的核心就是渲染`<a>`标签，拦截`<a>`标签的点击事件，然后通过`<Router />`共享的`router`对`history`进行路由操作，进而通知`<Router />`重新渲染。
-```js
-/**
- * The public API for rendering a history-aware <a>.
- */
-class Link extends React.Component {
-  
-  // ......
-  
-  static contextTypes = {
-    router: PropTypes.shape({
-      history: PropTypes.shape({
-        push: PropTypes.func.isRequired,
-        replace: PropTypes.func.isRequired,
-        createHref: PropTypes.func.isRequired
-      }).isRequired
-    }).isRequired
-  };
-
-  handleClick = event => {
-    if (this.props.onClick) this.props.onClick(event);
-
-    if (
-      !event.defaultPrevented &&
-      event.button === 0 &&
-      !this.props.target &&
-      !isModifiedEvent(event)
-    ) {
-      event.preventDefault();
-      // 使用<Router />组件提供的router实例
-      const { history } = this.context.router;
-      const { replace, to } = this.props;
-
-      if (replace) {
-        history.replace(to);
-      } else {
-        history.push(to);
-      }
-    }
-  };
-  
-  render() {
-    const { replace, to, innerRef, ...props } = this.props;
-
-    // ...
-
-    const { history } = this.context.router;
-    const location =
-      typeof to === "string"
-        ? createLocation(to, null, null, history.location)
-        : to;
-
-    const href = history.createHref(location);
-    return (
-      <a {...props} onClick={this.handleClick} href={href} ref={innerRef} />
-    );
-  }
-}
-```
-
-
-
-### Route.js
-`<Route />`有一部分源码与`<Router />`相似，可以实现路由的嵌套，但其核心是通过`Context`共享的`router`，判断是否匹配当前路由的路径，然后渲染组件。
-```js
-class Route extends React.Component {
-  
-  // ......
-  
-  state = {
-    match: this.computeMatch(this.props, this.context.router)
-  };
-
-  // 计算匹配的路径，匹配的话，会返回一个匹配对象，否则返回null
-  computeMatch(
-    { computedMatch, location, path, strict, exact, sensitive },
-    router
-  ) {
-    if (computedMatch) return computedMatch;
-    
-    // ......
-
-    const { route } = router;
-    const pathname = (location || route.location).pathname;
-    
-    return matchPath(pathname, { path, strict, exact, sensitive }, route.match);
-  }
- 
-  // ......
-
-  render() {
-    const { match } = this.state;
-    const { children, component, render } = this.props;
-    const { history, route, staticContext } = this.context.router;
-    const location = this.props.location || route.location;
-    const props = { match, location, history, staticContext };
-
-    if (component) return match ? React.createElement(component, props) : null;
-
-    if (render) return match ? render(props) : null;
-
-    if (typeof children === "function") return children(props);
-
-    if (children && !isEmptyChildren(children))
-      return React.Children.only(children);
-
-    return null;
-  }
-}
-```
-
 ## 传参方式
 1. params传参:路由表配置：参数地址栏显示;动态路由,推荐使用
 
@@ -243,10 +59,8 @@ state传参：BrowserRouter(history)模式下，刷新页面不消失；
 而HashRouter(hash)模式下，刷新页面会消失，但都不会暴露在url中
 ```
 
-# react router v6 
-
-## 个人使用总结：
-1. 移除了之前的 withRouter，路由组件使用hooks订阅histery
+## router v6 
+### 1.移除了之前的withRouter，路由组件使用hooks订阅history
 ```js
 import { useNavigate } from 'react-router-dom';
 
@@ -270,7 +84,7 @@ function App(props: any) {
 export default App;
 ```
 
-2. useRoutes api实现动态路由更加方便
+### 2.useRoutes api实现动态路由更加方便
 ```js
 const RoutesContainer = () => {
 	const GetRoutes = () => {
@@ -287,8 +101,7 @@ const RoutesContainer = () => {
 };
 ```
 
-### 1.Switch 重命名为 Routes
-
+### 3.Switch重命名为Routes
 ```js
 // v5
 <Switch>
@@ -303,8 +116,7 @@ const RoutesContainer = () => {
 </Routes>
 ```
 
-### Route 的新特性变更 ,component/render 被 element 替代
-
+### 4.Route 的新特性变更,component/render被element替代
 ```js
 import Profile from './Profile';
 
@@ -322,7 +134,7 @@ import Profile from './Profile';
 <Route path=":userId" element={<Profile animate={true} />} />
 ```
 
-### history 的用法也将被替换成 navigate
+### 4.history 的用法也将被替换成navigate
 
 ```js
 // v5
@@ -334,7 +146,8 @@ navigate('/home');
 navigate('/home', { replace: true });
 ```
 
-### Module '"react-router-dom"' has no exported member 'withRouter'.
+### 遇到的问题
+Module '"react-router-dom"' has no exported member 'withRouter'.
 
 react-router-dom v6 版本中的 withRouter 和 Switch 已过时，可以退回到 v5 版本继续使用，或者使用 useNavigate()替代 withRouter，使用 Routes 替代 Switch。
 例如：
@@ -345,7 +158,7 @@ navigate(-1) // 返回上一级
 navigate(0, {replace: true})// 强制刷新当前页面并不加入路由历史
 
 ```js
-So basically instead of having somthing like
+So basically instead of having something like
 ...
 function handleClick() {
   history.push("/home");
@@ -366,7 +179,6 @@ function App() {
 ### Redirect 也没法使用
 
 新版的路由需要引入 Navigate 标签，以下是案例
-
 ```js
 <Router>
   <Routes>
@@ -396,7 +208,6 @@ const routers = [
 ```
 
 ### React Router v6 exact
-
 ```js
 <Route exact>消失了。相反，具有后代路由（在其他组件中定义）的路由在其路径中使用一个尾随*符号来指示它们精确匹配。
 ```
@@ -414,13 +225,12 @@ You don't need to use an exact prop on <Route path="/"> anymore. This is because
 ```
 
 ### 嵌套路由变得更简单
-
-具体变化有以下：
-1.Route children 已更改为接受子路由。 2.比 Route exact 和 Route strict 更简单的匹配规则。
-3.Route path 路径层次更清晰。
-
 v5 中的嵌套路由必须非常明确定义，且要求在这些组件中包含许多字符串匹配逻辑.
 
+具体变化有以下：
+1. Route children 已更改为接受子路由。 
+2. 比 Route exact 和 Route strict 更简单的匹配规则。
+3. Route path 路径层次更清晰。
 ```js
 // v5
 import {
@@ -514,9 +324,7 @@ function Profile() {
 ```
 
 ### 实现来回导航(使用 go、goBack、goForward)
-
 实现来回导航(使用 go、goBack、goForward)
-
 ```js
 import { useHistory } from 'react-router-dom';
 
@@ -535,7 +343,6 @@ function App() {
 ```
 
 ### 获取当前路由
-
 ```js
 import { NavLink,useLocation } from "react-router-dom";
 import './index.scss'
@@ -546,10 +353,8 @@ const Header =()=>{
 }
 ```
 
-# v6 传参
-
-## 1.params参数
-
+## v6传参
+### 1.params参数
 需要在Route上显示写明 :params
 ```js
 <BrowserRouter>
@@ -639,7 +444,7 @@ const Pages = () => {
 }
 ```
 
-### 接收
+### search接收
 ```js
 import { useSearchParams } from "react-router-dom";
 
@@ -651,7 +456,7 @@ const ToPages = () => {
 }
 ```
 
-## 3.state 传参
+### 3.state 传参
 如果传递的是state参数需要使用useLocation获取参数
 
 ```js
@@ -663,4 +468,166 @@ const goTo = () => {
 import {useLocation} from "react-router-dom";
 const location = useLocation();
 const {id} = location.state;
+```
+
+## 源码
+### Router.js
+尽管源码还有其他的逻辑，但<Router />的核心就是为子组件提供一个带有router属性的Context，同时监听history，一旦history发生变化，便通过setState()触发组件重新渲染。
+```js
+/**
+ * The public API for putting history on context.
+ */
+class Router extends React.Component {
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+    children: PropTypes.node
+  };
+
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  static childContextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
+  getChildContext() {
+    return {
+      router: {
+        ...this.context.router,
+        history: this.props.history,
+        route: {
+          location: this.props.history.location,
+          match: this.state.match
+        }
+      }
+    };
+  }
+  
+  // ......
+  
+  componentWillMount() {
+    const { children, history } = this.props;
+    
+    // ......
+    
+    this.unlisten = history.listen(() => {
+      this.setState({
+        match: this.computeMatch(history.location.pathname)
+      });
+    });
+  }
+
+  // ......
+}
+```
+
+### Link.js
+`<Link />`的核心就是渲染`<a>`标签，拦截`<a>`标签的点击事件，然后通过`<Router />`共享的`router`对`history`进行路由操作，进而通知`<Router />`重新渲染。
+```js
+/**
+ * The public API for rendering a history-aware <a>.
+ */
+class Link extends React.Component {
+  
+  // ......
+  
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        push: PropTypes.func.isRequired,
+        replace: PropTypes.func.isRequired,
+        createHref: PropTypes.func.isRequired
+      }).isRequired
+    }).isRequired
+  };
+
+  handleClick = event => {
+    if (this.props.onClick) this.props.onClick(event);
+
+    if (
+      !event.defaultPrevented &&
+      event.button === 0 &&
+      !this.props.target &&
+      !isModifiedEvent(event)
+    ) {
+      event.preventDefault();
+      // 使用<Router />组件提供的router实例
+      const { history } = this.context.router;
+      const { replace, to } = this.props;
+
+      if (replace) {
+        history.replace(to);
+      } else {
+        history.push(to);
+      }
+    }
+  };
+  
+  render() {
+    const { replace, to, innerRef, ...props } = this.props;
+
+    // ...
+
+    const { history } = this.context.router;
+    const location =
+      typeof to === "string"
+        ? createLocation(to, null, null, history.location)
+        : to;
+
+    const href = history.createHref(location);
+    return (
+      <a {...props} onClick={this.handleClick} href={href} ref={innerRef} />
+    );
+  }
+}
+```
+
+### Route.js
+`<Route />`有一部分源码与`<Router />`相似，可以实现路由的嵌套，但其核心是通过`Context`共享的`router`，判断是否匹配当前路由的路径，然后渲染组件。
+```js
+class Route extends React.Component {
+  
+  // ......
+  
+  state = {
+    match: this.computeMatch(this.props, this.context.router)
+  };
+
+  // 计算匹配的路径，匹配的话，会返回一个匹配对象，否则返回null
+  computeMatch(
+    { computedMatch, location, path, strict, exact, sensitive },
+    router
+  ) {
+    if (computedMatch) return computedMatch;
+    
+    // ......
+
+    const { route } = router;
+    const pathname = (location || route.location).pathname;
+    
+    return matchPath(pathname, { path, strict, exact, sensitive }, route.match);
+  }
+ 
+  // ......
+
+  render() {
+    const { match } = this.state;
+    const { children, component, render } = this.props;
+    const { history, route, staticContext } = this.context.router;
+    const location = this.props.location || route.location;
+    const props = { match, location, history, staticContext };
+
+    if (component) return match ? React.createElement(component, props) : null;
+
+    if (render) return match ? render(props) : null;
+
+    if (typeof children === "function") return children(props);
+
+    if (children && !isEmptyChildren(children))
+      return React.Children.only(children);
+
+    return null;
+  }
+}
 ```

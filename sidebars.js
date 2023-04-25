@@ -500,6 +500,8 @@ const sidebars = {
         'C++-V8/v8编译',
         'C++-V8/chromium/chromium编译',
         'C++-V8/gn命令',
+        'C++-V8/Safari-Chrome',
+        'C++-V8/electron-tauri',
         'C++-V8/visual studio入门',
         {
           label: 'C++',

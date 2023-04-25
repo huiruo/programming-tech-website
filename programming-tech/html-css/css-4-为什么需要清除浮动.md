@@ -38,16 +38,27 @@ sidebar_position: 3
 }
 ```
 
-### 清除浮动的方式
-父级 div 定义 height，原理：父级 div 手动定义 height，就解决了父级 div 无法自动获取到高度的问题。 
+## 清除浮动的方式
+### 使用clear属性清除浮动
+在浮动元素下添加一个空元素，并给该元素添加clear属性，可以清除浮动
+```html
+<div style="clear:both;"></div>
+```
 
-结尾处加空 div 标签 clear: both，原理：添加一个空 div，利用 css 提高的 clear: both 清除浮动，让父级 div 能自动获取到高度。
+### 使用overflow属性清除浮动
+将包含浮动元素的容器元素的overflow属性设置为hidden或auto，可以清除浮动。
+```html
+<div style="overflow:hidden;">
+    <img src="example.jpg" style="float:left;">
+</div>
+```
 
-父级 div 定义 overflow: hidden，  原理：必须定义 width 或 zoom: 1，同时不能定义 height，使用 overflow: hidden 时，浏览器会自动检查浮动区域的高度。 
-
-
-父级 div 定义 display: table 。
-
-父级 div 定义 伪类 :after 和 zoom 。
-
-结尾处加 br 标签 clear: both， 原理：父级 div 定义 zoom: 1 来解决 IE 浮动问题，结尾处加 br 标签 clear: both。
+### 使用伪元素清除浮动
+可以使用:before或:after伪元素在浮动元素后添加一个空元素，并给该元素添加clear属性，可以清除浮动。
+```css
+.clearfix::after {
+    content:"";
+    display:block;
+    clear:both;
+}
+```

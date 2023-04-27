@@ -3,44 +3,26 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Z-one</title>
+  <title>index</title>
   <style>
-    .parent {
-      border: 1px solid black;
-      overflow: hidden;
-      /* 创建BFC */
-    }
-
-    .child1,
-    .child2 {
-      float: left;
-      width: 50%;
-      height: 200px;
-      background-color: yellow;
-    }
-
-    .child3 {
-      margin-top: 20px;
+    #app {
+      width: 50px;
       height: 100px;
-      background-color: pink;
-    }
-
-    .grandchild {
-      height: 50px;
-      background-color: green;
+      background: yellow;
+      margin: 20px;
+      padding: 10px;
+      border: 2px solid green;
     }
   </style>
 </head>
 
 <body>
-  <div class="parent">
-    <div class="child1">Child 1</div>
-    <div class="child2">Child 2</div>
-    <div class="child3">
-      Child 3
-      <div class="grandchild">Grandchild</div>
-    </div>
-  </div>
+  <div id="app">hello world</div>
+  <script type="text/javascript">
+    var dom = document.getElementById('app');
+    console.log(dom.offsetHeight); // 124
+    console.log(dom.clientHeight); // 120
+  </script>
 </body>
 
 </html>

@@ -17,6 +17,49 @@ margin 是用来隔开元素与元素的间距；
 
 padding 是用来隔开元素与内容的间隔，让内容（文字）与（包裹）元素之间有一段 呼吸距离。
 
+### dom元素的高度
+* offsetHeight：元素的完整高度:可见内容+边框+内边距+滚动条（如果存在的话）的高度。
+
+* scrollHeight：元素的内容高度，包括因为溢出而无法看到的部分，不包括:边框+内边距+外边距或滚动条（如果存在的话）。
+
+* clientHeight：元素的内部高度,包括:可见内容+内边距，不包括:边框+外边距+滚动条（如果存在的话）。
+```
+offsetHeight 和 scrollHeight 可以看做是元素实际高度的两个方面，分别考虑了内容和溢出的情况。
+
+clientHeight 只考虑了元素内部的高度。
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>index</title>
+  <style>
+    #app {
+      width: 50px;
+      height: 100px;
+      background: yellow;
+      margin: 20px;
+      padding: 10px;
+      border: 2px solid green;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">hello world</div>
+  <script type="text/javascript">
+    var dom = document.getElementById('app');
+    console.log(dom.offsetHeight); // 124
+    console.log(dom.clientHeight); // 120
+  </script>
+</body>
+
+</html>
+```
+
 ## box-sizing
 ### W3C的标准Box Model
 ```

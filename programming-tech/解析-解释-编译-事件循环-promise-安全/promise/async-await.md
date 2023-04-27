@@ -1,3 +1,161 @@
+## async
+* 函数前面使用async关键字，这个函数就会返回一个promise
+* 如果返回的不是一个promise，JavaScript也会自动把这个值"包装"成Promise的resolve值。
+
+返回一个promise
+```js
+async function fn() {
+    return new Promise(resolve => {
+        setTimeout(function(){
+            resolve('hello world');
+        }, 1000);
+    });
+}
+
+fn().then(res => {
+    console.log(res); // hello world
+});
+
+let test1 = Object.prototype.toString.call(fn) === '[object AsyncFunction]';
+let test2 = Object.prototype.toString.call(fn()) === '[object Promise]';
+console.log({test1,test2}) // true,true
+```
+
+返回一个非promise
+```js
+async function fn() {
+    return 2;
+}
+const test = fn(); 
+
+console.log(test); // Promise {<resolved>: 2}
+
+fn().then(res => {
+    console.log(res); // 2
+})
+```
+
+## await
+await 操作符用于等待一个Promise 对象。只能在异步函数async function使用;
+
+当代码执行到await语句时，会暂停执行，直到await后面的promise正常处理。
+
+这和我们之前讲到的generator一样，可以让代码在某个地方中断。只不过，在generator中，我们需要手动写代码去执行generator，而await则是像一个自带执行器的generator。
+
+可以理解为：await就是generator的语法糖
+
+
+
+await 表达式会暂停当前 async function 的执行，等待 Promise 处理完成。若 Promise 正常处理(fulfilled)，其回调的resolve函数参数作为 await 表达式的值，继续执行 async function。若 Promise 处理异常(rejected)，await 表达式会把 Promise 的异常原因抛出。另外，如果 await 操作符后的表达式的值不是一个 Promise，则返回该值本身。
+```js
+const promiseTest = function() {
+    return new Promise(resolve => {
+        setTimeout(function(){
+            resolve(1);
+        }, 1000);
+    });
+};
+
+const fn = async function() {
+    const res = await promiseTest();
+    console.log(res); 
+    const res2 = await 2;
+    console.log(res2);
+};
+
+fn();
+```
+
+
+把await放在try catch中捕获错误
+```js
+const promiseTest = function() {
+    return new Promise(resolve => {
+        console.log(test);
+        resolve();
+    });
+};
+
+const fn = async function() {
+    try {
+        await promiseTest();
+    } catch (e) {
+        console.log(e); // test is not defined
+    }
+};
+
+fn();
+```
+
+## 任务队列
+
+js中的队列其实就是一个数组。
+
+### 同步任务队列
+任务队列中的函数都是同步函数。这种情况比较简单，我们可以采用reduce很方便的遍历。
+```js
+const fn1 = function(i) {
+    return i + 1;
+};
+const fn2 = function(i) {
+    return i * 2;
+};
+const fn3 = function(i) {
+    return i * 100;
+};
+const taskList = [fn1, fn2, fn3];
+let a = 1;
+const res = taskList.reduce((sum, fn) => {
+    sum = fn(sum);
+    return sum;
+}, a); 
+
+console.log(res); // 400
+```
+
+### 任务队列中
+任务队列中的函数都是异步函数。这里，我们假设所有的函数都是以Promise的形式封装的。现在，需要依次执行队列中的函数。假设异步任务队列如下：
+```js
+const fn1 = function() {
+    return new Promise( resolve => {
+        setTimeout(function(){
+            console.log('fn1');
+            resolve();
+        }, 2000);
+    });
+};
+const fn2 = function() {
+    return new Promise( resolve => {
+        setTimeout(function(){
+            console.log('fn2');
+            resolve();
+        }, 1000);
+    });
+};
+const fn3 = function() {
+    console.log('fn3');
+    return Promise.resolve(1);
+};
+const taskList = [fn1, fn2, fn3];
+```
+
+可以使用正常的for循环或者for...of... 来遍历数组，并且使用async await来执行代码:
+```js
+// for循环
+(async function(){
+    for(let i = 0; i < taskList.length; i++) {
+        await taskList[i]();
+    }
+})();
+
+// for..of..
+(async function(){
+    for(let fn of taskList) {
+    	await fn();
+	}
+})();
+```
+
 ## promise和async/await区别
 ### 错误处理
 1. Promise使用catch()方法处理失败状态下的结果

@@ -319,7 +319,6 @@ const sidebars = {
         },
         '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
         '解析-解释-编译-事件循环-promise-安全/辅-浏览器兼容性-防抖函数',
-        '解析-解释-编译-事件循环-promise-安全/辅-ie浏览器兼容性',
         '解析-解释-编译-事件循环-promise-安全/旧-变量对象',
         '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
         '解析-解释-编译-事件循环-promise-安全/题目',
@@ -348,6 +347,7 @@ const sidebars = {
         'html-css/重要的html-dom属性',
         'html-css/flex',
         'html-css/水平垂直-居中',
+        'html-css/浏览器兼容性',
         {
           label: 'css3动画',
           type: 'category',

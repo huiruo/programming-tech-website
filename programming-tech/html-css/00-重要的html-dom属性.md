@@ -40,7 +40,7 @@ document.location.href="http://www.baidu.com"
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Z-one</title>
+    <title>index</title>
 </head>
 <body>
     <p id="p1" class="p">测试</p>

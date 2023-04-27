@@ -5,6 +5,12 @@ completeWork阶段处在beginWork之后，commit之前，起到的是一个承�
 
 workLoopSync 循环调用 performUnitOfWork 
 
+作用：
+1. 为新增的 fiber 节点生成对应的DOM节点。
+2. 更新DOM节点的属性。
+3. 进行事件绑定。
+4. 收集effectTag。
+
 ## render阶段2:completeWork
 complete阶段workInProgress节点都是经过diff算法调和过的，也就意味着对于某个节点来说它fiber的形态已经基本确定了，但除此之外还有两点：
 * 目前只有fiber形态变了，对于原生DOM组件（HostComponent）和文本节点（HostText）的fiber来说，对应的DOM节点（fiber.stateNode）并未变化。

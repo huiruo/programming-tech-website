@@ -28,7 +28,7 @@ git checkout -b feat-xx
 
 git push --set-upstream origin feat-xx
 
-删除本地分支：
+删除远程分支：
 git push --delete origin feat-xx
 
 删除本地：

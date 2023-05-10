@@ -543,7 +543,6 @@ const sidebars = {
       items: [
         'backend/消息队列',
         'backend/pm2',
-        'backend/Docker',
         'backend/redis',
         'backend/Apache/Apache',
         {
@@ -573,6 +572,16 @@ const sidebars = {
             'backend/mysql/查看已登录密码',
           ]
         },
+      ]
+    },
+    {
+      label: 'docker',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'docker/Docker命令',
+        'docker/Dockerfile命令',
+        'docker/Docker基础',
       ]
     },
     {

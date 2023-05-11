@@ -108,7 +108,7 @@ mounted()         <--> onMounted()
 
 // 界面还没更新 但是data里面的数据是最新的。即页面尚未和最新的data里面的数据包同步
 beforeUpdate()    <--> onBeforeUpdate()
-// 表示页面和data里面的数据已经包吃同步了 都是最新的
+// 表示页面和data里面的数据已经保持同步了 都是最新的
 updated()         <--> onUpdated()
 
 // 当执行这个生命周期钩子的时候 vue的实例从运行阶段进入销毁阶段 此时实例身上的data 还有 methods处于可用的状态
@@ -118,11 +118,12 @@ destroyed()       <--> onUnmounted()
 errorCaptured()   <--> onErrorCaptured()
 ```
 
-vue3:
+vue3完整钩子:
 ```js
 onBeforeMount(() => {
   console.log('组件挂载前onBeforeMount')
 })
+
 onMounted(() => {
   console.log('组件挂载后onMounted')
 })
@@ -143,6 +144,15 @@ onUnmounted(() => {
 })
 ```
 
+### beforeCreate -> created:初始化vue实例，进行数据观测
+created:
+```
+完成数据观测，属性与方法的运算，watch、event事件回调的配置
+
+可调用methods中的方法，访问和修改data数据触发响应式渲染dom，可通过computed和watch完成数据计算
+
+此时vm.$el 并没有被创建
+```
 
 * vue2专有:beforeCreate()和created()
 ```
@@ -159,18 +169,29 @@ setup相当于组件编译的入口，setup在beforeCreate钩子执行前运行�
 由于setup中不能使用this，因此需要使用getCurrentInstance 方法获得当前活跃的组件
 ```
 
+### vue2-beforemount在组件实例创建之前执行
+此阶段vm.el已完成DOM初始化，但并未挂载在el选项上,组件的模板尚未渲染到DOM中。
+
+作用:在渲染之前对组件进行必要的初始化工作。
+
 * 组件挂载前 vue3:onBeforeMount()/vue2:beforeMount()
 updateComponent，该函数会运行render函数，并把render函数的返回结果vnode作为参数给
 ```
 onBeforeMount()/beforeMount() 表示模板已经在内存中编辑完成了，但是尚未渲染到模板页面中。即页面中的元素，没有被真正的替换过来，只是之前写的一些模板字符串。
 ```
+
+### vue2-mounted在组件实例创建完成后立即执行
+vm.el已完成DOM的挂载与渲染, 此时组件的模板已经渲染到DOM中。
+
+作用:在组件的渲染完成后对组件进行必要的初始化工作。
+
 * 组件挂载后 vue3:onMounted()/ vue2:mounted()
 ```
 表示内存中模板已经真实的挂载到页面中去了，用户可以看到渲染好的界面了
 执行完这个函数表示 整个vue实例已经初始化完成了，组件脱离了创建阶段，进入运行阶段。
 ```
 
-## 按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制。
+## 按需引用的有了更细微的可控性，让项目的性能和打包大小有更好的控制
 
 ## 接收 Props 不同,setup,this
 接收组件props参数传递这一块为我们带来了Vue2和Vue3之间最大的区别。

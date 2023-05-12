@@ -20,6 +20,7 @@ const sidebars = {
         'React/commit阶段-useLayoutEffect-useEffect',
         'React/mockData-babel返回code函数',
         'React/类组件渲染流程-组件分类',
+        'React/生命周期和hooks',
         'React/hook和闭包',
         'React/fiber',
         'React/fiberNode-fiber结构-RequestIdleCallback',

@@ -37,3 +37,28 @@ git pull -- rebase 该命令会把你的提交“放置”在远程拉取的提�
 解决所有冲突的文件，git add <冲突文件>
 git rebase --continue
 ```
+
+## 回退版本（三种方式）
+
+### git reset commit_id(撤销 commit 和 add 操作)
+git reset 默认是--mixed 模式
+
+* 回退一个版本,且会将暂存区的内容和本地已提交(commit)的内容全部恢复到未暂存的状态,不影响原来本地文件(未提交的也不受影响)
+
+* 会保留源码，只是将 git commit 和 index 信息回退到了某个版本
+
+### git reset --soft commit_id（撤销 commit 操作）
+```
+*回退一个版本,不清空暂存区,将已提交的内容恢复到暂存区,不影响原来本地的文件(未提交的也不受影响)
+
+保留源码，只回退 commit 信息到某个版本，不涉及 index 的回退，如果还需要提交，直接 commit 即可
+```
+
+### git reset --hard commit_id（慎用）
+撤销 commit 和 add 操作，并将本地版本置回上一版本
+
+回退一个版本,清空暂存区,将已提交的内容的版本恢复到本地,本地的文件也将被恢复的版本替换
+
+源码也会回退到某个版本,commit 和 index 都会回退到某个版本.(注意这种方式是改变本地代码仓库源码)
+
+

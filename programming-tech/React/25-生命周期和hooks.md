@@ -1,4 +1,4 @@
-## useEffect模拟生命周期的
+## useEffect模拟生命周期
 * 第二个参数传递一个空数组, 模拟 componentDidMount
 
 * 第二个参数传递依赖项，模拟 componentDidUpdate

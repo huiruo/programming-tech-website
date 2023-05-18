@@ -45,7 +45,7 @@
 子组件：
 ```javaScript
 <template>
-    <button @click="f">heihei</button>
+    <button @click="f">hello</button>
 </template>
 ​
 <script setup>
@@ -72,6 +72,3 @@
 而在第二个的组件1上,我们定义了自定义方法fun2，由于在一开始我们已经在子组件中定义了fun2，所以在第二个组件1上没有将fun2添加到$attrs上。
 
 注意，这里虽然这两个组件都是组件1，但是其的自定义事件是不会互相影响的，这也是fun自定义方法没有出现在第二个组件1上的$attrs上的原因。
-
-
-

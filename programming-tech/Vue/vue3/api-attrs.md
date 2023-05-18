@@ -1,4 +1,3 @@
-
 ## vue2中的$attrs
 包含了父组件传递给子组件的非 prop 特性,除style和class (attribute)。
 这意味着当你在子组件上使用v-bind="$attrs"时，只有非 prop 特性会被应用到子组件的根元素上。
@@ -59,7 +58,6 @@ import TestCom from "./TestSon.vue"
     </div>
 </template>
 ```
-
 
 我们发现父组件中的属性直接是渲染在了
 ```html

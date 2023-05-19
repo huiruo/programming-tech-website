@@ -1,0 +1,81 @@
+<html>
+
+<head>
+    <style type="text/css">
+        :after,
+        :before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .nav {
+            width: 414px;
+            height: 64px;
+            margin: 0 auto;
+            border: 0 solid transparent;
+        }
+
+        .box {
+            width: 414px;
+            height: 736px;
+            margin: 0 auto;
+            border: 1px solid blue;
+        }
+
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border: 1px solid red;
+        }
+
+        .flex .item {
+            display: block;
+            padding: 4px 10px;
+            color: white;
+            background-color: #5454dd;
+            margin: 8px 0 0 8px;
+            border-radius: 3px;
+        }
+
+        /* 如果希望保持起点位置不变，还需要对容器加上以下设置 */
+        .flex {
+            margin: -8px 0 0 -8px;
+        }
+    </style>
+</head>
+<div class="nav"></div>
+<div class="box">
+    <div class="flex">
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+        <span class="item">item</span>
+    </div>
+</div>
+
+<body>
+</body>
+
+</html>

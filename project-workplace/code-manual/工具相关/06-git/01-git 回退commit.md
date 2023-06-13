@@ -1,3 +1,8 @@
+## 删除远程分支
+```bash
+git push origin --delete feature-branch
+```
+
 ## 方法1.回退不提交（可能不生效）
 
 $ git reset --hard HEAD^ 回退到上个版本
@@ -18,6 +23,8 @@ git push origin HEAD --force
 
 ## 回退到已经push 的commit
 git reset --hard 10bd20ca1b328ac03849fcd09705ae2e58d95d6e
+
+git reset --hard 873a9ee2426b27566fbfed208101796794f57a82
 
 git push origin HEAD --force
 或

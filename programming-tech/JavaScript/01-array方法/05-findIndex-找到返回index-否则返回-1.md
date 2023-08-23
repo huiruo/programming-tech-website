@@ -21,7 +21,7 @@ findIndex是传入一个测试条件,也就是函数,找到了返回当前项索
 ```js
 const testArr = [{ id: 1, name: '张三' }, { id: 2, name: '李四' }, { id: 3, name: '王五' }, { id: 2, name: '赵六' }]
 
-let arrIndex = testArr.findIndex(item => {
+const arrIndex = testArr.findIndex(item => {
     return item.name === '张三';
 });
 

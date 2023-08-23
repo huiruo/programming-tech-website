@@ -10,4 +10,10 @@ console.log('testArr：', testArr2)
 // 使用方法2：删除指定下标的元素
 console.log(testArr.splice(2, 1));
 console.log('testArr：', testArr)
+
+
+// test: 删除空数组
+const testArr = []
+testArr.splice(1,1)
+console.log('testArr:',testArr)
 ```

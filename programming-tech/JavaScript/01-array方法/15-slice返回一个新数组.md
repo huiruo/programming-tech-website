@@ -1,4 +1,37 @@
-### slice 不改变原数组
+## 修改数组优化
+对于这段代码的优化，可以考虑以下几点：
+
+1. 避免不必要的数组复制：在代码中，const target = [...formik?.values[formValuesName]] 创建了 target 数组的副本。如果 formik?.values[formValuesName] 已经是一个数组，可以直接引用它而不需要创建副本。
+
+2. 使用更高效的操作来删除数组元素：目前的代码使用 splice 方法来删除数组中的一个元素。然而，splice 操作会改变原始数组，可能导致性能损失，尤其是在大型数组上。可以考虑使用 slice 方法结合展开运算符来创建一个新的数组，而不改变原始数组。
+
+这样做的好处是避免了不必要的数组复制，并使用了更高效的方式删除数组中的元素。
+```js
+/*
+const formValuesName = controlItemParam.id
+const target = [...formik?.values[formValuesName]]
+const targetItemIndex = target.findIndex(
+(url) => url === targetUrl,
+)
+
+if (targetItemIndex !== -1) {
+target.splice(targetItemIndex, 1)
+}
+
+formik.setFieldValue(formValuesName, target)
+*/
+const formValuesName = controlItemParam.id
+const target = formik?.values[formValuesName] || []
+const targetItemIndex = target.findIndex((url) => url === targetUrl)
+
+if (targetItemIndex !== -1) {
+const updatedTarget = [...target.slice(0, targetItemIndex), ...target.slice(targetItemIndex + 1)]
+formik.setFieldValue(formValuesName, updatedTarget)
+}
+```
+
+
+## slice 不改变原数组
 slice 不会修改原数组，只会返回一个浅复制了原数组中的元素的一个新数组。
 
 使用 slice() 方法从数组中获取片段，但是不会更改原数组。

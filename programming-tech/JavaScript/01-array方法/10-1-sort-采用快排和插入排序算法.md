@@ -94,5 +94,4 @@ JavaScript在做字符比较的时候，是根据字符对应的ASCII值来比�
 names = ['Ana', 'ana', 'john', 'John'];
 
 console.log('3.字符串排序:names.sort((a, b) => a.localeCompare(b))', names.sort((a, b) => a.localeCompare(b)));
-
 ```

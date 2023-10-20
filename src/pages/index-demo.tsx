@@ -6,7 +6,14 @@ import styles from './index.module.css';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 
-
+/**
+ * If you added slug: / to a doc to make it the homepage, you should delete
+ * the existing homepage at ./src/pages/index.js, or else there will be two 
+ * files mapping to the same route!
+ * 
+ * https://docusaurus.io/zh-CN/docs/next/docs-introduction
+ * https://docusaurus.io/zh-CN/docs/docs-introduction
+*/
 export function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (

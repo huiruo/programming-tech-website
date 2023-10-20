@@ -47,6 +47,7 @@ const config = {
           routeBasePath: '/',
           path: 'programming-tech/', // 指向 doc 的文件夹
           sidebarPath: require.resolve('./sidebars.js'),
+
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -81,13 +82,6 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
-          // {
-          //   type: 'docSidebar',
-          //   sidebarId: 'tutorialSidebar',
-          //   position: 'left',
-          //   label: 'Main',
-          // },
-          // { to: '/blog', label: 'Blog', position: 'left' },
           {
             type: 'doc',
             position: 'left',
@@ -95,12 +89,12 @@ const config = {
             docId: 'start',
             label: 'Main',
           },
-          {
-            type: 'doc',
-            position: 'left',
-            docId: 'structure-algorithm/README',
-            label: 'Structure algorithm',
-          },
+          // {
+          //   type: 'doc',
+          //   position: 'left',
+          //   docId: 'structure-algorithm/README',
+          //   label: 'Structure algorithm',
+          // },
           {
             href: 'https://github.com/huiruo/programming-tech-website/',
             label: 'GitHub',

@@ -1,5 +1,5 @@
 ---
-title: api-memo()和shouldComponentUpdate()
+title: api-memo和shouldComponentUpdate
 sidebar_position: 51
 ---
 

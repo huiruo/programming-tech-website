@@ -8,7 +8,7 @@ React 组件性能优化的核心是减少渲染真实 DOM 节点的频率，减
 ## 优化方式
 
 ### 在渲染期间执行了高开销的计算，可以使用 `useMemo` 来进行优化
-参考：[api-memo和shouldComponentUpdate](../React/api-memo()和shouldComponentUpdate())
+参考：[api-memo和shouldComponentUpdate](../React/api-memo和shouldComponentUpdate)
 
 ### 减少嵌套节点/组件
 因为react 每个节点都会触发beginWork;

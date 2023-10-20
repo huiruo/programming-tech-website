@@ -1,7 +1,7 @@
 ## render阶段：
 render阶段的执行是一个深度优先遍历的过程，它有两个核心函数，beginWork和completeUnitOfWork,
 
-参考：[图的两种遍历](/structure-algorithm/图-深度优先遍历-广度优先遍历/图的两种遍历)
+>参考：图的两种遍历:structure-algorithm/图-深度优先遍历-广度优先遍历/图的两种遍历
 
 
 ### beginWork阶段:将ast树转换为fiber 树

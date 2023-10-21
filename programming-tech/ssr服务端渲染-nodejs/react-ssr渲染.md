@@ -118,7 +118,10 @@ React 在客户端通过 checksum 判断是否需要重新render 相同则不重
 renderToStaticMarkup 则不会生成与 react 相关的 data-* ，也不存在 checksum.
 在客户端时组件会被重新挂载，客户端重新挂载不生成 checknum( 也没这个必要 )，所以该方法只当服务端上所渲染的组件在客户端不需要时才使用。
 
-checknum 实际上是 HTML 片段的 adler32 算法值，实际上调用 React.render(<MyComponent />, container);
+checknum 实际上是 HTML 片段的 adler32 算法值，实际上调用 
+```
+React.render(<MyComponent />, container);
+```
 
 
 ### webpack.server.config.js

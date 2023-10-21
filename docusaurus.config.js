@@ -6,7 +6,6 @@ const config = {
   title: 'Programming tech',
   tagline: 'Hello World',
   favicon: 'img/favicon.ico',
-
   /**
    * https://programming-tech-website.vercel.app/sitmap.xml
    * https://huiruo.github.io
@@ -16,7 +15,6 @@ const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
-
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'huiruo', // Usually your GitHub org/user name.
@@ -37,7 +35,6 @@ const config = {
     mermaid: true,
   },
   themes: ['@docusaurus/theme-mermaid'],
-
   presets: [
     [
       'classic',

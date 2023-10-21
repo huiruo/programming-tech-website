@@ -3,7 +3,7 @@ title: babel
 sidebar_position: 2
 ---
 
-## 例子：es6-->es5
+## 例子：`es6-->es5`
 [es6-to-es5](https://github.com/huiruo/es6-to-es5)
 
 ## Babel是一个 JavaScript 编译器
@@ -34,14 +34,14 @@ Transformer 利用我们配置好的 plugins/presets 把 Parser 生成的 AST �
 递归遍历这颗语法树，然后生成相应的代码,代码生成步骤把最终（经过一系列转换之后）的AST转换成字符串形式的代码，同时还会创建源码映射（source maps）;<br/>代码生成其实很简单：深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串
 
 ### 举例子
-```js
+```
 if (1 > 0) {
     alert('hi');
 }
 ```
 
 ### 经过第1步得到一个如下的对象：
-```js
+```
 {
   "type": "Program",                          // 程序根节点
   "body": [                                   // 一个数组包含所有程序的顶层语句
@@ -99,10 +99,12 @@ transforming阶段使用的插件，因为 transform 插件会自动使用对应
 
 称之为 preset，这样我们只需要使用对应的 preset 就可以了。
 es20xx 的 preset 只转译该年份批准的标准，而 env 则代指最新的标准，包括了 latest 和 es20xx 各年份,以 JS 标准为例，babel 提供了如下的一些 preset：
+```
 * es2015
 * es2016
 * es2017
 * env
+```
 
 
 

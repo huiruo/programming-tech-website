@@ -4,7 +4,7 @@ sidebar_position: 7
 ---
 
 在升级@babel/preset-env之前，项目中的配置是这样的：
-```js
+```
 {
   test: /\.(ts|js)x?$/,
   include: [
@@ -41,7 +41,7 @@ babel.config.js中@babel/preset-env的配置modules变为auto。
 问题出在模块包装上，具体就是webpack打包的时候注入的形参变量中没有exports。而引起webpack未在包装时注入形参的原因很可能是@babel/preset-env的配置modules导致的
 
 babel.config.js
-```js
+```
 const plugins = [
   ['@babel/plugin-transform-runtime', {
     corejs: 3,
@@ -107,7 +107,7 @@ modules:
 
 用babel-loader去处理node_modules的原因是做语法兼容。
 
-```js
+```
 [
   {
     test: /\.(ts|js)x?$/,

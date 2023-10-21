@@ -1,0 +1,28 @@
+.resume-container {
+  width: 100%;
+}
+
+.title-font {
+  font-size: 20px;
+}
+
+.skill-title {
+  font-size: 20px;
+}
+
+.onpreview {
+  cursor: pointer;
+  color: #25c2a0;
+}
+
+.flex {
+  display: flex;
+}
+
+.mg2-bottom {
+  margin-bottom: 10px;
+}
+
+.mg1-bottom {
+  margin-bottom: 20px;
+}

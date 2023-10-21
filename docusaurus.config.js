@@ -44,11 +44,7 @@ const config = {
           routeBasePath: '/',
           path: 'programming-tech/', // 指向 doc 的文件夹
           sidebarPath: require.resolve('./sidebars.js'),
-
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/huiruo/programming-tech-website',
+          editUrl: 'https://github.com/huiruo/programming-tech-website/edit/main',
         },
         blog: false,
         /*

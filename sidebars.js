@@ -585,20 +585,20 @@ const sidebars = {
       ]
     },
     {
-      label: '设计模式',
+      label: 'DesignPatterns',
       type: 'category',
       collapsed: true,
       items: [
-        '设计模式/README',
-        '设计模式/单例模式',
-        '设计模式/代理模式',
-        '设计模式/工厂模式',
-        '设计模式/03-1-发布订阅模式-或观察者模式',
-        '设计模式/03-2-js事件模型',
-        '设计模式/适配器模式',
-        '设计模式/装饰器模式',
-        '设计模式/a-策略模式',
-        '设计模式/a-命令模式',
+        'DesignPatterns/README',
+        'DesignPatterns/单例模式',
+        'DesignPatterns/代理模式',
+        'DesignPatterns/工厂模式',
+        'DesignPatterns/03-1-发布订阅模式-或观察者模式',
+        'DesignPatterns/03-2-js事件模型',
+        'DesignPatterns/适配器模式',
+        'DesignPatterns/装饰器模式',
+        'DesignPatterns/a-策略模式',
+        'DesignPatterns/a-命令模式',
       ]
     },
     {

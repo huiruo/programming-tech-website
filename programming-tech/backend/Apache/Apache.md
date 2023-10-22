@@ -31,5 +31,7 @@ httpd -k uninstall -n Apache24
 注意：卸载时要先关闭服务，再卸载。否则服务可能依然在运行，只是状态设为了“禁用”
 ```
 
-### 网站
-在 D:\Apache24\htdocs
+### 网站资源地址
+```
+D:\Apache24\htdocs
+```

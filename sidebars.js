@@ -545,19 +545,20 @@ const sidebars = {
         'backend/pm2',
         'backend/redis',
         'backend/Apache/Apache',
+        'backend/进程-线程-协程',
         {
           label: 'golang',
           type: 'category',
           collapsed: true,
           items: [
+            'backend/golang/golang启动一个简单的http服务',
             'backend/golang/03-1-function',
             'backend/golang/03-2-函数拥有者',
-            'backend/golang/go-备份/go备份',
-            'backend/golang/golang启动一个简单的http服务',
-            'backend/golang/协程/helloworld',
+            'backend/golang/协程-helloworld',
             'backend/golang/字符串拼接',
             'backend/golang/指针',
             'backend/golang/类型转换',
+            'backend/golang/go-备份/go备份',
           ]
         },
         {
@@ -570,6 +571,23 @@ const sidebars = {
             'backend/mysql/mysql8安装',
             'backend/mysql/mysql行格式',
             'backend/mysql/查看已登录密码',
+          ]
+        },
+        {
+          label: 'nextjs',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'backend/nextjs/nextjs部署',
+            'backend/nextjs/nextjs跨域',
+          ]
+        },
+        {
+          label: 'nginx',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'backend/nginx/nginx',
           ]
         },
       ]
@@ -593,7 +611,7 @@ const sidebars = {
       ]
     },
     {
-      label: 'designPatterns',
+      label: 'design patterns',
       type: 'category',
       collapsed: true,
       items: [

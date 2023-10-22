@@ -1,5 +1,4 @@
 ```go
-//golang启动一个简单的http服务
 package main
  
 import (
@@ -25,6 +24,9 @@ func main() {
         log.Fatal("ListenAndServe: ", err)
     }
 }
+```
+
 运行服务：
+```bash
 $ go run main.go
 ```

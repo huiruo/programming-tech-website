@@ -245,22 +245,6 @@ const sidebars = {
           ]
         },
         {
-          label: 'String方法',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'JavaScript/String方法/exec-执行正则表达式模式匹配的字符串-返回匹配结果的数组',
-            'JavaScript/String方法/indexOf-lastIndexOf',
-            'JavaScript/String方法/js截取字符串',
-            'JavaScript/String方法/match-字符串中搜索指定值并返回数组',
-            'JavaScript/String方法/replace-替换字符串中指定值',
-            'JavaScript/String方法/search-字符串中查找指定值返回-1或值',
-            'JavaScript/String方法/startsWith-indexOf-的区别',
-            'JavaScript/String方法/substr-substring-slice',
-            'JavaScript/String方法/trim',
-          ]
-        },
-        {
           label: 'jsdom操作',
           type: 'category',
           collapsed: true,
@@ -618,19 +602,25 @@ const sidebars = {
       ]
     },
     {
-      label: '正则',
+      label: 'regular-string',
       type: 'category',
       collapsed: true,
       items: [
-        '正则/00-1-正则-基础',
-        '正则/00-2-例子解析',
-        '正则/02-1-exec',
-        '正则/02-2-exec清晰例子',
-        '正则/辅助-例子',
-        '正则/正则例子/特殊需求正则表达',
-        '正则/正则例子/校验数字的正则表达式',
-        '正则/正则例子/校验字符的正则表达式',
-        '正则/test',
+        'regular-string/正则-基础',
+        'regular-string/exec-test',
+        'regular-string/string-match-搜索指定值并返回数组',
+        'regular-string/string-replace-替换字符串中指定值',
+        'regular-string/string-indexOf-lastIndexOf',
+        'regular-string/string-截取字符串',
+        'regular-string/string-search-字符串中查找指定值返回-1或值',
+        'regular-string/string-startsWith-indexOf-的区别',
+        'regular-string/string-substr-substring-slice',
+        'regular-string/string-trim',
+        'regular-string/正则限制-验证例子',
+        'regular-string/例子解析',
+        'regular-string/例子-校验字符的正则表达式',
+        'regular-string/例子-校验数字的正则表达式',
+        'regular-string/例子-特殊需求正则表达',
       ]
     },
   ],

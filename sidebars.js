@@ -579,9 +579,17 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'docker/Docker命令',
-        'docker/Dockerfile命令',
         'docker/Docker基础',
+        'docker/Docker基础2',
+        'docker/Dockerfile命令',
+        'docker/Docker命令',
+        'docker/如何获取docker容器的运行状态',
+        'docker/Harbor',
+        'docker/K8S基础',
+        'docker/Kubernetes',
+        'docker/dockerSwarm',
+        'docker/dockerignore作用',
+        'docker/docker中的nginx配置',
       ]
     },
     {

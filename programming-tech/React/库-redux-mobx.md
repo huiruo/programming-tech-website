@@ -67,7 +67,8 @@ export { Provider, ReactReduxContext, connect, useDispatch, createDispatchHook, 
 6 connect 怎么样将 props，和 redux的 state 合并的?
 
 react 中能更新 redux 的 store，并能监听 store 的变化并通知 react 的相关组件更新，从而能让 react 将状态放在外部管理（有利于 model 集中管理，能利用 redux 单项数据流架构，数据流易预测易维护，也极大的方便了任意层级组件间通信
-![](../assets/img-react/redux-workflow.png)
+
+<!-- ![](../assets/img-react/redux-workflow.png) -->
 
 ### react-redux 是如何关联起 redux 和 react 的？
 Provider 中有 Subscription 实例，connect 这个高阶组件中也有 Subscription 实例，并且有负责自身更新的 hooks: useReducer，useReducer 的 dispatch 会被注册进 Subscription 的 listeners。

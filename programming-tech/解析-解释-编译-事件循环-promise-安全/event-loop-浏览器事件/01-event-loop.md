@@ -12,7 +12,7 @@ sidebar_position: 1
 
 浏览器是多进程的，浏览器每一个打开一个Tab页面都代表着创建一个独立的进程（至少需要四个，若页面有插件运行，则五个）。
 
-![](../../assets/img-algorithm/图A浏览器进程和线程.png)
+![](../../assets/img-others/图A浏览器进程和线程.png)
 
 ### 渲染进程
 1. GUI渲染线程

@@ -5,18 +5,8 @@ sidebar_position: 1
 
 ## 编译原理和AST
 
-例如：babel
-```
-parsing(解析)-->transforming（转化）-->printing（生成）
-```
-
-* parsing阶段:babel:babylon负责将es6代码进行语法分析和词法分析后转换成抽象语法树
-* transforming阶段:babel-traverse对抽象语法树进行变换操作
-```
-babel的插件机制也是在这一步发挥作用的，plugins在这里进行操作，转化成新的AST，再交给第三步的babel-generator
-```
-* printing阶段:babel-generator生成对应的代码
-
+例如：
+[babel编译器](./babel)
 
 [astexplorer:查看js被转换为抽象语法树](https://astexplorer.net/)
 

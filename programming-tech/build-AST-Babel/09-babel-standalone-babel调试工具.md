@@ -1,13 +1,11 @@
 ---
-title: babel-standalone使用
+title: babel-standalone-babel调试工具
 sidebar_position: 6
 ---
 babel-standalone.js是为非NodeJS环境而生的babel库，可以直接在html中，通过
-`<script src='...'></script>`方式被引入，它包含了所有babel标准的plugins和presets
+`<script src='...'/>`方式被引入，它包含了所有babel标准的plugins和presets
 
-通常，我们使用官方或是第三方脚手架，通过配置化引入babel-loader，在编译阶段就完成了编译，所以这个库是否多余？
-
-使用场景:
+通常，我们使用官方或是第三方脚手架，通过配置化引入babel-loader，在编译阶段就完成了编译，但是这个库支持本地浏览器使用, 使用场景:
 1. 调试React源码；
 2. 在线实时javascript编辑器网站（如 JSFiddle, JS Bin, REPL on the Babel ）；
 3. 直接嵌入到应用中，例如：V8 javascript 引擎；
@@ -95,7 +93,6 @@ babel-standalone.js是为非NodeJS环境而生的babel库，可以直接在html�
 
     const root = ReactDOM.createRoot(document.getElementById('root'))
     root.render(<Test />);
-  </script>
   </script>
 </body>
 

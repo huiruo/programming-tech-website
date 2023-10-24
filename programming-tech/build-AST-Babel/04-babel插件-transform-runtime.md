@@ -1,5 +1,5 @@
 ---
-title: transform-runtime
+title: babel插件-transform-runtime
 sidebar_position: 4
 ---
 
@@ -10,6 +10,10 @@ sidebar_position: 4
 - transform-runtime可以提取一些帮助函数来减小打包的体积，在开发自己的类库建议开启corejs选项
 
 ## `@babel/plugin-transform-runtime`的主要有三个用处
+> 帮助减小输出文件大小，并解决一些运行时问题，例如生成器函数和异步函数的支持。
+
+@babel/plugin-transform-runtime 是 Babel 插件之一，用于改善 JavaScript 代码的转译过程，并减小转译后的代码大小。它的主要作用是解决一些与 JavaScript 运行时相关的问题，特别是在使用新特性和内置函数时引入的一些辅助函数，以及多次在代码中重复引入这些辅助函数的问题。
+
 1. 自动引入@babel/runtime/regenerator，当你使用了generator/async
 函数(通过regenerator选项打开，默认为true)
 

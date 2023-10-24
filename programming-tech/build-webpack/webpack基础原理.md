@@ -20,31 +20,54 @@ sidebar_position: 1
 
 - 3.能力扩展。通过webpack的Plugin机制，我们在实现模块化打包和编译兼容的基础上，可以进一步实现诸如按需加载，代码压缩等一系列功能，帮助我们进一步提高自动化程度，工程效率以及打包输出的质量。
 
-而由于webpack只理解 JavaScript 和 JSON 文件，过程中需要通过配置指定的加载器（loader）对相应文件进行转换，也可以通过配置指定的插件（plugins）对上下文进行优化输出（output）为代码块（chunk）
+需要通过配置指定的加载器（loader）对相应文件进行转换，也可以通过配置指定的插件（plugins）对上下文进行优化输出（output）为代码块（chunk）
 
 将各种类型的资源，包括图片、css、js等，转译、组合、拼接、生成输出bundle.js,一个IIFE的执行函数。
 
+## Babel在Webpack处理Js代码转译->在构建阶段
+在Webpack中，Babel通常作为一个"loader"来使用，用于处理应用程序的源代码。Webpack中的配置通常包括以下部分：
+* 安装Babel依赖：您需要安装与Babel一起使用的相关依赖，如 babel-loader、Babel核心包、预设（preset，用于指定要转译的语法规则）、以及任何需要的Babel插件。
 
-这个过程核心完成了 内容转换 + 资源合并 两种功能，实现上包含三个阶段：
+* Webpack配置：在Webpack配置文件中，您需要配置Babel loader，以指定哪些文件需要经过Babel转译。通常，您将在Webpack配置的module.rules中添加一个包含Babel loader配置的规则。
 
-## 1.初始化阶段
+* Babel配置：您可能需要创建一个Babel配置文件（如.babelrc或babel.config.js）来指定Babel的详细配置选项，包括预设、插件和其他选项。
+```js
+module.exports = {
+  // ...其他Webpack配置...
+  module: {
+    rules: [
+      {
+        test: /\.js$/, // 匹配JavaScript文件
+        exclude: /node_modules/, // 排除node_modules目录
+        use: {
+          loader: 'babel-loader', // 使用Babel loader
+        },
+      },
+    ],
+  },
+};
+```
+
+## webpack核心完成了:`内容转换 + 资源合并`两种功能，过程包含三个阶段：
+
+### 1.初始化阶段
 1. 初始化参数：从配置文件、 配置对象、Shell 参数中读取，与默认配置结合得出最终的参数
 2. 创建编译器对象：用上一步得到的参数创建 Compiler 对象
 3. 初始化编译环境：包括注入内置插件、注册各种模块工厂、初始化 RuleSet 集合、加载配置的插件等
 4. 开始编译：执行 compiler 对象的 run 方法
 5. 确定入口：根据配置中的 entry 找出所有的入口文件，调用 Compilation .addEntry 将入口文件转换为 dependence 对象
-## 2.构建阶段：
-1. 编译模块(make)：根据 entry 对应的 dependence 创建 module 对象，调用 loader 将模块转译为标准 JS 内容，调用 JS 解释器将内容转换为 AST 对象，从中找出该模块依赖的模块，再 递归 本步骤直到所有入口依赖的文件都经过了本步骤的处理
-2. 完成模块编译：上一步递归处理所有能触达到的模块后，得到了每个模块被翻译后的内容以及它们之间的 依赖关系图
+### 2.构建阶段：
+1. 编译模块(make)：根据 entry 对应的 dependence 创建 module 对象，调用 loader 将模块转译为标准 JS 内容，调用 JS 解释器将内容转换为 AST 对象，从中找出该模块依赖的模块，再递归本步骤直到所有入口依赖的文件都经过了本步骤的处理
+2. 完成模块编译：上一步递归处理所有能触达到的模块后，得到了每个模块被翻译后的内容以及它们之间的依赖关系图
 
-## 3.生成阶段：
+### 3.生成阶段：
 1. 输出资源(seal)：根据入口和模块之间的依赖关系，组装成一个个包含多个模块的 Chunk，再把每个 Chunk 转换成一个单独的文件加入到输出列表，这步是可以修改输出内容的最后机会
 2. 写入文件系统(emitAssets)：在确定好输出内容后，根据配置确定输出的路径和文件名，把文件内容写入到文件系统
 
 ## 单次构建过程自上而下按顺序执行,webpack 编译过程都是围绕着这些关键对象展开的
 * Entry：编译入口，webpack 编译的起点
 
-* Compiler：编译管理器，webpack 启动后会创建 compiler 对象，该对象一直存活知道结束退出
+* Compiler：编译管理器，webpack 启动后会创建 compiler 对象，该对象一直存活直到结束退出
 
 * Compilation：单次编辑过程的管理器，比如 watch = true 时，运行过程中只有一个 compiler 但每次文件变更触发重新编译时，都会创建一个新的 compilation 对象
 
@@ -55,7 +78,7 @@ sidebar_position: 1
 * Chunk：编译完成准备输出时，webpack 会将 module 按特定的规则组织成一个一个的 chunk，这些 chunk 某种程度上跟最终输出一一对应
 
 * Loader：资源内容转换器<br/>
-参考: [loader](./loader)
+参考: [loader-plugin](./loader-plugin)
 
 * Plugin：webpack构建过程中，会在特定的时机广播对应的事件，插件监听这些事件，在特定时间点介入编译过程
 ```
@@ -377,6 +400,18 @@ const {
 ```
 
 不同类型的钩子根据其并行度、熔断方式、同步异步，调用方式会略有不同，插件开发者需要根据这些的特性，编写不同的交互逻辑，这部分内容也特别多，回头展开聊聊。
+
+### Webpack中最常用的插件：
+1. html-webpack-plugin: 这个插件用于自动生成HTML文件，并自动将打包后的JavaScript文件引入HTML中。这样可以减少手动操作，确保HTML文件与生成的资源一致。
+2. clean-webpack-plugin: 用于在每次构建之前清理输出目录，以确保旧的构建文件不会干扰新的构建结果。
+3. MiniCssExtractPlugin: 用于将CSS文件从JavaScript代码中分离出来，以提高性能并允许更好的缓存。这在生产构建中特别有用。
+4. OptimizeCSSAssetsPlugin: 用于优化和压缩CSS资源，以减小文件大小。
+5. CopyWebpackPlugin: 用于复制静态文件或目录到输出目录，例如，复制字体文件、图片等。
+6. DefinePlugin: 允许您在编译时创建全局常量，这对于在开发和生产构建之间切换不同的配置非常有用。
+7. HotModuleReplacementPlugin: 启用热模块替换，使在开发过程中可以在无需刷新整个页面的情况下更新应用程序。
+8. ProvidePlugin: 自动加载模块，而不必每次都导入或要求它们。
+9. BundleAnalyzerPlugin: 用于分析构建结果，可视化输出文件的大小和依赖关系，以帮助优化构建。
+10. SplitChunksPlugin: 用于拆分公共代码块，以减小生成的文件大小，同时提高缓存效果。
 
 ### 什么时候会触发钩子
 了解 webpack 插件的基本形态之后，接下来需要弄清楚一个问题：webpack 会在什么时间节点触发什么钩子？这一块我认为是知识量最大的一部分，毕竟源码里面有237个钩子，但官网只介绍了不到100个，且官网对每个钩子的说明都太简短，就我个人而言看完并没有太大收获，所以有必要展开聊一下这个话题。先看几个例子：

@@ -100,7 +100,8 @@ const sidebars = {
         'Vue/proxy-defineProperty区别',
         'Vue/Reflect',
         'Vue/问题-v-if和v-for-前者优先级更高',
-        'Vue/api-computed-watch区别',
+        'Vue/api-watch',
+        'Vue/api-computed-data区别',
         'Vue/api-nextTick',
         'Vue/api-vue3-vue2区别',
         'Vue/api-vue-router',
@@ -270,61 +271,6 @@ const sidebars = {
       ]
     },
     {
-      label: '解析-解释-编译-事件循环-promise-安全',
-      type: 'category',
-      collapsed: true,
-      link: {
-        type: 'generated-index',
-      },
-      items: [
-        '解析-解释-编译-事件循环-promise-安全/Parser解析得到AST-Ignition解释得到字节码',
-        '解析-解释-编译-事件循环-promise-安全/步骤1-预解析-变量提升',
-        '解析-解释-编译-事件循环-promise-安全/步骤2-作用域-块级作用域原理',
-        '解析-解释-编译-事件循环-promise-安全/步骤3-执行上下文-函数调用栈-this',
-        '解析-解释-编译-事件循环-promise-安全/闭包-内存生命周期',
-        {
-          label: '模块化',
-          type: 'category',
-          collapsed: true,
-          items: [
-            '解析-解释-编译-事件循环-promise-安全/模块化/模块化和闭包',
-            '解析-解释-编译-事件循环-promise-安全/模块化/cjs',
-            '解析-解释-编译-事件循环-promise-安全/模块化/esm',
-            '解析-解释-编译-事件循环-promise-安全/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
-          ]
-        },
-        {
-          label: 'promise',
-          type: 'category',
-          collapsed: true,
-          items: [
-            '解析-解释-编译-事件循环-promise-安全/promise/Generator',
-            '解析-解释-编译-事件循环-promise-安全/promise/async-await',
-            '解析-解释-编译-事件循环-promise-安全/promise/题目',
-            '解析-解释-编译-事件循环-promise-安全/promise/promise基础',
-            '解析-解释-编译-事件循环-promise-安全/promise/实现-promise方法',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise-all-20191121新',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise模拟请求',
-            '解析-解释-编译-事件循环-promise-安全/promise/使用-tabControl-两个请求合并promiseAll',
-          ]
-        },
-        {
-          label: 'event loop-浏览器事件',
-          type: 'category',
-          collapsed: true,
-          items: [
-            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/event-loop',
-            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
-          ]
-        },
-        '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
-        '解析-解释-编译-事件循环-promise-安全/辅-浏览器兼容性-防抖函数',
-        '解析-解释-编译-事件循环-promise-安全/旧-变量对象',
-        '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
-        '解析-解释-编译-事件循环-promise-安全/题目',
-      ]
-    },
-    {
       label: 'html-css',
       type: 'category',
       collapsed: true,
@@ -379,7 +325,7 @@ const sidebars = {
       items: [
         'http-浏览器缓存/浏览器请求-渲染的流程',
         'http-浏览器缓存/浏览器缓存',
-        'http-浏览器缓存/http1.1-http2.0-报文',
+        'http-浏览器缓存/http1.1-报文',
         'http-浏览器缓存/reflow-repaint',
         'http-浏览器缓存/TCP-IP-握手',
         'http-浏览器缓存/https-加密方式',
@@ -406,6 +352,62 @@ const sidebars = {
       ]
     },
     {
+      label: '解析-解释-编译-事件循环-promise-安全',
+      type: 'category',
+      collapsed: true,
+      link: {
+        type: 'generated-index',
+      },
+      items: [
+        '解析-解释-编译-事件循环-promise-安全/Parser解析得到AST-Ignition解释得到字节码',
+        '解析-解释-编译-事件循环-promise-安全/步骤1-预解析-变量提升',
+        '解析-解释-编译-事件循环-promise-安全/步骤2-作用域-块级作用域原理',
+        '解析-解释-编译-事件循环-promise-安全/步骤3-执行上下文-函数调用栈-this',
+        '解析-解释-编译-事件循环-promise-安全/闭包-内存生命周期',
+        {
+          label: '模块化',
+          type: 'category',
+          collapsed: true,
+          items: [
+            '解析-解释-编译-事件循环-promise-安全/模块化/模块化和闭包',
+            '解析-解释-编译-事件循环-promise-安全/模块化/cjs',
+            '解析-解释-编译-事件循环-promise-安全/模块化/esm',
+            '解析-解释-编译-事件循环-promise-安全/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
+          ]
+        },
+        {
+          label: 'promise',
+          type: 'category',
+          collapsed: true,
+          items: [
+            '解析-解释-编译-事件循环-promise-安全/promise/Generator',
+            '解析-解释-编译-事件循环-promise-安全/promise/async-await',
+            '解析-解释-编译-事件循环-promise-安全/promise/题目',
+            '解析-解释-编译-事件循环-promise-安全/promise/promise基础',
+            '解析-解释-编译-事件循环-promise-安全/promise/实现-promise方法',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise-all-20191121新',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-promise模拟请求',
+            '解析-解释-编译-事件循环-promise-安全/promise/axios',
+            '解析-解释-编译-事件循环-promise-安全/promise/使用-tabControl-两个请求合并promiseAll',
+          ]
+        },
+        {
+          label: 'event loop-浏览器事件',
+          type: 'category',
+          collapsed: true,
+          items: [
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/event-loop',
+            '解析-解释-编译-事件循环-promise-安全/event-loop-浏览器事件/浏览器对事件的处理-1冒泡-2捕获',
+          ]
+        },
+        '解析-解释-编译-事件循环-promise-安全/安全-web有两大类漏洞-XSS和CSRF',
+        '解析-解释-编译-事件循环-promise-安全/辅-浏览器兼容性-防抖函数',
+        '解析-解释-编译-事件循环-promise-安全/旧-变量对象',
+        '解析-解释-编译-事件循环-promise-安全/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
+        '解析-解释-编译-事件循环-promise-安全/题目',
+      ]
+    },
+    {
       label: 'webpack',
       type: 'category',
       collapsed: true,
@@ -422,16 +424,16 @@ const sidebars = {
             'build-webpack/配置实例2',
           ]
         },
+        'build-webpack/webpack基础原理',
         'build-webpack/浏览器正常运行流程-静态-同步',
         'build-webpack/dynamic-import-动态-异步',
         'build-webpack/构建包大小优化',
         'build-webpack/构建速度优化',
         'build-webpack/webpack4-增量构建',
         'build-webpack/06-1-webpack5新特性',
-        'build-webpack/06-2-webpack5-Persistent Caching',
-        'build-webpack/loader',
+        'build-webpack/06-2-webpack5-Persistent-Caching',
+        'build-webpack/loader-plugin',
         'build-webpack/resolve-devServer-等参数',
-        'build-webpack/webpack基础原理',
         'build-webpack/vite',
       ]
     },
@@ -442,17 +444,17 @@ const sidebars = {
       items: [
         'build-AST-Babel/AST',
         'build-AST-Babel/babel',
-        'build-AST-Babel/babel-编译构建之modules',
-        'build-AST-Babel/babel-standalone使用',
-        'build-AST-Babel/transform-runtime',
-        'build-AST-Babel/断点调试要领',
+        'build-AST-Babel/babel-编译构建之preset属性值modules',
+        'build-AST-Babel/babel插件-transform-runtime',
+        'build-AST-Babel/babel-standalone-babel调试工具',
+        'build-AST-Babel/断点调试要领-调试开源库',
         {
           label: '代码格式化',
           type: 'category',
           collapsed: true,
           items: [
             'build-AST-Babel/eslint-Prettier配置',
-            'build-AST-Babel/代码格式化',
+            'build-AST-Babel/配置代码格式化',
           ]
         },
       ]
@@ -467,27 +469,27 @@ const sidebars = {
       ]
     },
     {
-      label: 'ssr服务端渲染-nodejs',
+      label: 'SSR-Nodejs',
       type: 'category',
       collapsed: true,
       items: [
-        'ssr服务端渲染-nodejs/react-ssr渲染',
-        'ssr服务端渲染-nodejs/react-ssr-demo/react18-ssr',
-        'ssr服务端渲染-nodejs/NextJS',
-        'ssr服务端渲染-nodejs/nodejs事件循环',
-        'ssr服务端渲染-nodejs/TypeORM和Prisma',
+        'SSR-Nodejs/react-ssr渲染',
+        'SSR-Nodejs/react-ssr-demo/react18-ssr',
+        'SSR-Nodejs/nodejs事件循环',
+        'SSR-Nodejs/TypeORM和Prisma',
       ]
     },
     {
-      label: '优化',
+      label: 'web optimization',
       type: 'category',
       collapsed: true,
       items: [
-        '优化/React',
-        '优化/Vue优化',
-        '优化/总结',
-        '优化/CDN-内容分发网络',
-        '优化/国际化',
+        'web-optimization/总结',
+        'web-optimization/升级http2',
+        'web-optimization/React',
+        'web-optimization/Vue',
+        'web-optimization/CDN-内容分发网络',
+        'web-optimization/国际化',
       ]
     },
     {
@@ -541,6 +543,9 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
+        'backend/nextjs/NextJS',
+        'backend/nextjs/nextjs部署',
+        'backend/nextjs/nextjs跨域',
         'backend/消息队列',
         'backend/pm2',
         'backend/redis',
@@ -571,15 +576,6 @@ const sidebars = {
             'backend/mysql/mysql8安装',
             'backend/mysql/mysql行格式',
             'backend/mysql/查看已登录密码',
-          ]
-        },
-        {
-          label: 'nextjs',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'backend/nextjs/nextjs部署',
-            'backend/nextjs/nextjs跨域',
           ]
         },
         {

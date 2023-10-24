@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="root">
+    <div>
+      <button @click="onClickText" class="btn">Hello world, Click me</button>
+      <span>{{ refData.myName }} - {{ msg }} - {{ info.msg2 }}</span>
+      <span>{{ info.age }} - {{ nextYage }}</span>
+      <span>-nextYageFor2: {{ nextYageFor2 }}</span>
+      <div v-if="showDiv">
+        被你发现了
+      </div>
+
+      <div>
+        <button @click="onIncreaseAge" class="btn">Increase Age</button>
+        <button @click="onChangeAgeSetter" class="btn">ChangeAge Setter</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#root',
+      data: {
+        msg: '改变我',
+        showDiv: false,
+        refData: {
+          myName: 'Ruo'
+        },
+        info: {
+          msg2: 'hello',
+          age: 28
+        }
+      },
+      computed: {
+        nextYage: function () {
+          return this.info.age + 1;
+        },
+        nextYageFor2: {
+          get: function () {
+            console.log('1.computed getter...');
+            return this.info.age * 10;
+          },
+          set: function (value) {
+            console.log('2.computed setter...', value);
+          }
+        }
+      },
+      methods: {
+        onClickText: function () {
+          console.log('test:', this);
+          this.msg = '努力';
+          this.showDiv = !this.showDiv;
+          this.info.msg2 = this.showDiv ? '直接点' : '其他选择';
+        },
+        onIncreaseAge: function () {
+          this.info.age = this.info.age + 1;
+        },
+        onChangeAgeSetter: function () {
+          console.log('this.onChangeAgeSetter', this.nextYageFor2);
+          this.nextYageFor2 = 1;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

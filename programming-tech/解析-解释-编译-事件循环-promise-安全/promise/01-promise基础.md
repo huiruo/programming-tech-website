@@ -118,7 +118,39 @@ runAsync1()
 这样能够按顺序，每隔两秒输出每个异步回调中的内容，在runAsync2中传给resolve的数据，能在接下来的then方法中拿到.
 ```
 
-## promise all
+## promise方法
+### Promise.resolve(value)
+返回一个解决的 Promise 对象，其状态为已完成（fulfilled），并且带有给定的值。
+```js
+Promise.resolve("Hello, world").then(result => {
+  console.log(result); // 输出 "Hello, world"
+});
+```
+
+### Promise.reject(reason)
+返回一个拒绝的 Promise 对象，其状态为已拒绝（rejected），并且带有给定的拒绝原因。
+```js
+Promise.reject(new Error("Something went wrong")).catch(error => {
+  console.error(error); // 输出错误信息
+});
+```
+
+### Promise.allSettled(iterable)
+>返回一个 Promise，该 Promise 在可迭代对象中的所有 Promise 都已解决（无论是成功还是失败）后才解决，并提供每个 Promise 的解决状态和值。
+
+使用场景：上传的时候知道几个成功几个失败
+```js
+const promise1 = Promise.resolve(1);
+const promise2 = Promise.reject(new Error("Rejected"));
+const promise3 = Promise.resolve(3);
+
+Promise.allSettled([promise1, promise2, promise3]).then(results => {
+  console.log(results);
+  // 输出: [{status: "fulfilled", value: 1}, {status: "rejected", reason: Error: "Rejected"}, {status: "fulfilled", value: 3}]
+});
+```
+
+### promise all
 ```js
 function test(val){
 	return new Promise((resolve,reject)=>{
@@ -135,4 +167,53 @@ function test(val){
 }
 
 Promise.all([test(1),test(2)]).then((x)=>{console.log(x)},(y)=>{console.log(y)})
+```
+
+### Promise.prototype
+>`Promise.prototype.then(onFulfilled, onRejected)`：添加解决（fulfilled）和拒绝（rejected）时的回调函数。
+
+```js
+const promise = new Promise(resolve => {
+  setTimeout(() => resolve("Success!"), 1000);
+});
+
+promise.then(result => {
+  console.log(result); // 输出 "Success!"
+});
+```
+
+>`Promise.prototype.catch(onRejected)`：添加拒绝时的回调函数，用于处理 Promise 拒绝时的情况。
+
+```js
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => reject(new Error("Something went wrong")), 1000);
+});
+
+promise.catch(error => {
+  console.error(error); // 输出错误信息
+});
+```
+
+>`Promise.prototype.finally(onFinally)`
+
+添加一个回调函数，无论 Promise 是否解决或拒绝，都会执行。这在需要执行清理操作时非常有用。
+```js
+const promise = new Promise(resolve => {
+  setTimeout(() => resolve("Success!"), 1000);
+});
+
+promise.finally(() => {
+  console.log("Finally block executed."); // 无论如何都会执行
+});
+```
+
+### Promise.race(iterable)
+>返回一个 Promise，该 Promise 在可迭代对象中的任何一个 Promise 解决或拒绝时就解决或拒绝。
+```js
+const promise1 = new Promise(resolve => setTimeout(resolve, 100, 'first'));
+const promise2 = new Promise(resolve => setTimeout(resolve, 200, 'second'));
+
+Promise.race([promise1, promise2]).then(value => {
+  console.log(value); // 输出 "first"，因为它解决得更快
+});
 ```

@@ -1,20 +1,29 @@
 ---
-title: loader
+title: loader-plugin
 sidebar_position: 1
 ---
 
 ## Loader 配置处理模块的规则
-webpack只能对js文件进行直接的文件合并、压缩处理。然而实际开发中会用到各种其他类型的文件，如 css、less、jpg、jsx、vue 等等类型的文件，webpack本身是无法处理这些类型文件的，此时就需要借助各种文件的loader（加载器）。
+文档:
+https://www.webpackjs.com/concepts/loaders
 
-loader 的作用就是将各种类型的文件转换成 webpack 能够处理的模块
+优化：
+https://www.webpackjs.com/guides/build-performance/#loaders
+
+webpack本身是无法处理 css、less、jpg、jsx、vue 等类型的文件，这些类型文件的，此时就需要借助各种文件的loader。 loader的作用就是将各种类型的文件转换成 webpack 能够处理的模块。
 
 需要注意的是由于 loader 是从右往左执行的，一个 loader 处理完的结果会交给下一个 loader 继续处理，就像一条工厂流水线一样，所以加载器数组存在一定的次序，配置的时候就需要注意书写的loader次序。 
 
 接受源代码作为参数的函数，并返回这些转换过的新版本代码。
 
-loader 可以将文件从不同的语言（如 TypeScript）转换为 JavaScript 或将内联图像转换为 data URL。loader 甚至允许你直接在 JavaScript 模块中 import CSS 文件！babel-loader将es6语法转换成能普遍被浏览器所执行的es5。
+可以使用 Node.js 编写自己的 loader
 
-一个实际开发中经常接触到的例子：项目中使用了 less 语法，就需要使用 less-loader 去将其转译为 css，然后通过 css-loader 去加载 css 文件，处理后交给 style-loader，最后把资源路径写入到 html 中的 style 标签内生效。
+https://webpack.docschina.org/loaders/
+
+https://webpack.docschina.org/concepts/loaders
+
+### 例子：load解析less
+就需要使用 less-loader 去将其转译为 css,css-loader首先处理CSS文件，解析CSS模块，然后style-loader将它们插入到HTML文档中，使样式生效。这允许你将样式文件作为模块导入到JavaScript代码中，从而实现模块化的CSS管理。
 ```js
 module: {
     rules: [{
@@ -24,18 +33,102 @@ module: {
 },
 ```
 
+### loader 实例:解析jsx
+```bash
+npm install babel-loader @babel/core @babel/preset-env @babel/preset-react --save-dev
+```
 
-可以使用 Node.js 编写自己的 loader
+Webpack会在构建时自动处理JSX文件，将其转译成浏览器可执行的JavaScript。
+```js
+module.exports = {
+  // ...其他配置
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$,
+        exclude: /node_modules/,
+        use: {
+          // 使用Babel Loader来处理文件扩展名为 .js 或 .jsx 的文件
+          loader: "babel-loader",
+          options: {
+            // 使用@babel/preset-env,@babel/preset-react预设来处理ES6和React的特性。
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+      },
+    ],
+  },
+};
+```
 
-https://webpack.docschina.org/loaders/
+### loader 实例:解析vue
+```bash
+npm install vue vue-loader vue-template-compiler --save-dev
+```
 
-https://webpack.docschina.org/concepts/loaders
+通过以下配置，Webpack会在构建时自动处理Vue单文件组件，将其编译为JavaScript、HTML和CSS等部分
+```js
+const { VueLoaderPlugin } = require('vue-loader');
 
-## loader参数
+module.exports = {
+  // ...其他配置
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        // Vue Loader来处理文件扩展名为 .vue 的Vue单文件组件
+        loader: 'vue-loader',
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          // 处理JavaScript文件，通常使用Babel Loader来支持现代JavaScript特性。
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+  ],
+};
+```
 
-module:配置处理模块的规则,配置文件时使用哪些Loader去加载和转换
+## loader属性
+### 三种方式：条件匹配:通过test,include,exclude,来选中loader要应用规则的文件
+1. test：一个用于匹配需要被该Loader处理的文件的正则表达式。只有满足该正则表达式的文件会被该Loader处理。
+2. include：一个用于指定Loader应该处理的文件或目录的路径。通常用于精确指定Loader应该处理的范围，而不是整个项目。
+3. exclude：与include相反，用于指定Loader不应该处理的文件或目录的路径。通常用于排除特定的文件或目录。
 
-1. 三种方式：条件匹配:通过test,include,exclude,来选中loader要应用规则的文件
+
+### 应用规则：对选中的文件通过use 配置项来应用 Loader
+4. use：一个包含Loader名称和Loader选项的对象。用于指定要应用的Loader以及它们的配置选项。
+5. loader：Loader的名称，通常与use一起使用，但没有配置选项。指定要应用的Loader。
+6. options：Loader的配置选项，通常与loader一起使用。包含有关如何处理文件的参数。
+7. enforce：一个字符串，可以是"pre"或"post"。用于指定Loader的执行顺序，"pre"表示在其他Loader之前执行，"post"表示在其他Loader之后执行。
+```js
+module: {
+  rules: [
+    {
+      test: /\.js$/, // 匹配以.js为扩展名的文件
+      include: path.resolve(__dirname, 'src'), // 只处理src目录下的文件
+      use: {
+        loader: 'babel-loader', // 使用babel-loader来处理
+        options: {
+          presets: ['@babel/preset-env'],
+        },
+      },
+    },
+    {
+      test: /\.css$/, // 匹配以.css为扩展名的文件
+      use: ['style-loader', 'css-loader'], // 使用style-loader和css-loader来处理
+    },
+    // 其他Loader规则
+  ],
+}
+```
+
 2. 应用规则：对选中的文件通过use 配置项来应用 Loader,
 ```
 use: use是每一个rule的属性，指定要用什么loader
@@ -58,7 +151,19 @@ module.exports = {
 }
 ```
 
-### 常用loader
+## 常用loader
+### 1. JavaScript 相关,babel-loader（用于处理JavaScript）：
+  ○ presets: 一个数组，包含了Babel预设的名称，用于定义要使用的JavaScript语法规范。例如，['@babel/preset-env', '@babel/preset-react']。
+  ○ plugins: 一个数组，包含了要应用的Babel插件，用于处理各种转换。例如，['@babel/plugin-transform-async-to-generator']。
+  ○ cacheDirectory: 布尔值，用于启用/禁用缓存以加快构建速度。例如，true。
+
+- babel-loader：把 ES6 转换成 ES5；
+- script-loader：可以将指定的模块 JavaScript 文件转成纯字符串通过 eval 方式执行；
+- exports-loader：可以导出指定的对象，例如 window.Zepto；
+- ts-loader：把 TypeScript 转换成 JavaScript；
+- imports-loader：将任意三方的对象添加到 window 对象中。
+
+### 2. css-loader（用于处理CSS）：
 1.样式相关，如下所示：
 - style-loader：把 CSS 代码注入到 JavaScript 中，通过 DOM 操作去加载 CSS；
 - css-loader：加载 CSS，支持模块化、压缩、文件导入等特性；
@@ -66,13 +171,16 @@ module.exports = {
 - less-loader：把 less 代码转换成 CSS 代码；
 - sass-loader：把 SCSS/SASS 代码转换成 CSS 代码；
 
-2.JavaScript 相关，如下所示：
-- babel-loader：把 ES6 转换成 ES5；
-- script-loader：可以将指定的模块 JavaScript 文件转成纯字符串通过 eval 方式执行；
-- exports-loader：可以导出指定的对象，例如 window.Zepto；
-- ts-loader：把 TypeScript 转换成 JavaScript；
-- imports-loader：将任意三方的对象添加到 window 对象中。
+3. style-loader（用于将CSS注入到DOM中）：
+  ○ injectType: 字符串，指定如何注入样式，通常有 'styleTag'、'singletonStyleTag' 和 'lazyStyleTag' 等选项。例如，'styleTag'。
 
+### 5.静态资源相关,以image-webpack-loader(用于优化和压缩图像)为代表
+  ○ mozjpeg: 对象，用于配置mozjpeg优化器的参数。
+  ○ pngquant: 对象，用于配置pngquant优化器的参数。
+
+* file-loader/url-loader(用于处理文件和图像)
+  ○ name: 字符串，用于定义输出文件的名称和路径模板，可以包含占位符。例如，'[name].[ext]'。
+  ○ limit: 数字，用于指定小文件的阈值，以确定是使用file-loader还是url-loader。例如，8192。
 
 3.静态资源相关，如下所示：
 raw-loader：把文本文件的内容加载到代码中去；
@@ -87,11 +195,10 @@ image-webpack-loader：加载并且压缩图片文件；
 csv-loader：加载 csv 文件内容；
 xml-loader：加载 xml 文件内容。
 
-
-工程相关，如下所示：
-eslint-loader：通过 ESLint 检查 JavaScript 代码；
-tslint-loader：通过 TSLint 检查 TypeScript 代码；
-mocha-loader：加载 Mocha 测试用例代码。
+### 工程相关，如下所示：
+* eslint-loader：通过 ESLint 检查 JavaScript 代码；
+* tslint-loader：通过 TSLint 检查 TypeScript 代码；
+* mocha-loader：加载 Mocha 测试用例代码。
 
 ### css-loader和style-loader区别和使用
 默认webpack打包的时候只会处理JS之间的依赖关系,`.css`文件不是一个 JavaScript 模块，你需要配置 webpack 使用 css-loader 或者 style-loader 去合理地处理它们

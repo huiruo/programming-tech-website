@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+  <div id="root">
+    <div>
+      <button @click="onClickText" class="btn">Hello world, Click me</button>
+      <span>{{ msg }} - {{ refData.myName }} - {{ info.msg2 }}</span>
+      <div v-if="showDiv">
+        被你发现了
+      </div>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#root',
+      data: {
+        msg: '改变我',
+        showDiv: false,
+        refData: {
+          myName: 'Ruo'
+        },
+        info: {
+          msg2: 'hello'
+        }
+      },
+      methods: {
+        onClickText: function () {
+          console.log('test:', this);
+          this.msg = '努力';
+          this.showDiv = !this.showDiv;
+          this.info.msg2 = this.showDiv ? '直接点' : '其他选择';
+        }
+      },
+      watch: {
+        'info.msg2': function (value, oldValue) {
+          console.log('watch value:', value, 'oldValue:', oldValue);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

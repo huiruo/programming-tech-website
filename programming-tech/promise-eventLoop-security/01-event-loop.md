@@ -12,7 +12,7 @@ sidebar_position: 1
 
 浏览器是多进程的，浏览器每一个打开一个Tab页面都代表着创建一个独立的进程（至少需要四个，若页面有插件运行，则五个）。
 
-![](../../assets/img-others/图A浏览器进程和线程.png)
+![](../assets/img-others/图A浏览器进程和线程.png)
 
 ### 渲染进程
 1. GUI渲染线程
@@ -138,7 +138,7 @@ api-nextTick.md
 
 ## 初始化-构造事件循环与消息队列
 JS引擎常驻于内存中，等待宿主将JS代码或函数传递给它。也就是等待宿主环境分配宏观任务，反复等待 - 执行即为事件循环。
-![img1](../../assets/img-engine/js运行.png)
+![img1](../assets/img-engine/js运行.png)
 
 概念1：宿主
 JS运行的环境:浏览器/Node。

@@ -174,6 +174,7 @@ const sidebars = {
             'JavaScript/for常用循环/03-2-Object.keys-去掉空值属性',
             'JavaScript/for常用循环/for-in-实现深拷贝',
             'JavaScript/for常用循环/for-of-遍历对象-数组',
+            'JavaScript/for常用循环/for-of-遍历异步数组',
             'JavaScript/for常用循环/forEach',
             'JavaScript/for常用循环/forin-遍历对象',
             'JavaScript/for常用循环/values-循环对象',
@@ -343,11 +344,6 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'parsing-interpretation-compilation/Parser解析得到AST-Ignition解释得到字节码',
-        'parsing-interpretation-compilation/步骤1-预解析-变量提升',
-        'parsing-interpretation-compilation/步骤2-作用域-块级作用域原理',
-        'parsing-interpretation-compilation/步骤3-执行上下文-函数调用栈-this',
-        'parsing-interpretation-compilation/闭包-内存生命周期',
         {
           label: '模块化',
           type: 'category',
@@ -359,6 +355,11 @@ const sidebars = {
             'parsing-interpretation-compilation/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
           ]
         },
+        'parsing-interpretation-compilation/Parser解析得到AST-Ignition解释得到字节码',
+        'parsing-interpretation-compilation/步骤1-预解析-变量提升',
+        'parsing-interpretation-compilation/步骤2-作用域-块级作用域原理',
+        'parsing-interpretation-compilation/步骤3-执行上下文-函数调用栈-this',
+        'parsing-interpretation-compilation/闭包-内存生命周期',
         'parsing-interpretation-compilation/旧-变量对象',
       ]
     },
@@ -366,24 +367,22 @@ const sidebars = {
       label: 'promise-eventLoop-security',
       type: 'category',
       collapsed: true,
-      link: {
-        type: 'generated-index',
-      },
+      // link: {
+      //   type: 'generated-index',
+      // },
       items: [
         {
           label: 'promise',
           type: 'category',
           collapsed: true,
           items: [
-            'promise-eventLoop-security/promise/Generator',
-            'promise-eventLoop-security/promise/async-await',
-            'promise-eventLoop-security/promise/题目',
             'promise-eventLoop-security/promise/promise基础',
-            'promise-eventLoop-security/promise/实现-promise方法',
-            'promise-eventLoop-security/promise/使用-promise-all-20191121新',
-            'promise-eventLoop-security/promise/使用-promise模拟请求',
+            'promise-eventLoop-security/promise/promise实现原理',
+            'promise-eventLoop-security/promise/promise具体实现',
+            'promise-eventLoop-security/promise/async-await',
+            'promise-eventLoop-security/promise/Generator',
+            'promise-eventLoop-security/promise/题目',
             'promise-eventLoop-security/promise/axios',
-            'promise-eventLoop-security/promise/使用-tabControl-两个请求合并promiseAll',
           ]
         },
         {

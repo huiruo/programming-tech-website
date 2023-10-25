@@ -1,5 +1,5 @@
 ---
-title: 实现-promise方法
+title: promise具体实现
 sidebar_position: 7
 ---
 
@@ -88,8 +88,9 @@ MyPromise.prototype.then = (onFullFilled, onRejected) => {
 
 
 ### 步骤3，then()函数的完善
+>到此时，只是完成了基本,我们在then函数中，只判断了状态为fufilled时，调了onFullFilled，状态为rejected时，调了onRejected。但如果then()函数被调用时，promise的状态还并未发生改变（也就是还处于pending时），那then()函数内的代码是不是不会执行拉。因为我们并没有写pending状态时的处理代码。如以下情况
+
 ```js
-到此时，只是完成了基本,我们在then函数中，只判断了状态为fufilled时，调了onFullFilled，状态为rejected时，调了onRejected。但如果then()函数被调用时，promise的状态还并未发生改变（也就是还处于pending时），那then()函数内的代码是不是不会执行拉。因为我们并没有写pending状态时的处理代码。如以下情况
 const promise1 = new MyPromise((resolve, reject) => {
     setTimeout(() => {
         resolve(123)
@@ -100,9 +101,8 @@ promise1.then((res) => {
 }, (err) => {
     console.log(err)
 })
-/*
-没有输出
 
+// 没有输出
 const promise1 = new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve(123)
@@ -113,14 +113,16 @@ promise1.then((res) => {
 }, (err) => {
     console.log(err)
 })
-正常应该输出：输出2 123
-*/
+// 正常应该输出：输出2 123
+```
 
-1、先定义两个变量用来保存then()的回调函数
+1. 先定义两个变量用来保存then()的回调函数
 this.onFullFilledList = []
 this.onRejectedList = []
 
-2.then()执行时，如果状态还未发生改变（还是pending时），那么就将回调函数先保存起来
+2. then()执行时，如果状态还未发生改变（还是pending时），那么就将回调函数先保存起来
+
+```js
 MyPromise.prototype.then = function (onFullFilled, onRejected) {
     // onFulfilled, onRejected分别resolve()时的回调函数和reject()时的回调函数
 	// 此时，判断状态，不同状态时，分别执行不同的回调
@@ -141,8 +143,11 @@ MyPromise.prototype.then = function (onFullFilled, onRejected) {
     }
 	// 上面的this指向的是调用then的promise实例，故可以直接拿到状态和返回值
 }
+```
 
 3、在resolve()和reject()的时候, 去取onFullFilledList，onRejectedList两个队列中的函数，并依次执行
+
+```js
 // 定义resolve函数
 let resolve = (val) => {
 	 // 1、将状态变更为fulfilled, 但是注意一点，Promise是有个特点的，就是状态只能由pending状态变更为fulfilled或者由pending状态变更为rejected。且，状态变化后，不会再变化。故，我们需要先判断当前是否是等待状态pending
@@ -169,6 +174,8 @@ let reject = (val) => {
      }
 }
 ```
+
+
 ## 到此，就不会再有因为异步代码而执行不了的问题了。看下完整代码，并验证下
 ```js
 class MyPromise {
@@ -256,9 +263,7 @@ promise1.then((res) => {
 ```
 
 ## Promise.then()的链式调用
-```
-Promise之所以能够进行链式调用，是因为then()方法内部返回了一个Promise实例，而返回的这个Promise实例在继续调用了第二个then()方法。并且第二个then的resolve回调的参数，是上一个then的resolve回调函数的返回值。
-```
+>Promise之所以能够进行链式调用，是因为then()方法内部返回了一个Promise实例，而返回的这个Promise实例在继续调用了第二个then()方法。并且第二个then的resolve回调的参数，是上一个then的resolve回调函数的返回值。
 ### 我们来改造下then
 ```js
 MyPromise.prototype.then = function (onFullFilled, onRejected) {
@@ -289,7 +294,7 @@ MyPromise.prototype.then = function (onFullFilled, onRejected) {
     })
 }
 ```
-```js
+
 可以看到，我们在调用then时，返回了一个新的Promise实例，并且将这个then(onFullFilled，onRejected)的resolve回调和reject回调的返回值resolve或者reject出去了。
 这种方式，对于当onFullFilled返回的是一个普通值来说，是可行的，但如果onFullFilled返回的是一个Promise对象或者函数呢。
 从原生Promise的功能上，我们是可以看出的:
@@ -300,6 +305,7 @@ MyPromise.prototype.then = function (onFullFilled, onRejected) {
 所以，此时，我们是不是需要一个函数来专门判断这个onFullFilled的返回值到底是普通值还是函数还是Promise对象。并且，当值不同时，处理方式就不一样。
 如下：
 
+```js
 // then函数中，返回值的处理函数，判断返回值的类型，并做处理
 const formatPromise = (promise, result, resolve, reject) => {
 	// 首先，先判断下promise是不是result, 因为我们知道，我们的result是一个返回值，他可能是一个Promise，那如果他直接返回第一个参数中的promise的话，那么是会造成死循环的。
@@ -437,9 +443,9 @@ MyPromise {
   onFullFilledList: [],
   onRejectedList: []
 }
-
-可以看出，这个时候，就解析不出234了。更别说如果promise3内部resolve的又是一个Promise了。此时，如果出现这个层层嵌套的。我们是不是要进一步的去进行解析啊，直到解析出一个普通值。那么这个时候，我们是不是要用到递归啊，不断的利用fomatPromise去解析resolve的值，直到resolve的是一个普通值才停止。下面我们看代码，继续完善formatPromise
 ```
+>可以看出，这个时候，就解析不出234了。更别说如果promise3内部resolve的又是一个Promise了。此时，如果出现这个层层嵌套的。我们是不是要进一步的去进行解析啊，直到解析出一个普通值。那么这个时候，我们是不是要用到递归啊，不断的利用fomatPromise去解析resolve的值，直到resolve的是一个普通值才停止。下面我们看代码，继续完善formatPromise
+
 ```js
 class MyPromise {
 	constructor (fun) {

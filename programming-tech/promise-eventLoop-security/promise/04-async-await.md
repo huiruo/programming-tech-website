@@ -87,75 +87,6 @@ const fn = async function() {
 fn();
 ```
 
-## 任务队列
-
-js中的队列其实就是一个数组。
-
-### 同步任务队列
-任务队列中的函数都是同步函数。这种情况比较简单，我们可以采用reduce很方便的遍历。
-```js
-const fn1 = function(i) {
-    return i + 1;
-};
-const fn2 = function(i) {
-    return i * 2;
-};
-const fn3 = function(i) {
-    return i * 100;
-};
-const taskList = [fn1, fn2, fn3];
-let a = 1;
-const res = taskList.reduce((sum, fn) => {
-    sum = fn(sum);
-    return sum;
-}, a); 
-
-console.log(res); // 400
-```
-
-### 任务队列中
-任务队列中的函数都是异步函数。这里，我们假设所有的函数都是以Promise的形式封装的。现在，需要依次执行队列中的函数。假设异步任务队列如下：
-```js
-const fn1 = function() {
-    return new Promise( resolve => {
-        setTimeout(function(){
-            console.log('fn1');
-            resolve();
-        }, 2000);
-    });
-};
-const fn2 = function() {
-    return new Promise( resolve => {
-        setTimeout(function(){
-            console.log('fn2');
-            resolve();
-        }, 1000);
-    });
-};
-const fn3 = function() {
-    console.log('fn3');
-    return Promise.resolve(1);
-};
-const taskList = [fn1, fn2, fn3];
-```
-
-可以使用正常的for循环或者for...of... 来遍历数组，并且使用async await来执行代码:
-```js
-// for循环
-(async function(){
-    for(let i = 0; i < taskList.length; i++) {
-        await taskList[i]();
-    }
-})();
-
-// for..of..
-(async function(){
-    for(let fn of taskList) {
-    	await fn();
-	}
-})();
-```
-
 ## promise和async/await区别
 ### 错误处理
 1. Promise使用catch()方法处理失败状态下的结果
@@ -210,13 +141,20 @@ async function example() {
 ## 生成器+promise=async function
 Async/Await就是一个自执行的generate函数
 
-测试方式1：[es6-to-es5-本地测试](https://github.com/huiruo/es6-to-es5)
+使用babel插件可以用于将 async/await 语法转化为标准的 JavaScript 代码：
+* @babel/preset-env：这是 Babel 的预设，它可以根据你的目标浏览器环境自动选择需要的转译插件
+* @babel/plugin-transform-async-to-generator：这个插件用于将 async/await 转化为 Generator 函数
+* @babel/plugin-transform-regenerator：这个插件用于引入 regenerator-runtime，以便在不支持 async/await 的环境中运行
 
-测试方式2：
+### 测试方式1：
+[es6-to-es5-本地测试](https://github.com/huiruo/es6-to-es5)
+
+### 测试方式2：
 [babeljs.io](https://babeljs.io/repl)
 
-比如：`@babel/plugin-transform-arrow-functions`；码中的所有箭头函数（arrow functions）都将被转换为 ES5 兼容的函数表达式了
+比如：添加`@babel/plugin-transform-arrow-functions`babel插件,代码中的所有箭头函数（arrow functions）都将被转换为 ES5 兼容的函数表达式了
 
+![babel-es5-es6](../../assets/img-others/babel-es5-es6.png)
 
 ## 转化成es5
 [babeljs.io](https://babeljs.io/repl)
@@ -237,6 +175,14 @@ async1()
 |
 V
 // 省略包...
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function () { return e; }; 
+
+  // 省略
+  // ...
+}
+
+
+// 解析之后
 function async1() {
   return _regeneratorRuntime().async(function async1$(_context) {
     while (1) switch (_context.prev = _context.next) {
@@ -258,6 +204,17 @@ function testFn() {
 }
 async1();
 ```
+
+这段代码是一个使用异步函数（async/await）和 Promise 的 JavaScript 代码。
+1. async1 是一个异步函数（async function）。
+2. 在 async1 函数内部，有一个 await 表达式，它等待 testFn() 函数返回的 Promise 对象的状态变为 resolved。await 关键字用于等待一个 Promise 对象的解决，并在解决后继续执行后续代码。
+3. testFn 是一个函数，它返回一个 Promise 对象，该 Promise 在创建后立即被 resolved（解决）。这表示异步操作成功完成。
+4. 当 testFn 的 Promise 被 resolved 后，async1 函数会继续执行。它会打印出 'A'。
+
+5. 请注意 _regeneratorRuntime() 和 _regeneratorRuntime().async()、_regeneratorRuntime().awrap() 是 Babel 转译器生成的辅助函数，用于支持 async/await 的转译。这是因为不同 JavaScript 引擎可能对 async/await 支持程度不同，Babel 被用来确保代码在不同环境中的兼容性。
+
+综上所述，这段代码的主要目的是演示如何使用 async/await 来处理异步操作，以及如何使用 Promise 来进行异步操作的封装和管理。在这个特定的示例中，async1 函数等待 testFn 函数返回的 Promise 被 resolved，然后打印 'A'。如果 testFn 中的 Promise 被 rejected，你可以在 async1 函数内部使用 try/catch 来捕获错误。
+
 
 ## 转化成yield
 [babeljs.io](https://babeljs.io/repl)
@@ -325,6 +282,16 @@ function testFn() {
 }
 async1();
 ```
+
+这段代码是一个实现异步操作的 JavaScript 代码，其中使用了 async/await 和 Promise。让我为你解析它：
+1. asyncGeneratorStep 函数：这个函数是一个生成器函数内部的辅助函数。它接受生成器对象 gen、resolve、reject、下一个 _next、抛出异常 _throw、操作键 key 和参数 arg 作为参数。它的主要作用是执行生成器的下一步，处理成功和失败的情况。如果生成器步骤成功完成，它会通过 resolve 返回结果，否则通过 reject 抛出错误。
+2. _asyncToGenerator 函数：这个函数接受一个生成器函数 fn 作为参数，返回一个新的函数。这个新函数使用 Promise 包装生成器函数，并返回 Promise。它内部创建了一个 Promise 对象，然后执行生成器函数，将生成器对象传递给 asyncGeneratorStep 函数来逐步执行生成器的步骤。生成器函数内部会通过 yield 暂停执行，然后通过 Promise 的 then 方法继续执行。
+3. async1 函数：这是一个异步函数，它使用了 _async 函数来定义。async1 函数内部的主要操作是调用 testFn 函数，并在 testFn 函数返回的 Promise 被 resolved 后打印 'A'。
+4. _async 函数：这个函数是一个使用了 _asyncToGenerator 的异步函数。它内部定义了一个生成器函数，这个生成器函数在执行时会通过 yield 暂停，然后等待 testFn 函数的 Promise 被 resolved。一旦 testFn 的 Promise 被 resolved，它会继续执行并打印 'A'。
+5. testFn 函数：这个函数返回一个 Promise，该 Promise 在创建后立即被 resolved。这表示异步操作成功完成。
+6. 最后，通过调用 async1 函数来启动整个异步操作链。async1 函数内部的 _async 函数会启动异步操作并等待 testFn 的 Promise 被 resolved，然后打印 'A'。
+
+这段代码演示了如何使用 async/await 和 Promise 来管理异步操作，以及如何定义生成器函数来处理异步操作的暂停和继续。这种代码结构有助于处理异步逻辑，使其更容易理解和维护。
 
 ### 例子2
 [babeljs.io](https://babeljs.io/repl)

@@ -17,12 +17,10 @@ sidebar_position: 2
 
 ## async/await是Generator和自动执行器的语法糖，写法和实现原理都类似co模块的promise模式
 Generator自己不能自动执行，要自动执行需要引入其他方案，前面讲thunk的时候提供了一种方案，co模块也是一个很受欢迎的自动执行方案
-```
-思路：先写一个局部的方法，这个方法会去调用gen.next，同时这个方法本身又会传到回调函数或者promise的成功分支里面，异步结束后又继续调用这个局部方法，这个局部方法又调用gen.next，这样一直迭代，直到迭代器执行完毕。
-```
 
+>思路：先写一个局部的方法，这个方法会去调用gen.next，同时这个方法本身又会传到回调函数或者promise的成功分支里面，异步结束后又继续调用这个局部方法，这个局部方法又调用gen.next，这样一直迭代，直到迭代器执行完毕。
 
-## 基本应用
+## Generator基本应用
 ### 生成器函数运行后会返回一个迭代器对象，即iterator
 ```js
 function* testFn() {
@@ -77,8 +75,8 @@ console.log('iterator2:',iterator.next()) // iterator2 {value: 15, done: false}
 console.log('第二次调用next:',iterator.next()) // {value: 1, done: false}
 ```
 
-## 异步使用
-三个网络请求，请求3依赖请求2的结果，请求2依赖请求1;
+## 异步三种写法: promise,Generator,async
+需求：三个网络请求，请求3依赖请求2的结果，请求2依赖请求1;
 
 ### promise
 ```js

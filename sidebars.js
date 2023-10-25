@@ -255,19 +255,6 @@ const sidebars = {
             'JavaScript/jsdom操作/js操作dom',
           ]
         },
-        {
-          label: 'react-防抖节流',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'JavaScript/react-防抖节流/01-1-按钮更适合节流',
-            'JavaScript/react-防抖节流/01-2-什么场景适合防抖-输入框搜索-窗口滚动',
-            'JavaScript/react-防抖节流/05-2021-03-hooks防抖',
-            'JavaScript/react-防抖节流/防抖-节流',
-            'JavaScript/react-防抖节流/防抖-节流2',
-            'JavaScript/react-防抖节流/防抖节流',
-          ]
-        },
       ]
     },
     {
@@ -383,8 +370,6 @@ const sidebars = {
         type: 'generated-index',
       },
       items: [
-        'promise-eventLoop-security/event-loop',
-        'promise-eventLoop-security/浏览器对事件的处理-1冒泡-2捕获',
         {
           label: 'promise',
           type: 'category',
@@ -401,9 +386,22 @@ const sidebars = {
             'promise-eventLoop-security/promise/使用-tabControl-两个请求合并promiseAll',
           ]
         },
-        'promise-eventLoop-security/安全-web有两大类漏洞-XSS和CSRF',
-        'promise-eventLoop-security/辅-浏览器兼容性-防抖函数',
+        {
+          label: '防抖节流',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'promise-eventLoop-security/防抖节流/防抖',
+            'promise-eventLoop-security/防抖节流/节流',
+            'promise-eventLoop-security/防抖节流/按钮更适合防抖-踩坑',
+            'promise-eventLoop-security/防抖节流/05-2021-03-hooks防抖',
+          ]
+        },
+        'promise-eventLoop-security/event-loop',
         'promise-eventLoop-security/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
+        'promise-eventLoop-security/浏览器对事件的处理-1冒泡-2捕获',
+        'promise-eventLoop-security/web安全漏洞-XSS和CSRF',
+        'promise-eventLoop-security/辅-浏览器兼容性',
         'promise-eventLoop-security/题目',
       ]
     },

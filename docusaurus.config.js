@@ -107,6 +107,11 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()}.`,
       },
       */
+      docs: {
+        sidebar: {
+          hideable: true,
+        },
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,

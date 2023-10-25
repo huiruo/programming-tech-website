@@ -394,7 +394,7 @@ const sidebars = {
             'promise-eventLoop-security/防抖节流/防抖',
             'promise-eventLoop-security/防抖节流/节流',
             'promise-eventLoop-security/防抖节流/按钮更适合防抖-踩坑',
-            'promise-eventLoop-security/防抖节流/05-2021-03-hooks防抖',
+            'promise-eventLoop-security/防抖节流/04-2021-03-hooks防抖',
           ]
         },
         'promise-eventLoop-security/event-loop',

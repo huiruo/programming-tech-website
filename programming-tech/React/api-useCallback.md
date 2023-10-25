@@ -82,6 +82,29 @@ function areHookInputsEqual(nextDeps, prevDeps) {
 }
 ```
 
+## 组件需要类似useCallback 的函数吗？还是类组件每次刷新不会生成新的函数？
+在React类组件中，函数是否会被重新创建取决于函数的定义和组件的重新渲染方式。与函数组件不同，类组件没有像useCallback这样的Hook，但你可以手动控制函数的重新创建。
+
+在类组件中，通常情况下，每当组件重新渲染时，与该组件关联的函数也会重新创建。这是因为函数通常是在组件的方法或渲染函数中定义的，每次组件重新渲染时，这些函数都会重新创建。
+
+如果你希望防止函数在每次重新渲染时都重新创建，你可以将函数定义移到类的构造函数中，这样它将只在组件实例创建时被定义一次。例如：
+```js
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.myFunction = this.myFunction.bind(this);
+  }
+
+  myFunction() {
+    // Your function logic here
+  }
+
+  render() {
+    // ...
+  }
+}
+```
 
 ## useCallback的使用场景1：
 父组件包含子组件，子组件接收一个函数作为 props ；通常而言，如果父组件更新了，子组件也会执行更新；但是大多数场景下，更新是没有必要的，我们可以借助 useCallback 来返回函数，然后把这个函数作为 props 传递给子组件；这样，子组件就能避免不必要的更新。

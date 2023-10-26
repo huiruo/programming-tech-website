@@ -1,11 +1,41 @@
 ## esm
 ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范， 成为浏览器和服务器通用的模块解决方案。
 
+实际项目中配置Babel loader来处理ESM代码。
+```js
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.js', // 入口文件
+  output: {
+    path: path.resolve(__dirname, 'dist'), // 输出目录
+    filename: 'bundle.js' // 输出文件名
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/, // 匹配所有.js文件
+        exclude: /node_modules/, // 排除node_modules目录
+        use: {
+          loader: 'babel-loader', // 使用Babel loader
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'] // Babel预设配置
+          }
+        }
+      }
+    ]
+  }
+};
+```
+
+
+
 esm的设计思想是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。
 
 CommonJS和AMD模块，都只能在运行时确定这些东西。
 
-对比CommonJS
+esm对比CommonJS
 ```js
 // CommonJS
 let { start, exists, readFile } = require('fs')
@@ -17,12 +47,94 @@ let { start, exists, readFile } = require('fs')
 import { start, exists, readFile } from 'fs'
 ```
 
+### esm特点
 注意：
 1. export语句输出的接口是对应值的引用，也就是一种动态绑定关系，通过该接口可以获取模块内部实时的值。
-对比CommonJS规范：CommonJS模块输出的是值的缓存，不存在动态更新。
+> 对比CommonJS规范：CommonJS是导出值的拷贝并缓存，不存在动态更新。
+> <p>CommonJS模块是动态引入的，模块依赖关系的确认发生在代码运行时；而ES6 Module模块是静态引入的，模块的依赖关系在编译时已经可以确立。</p>
+> <p>CommonJS require函数可以在index.js任何地方使用，并且接受的路径参数也可以动态指定。因此，在CommonJS模块被执行前，是没有办法确定明确的依赖关系，模块的导入导出都发生在代码运行时(代码运行阶段)。</p>
 
 2. export命令规定要处于模块顶层，一旦出现在块级作用域内，就会报错，import同理。
 
+3. esm是编译时加载或静态加载
+4. `cjs运行时加载`:
+>因为只有运行时才能得到这个对象。如果要在浏览器中使用，如果想要使用对应的模块，需要提前加载。
+><p>浏览器不适用commonjs的原因还在于：require引入模块是同步的，这对服务器端不是一个问题，因为所有的模块都存放在本地硬盘，可以同步加载完成，等待时间就是硬盘的读取时间。但对于浏览器来说却是一个大问题，因模块在服务器端，等待时间取决于网速的快慢，可能要等很长时间，浏览器处于”假死”状态。所以浏览器端的模块，不建议用”同步加载”，应采用”异步加载”方式。</p>
+><p>在现代React应用程序中，你通常会使用ES6模块，结合Webpack进行代码打包。Webpack会将你的React代码编译成ES6模块，并生成一个单一的JavaScript文件（通常命名为bundle.js），你可以将这个文件包含在HTML中，以在浏览器中运行你的React应用程序。 bundle.js 文件通常采用 CommonJS 模块规范，特别是当使用 Webpack 默认配置时。 CommonJS 是一种在服务器端（Node.js）和一些构建工具中广泛使用的模块系统，它使用 require 和 module.exports（或 exports）语法来导入和导出模块。</p>
+
+例子：整体加载fs模块（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取 3 个方法。
+>这种加载称为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”。其实下面代码是先执行 fs 模块，得到一份代码拷贝，再获取对应的属性或方法的。
+
+```js
+// CommonJS模块
+let { stat, exists, readfile } = require('fs');
+
+// 等同于
+let _fs = require('fs');
+let stat = _fs.stat;
+let exists = _fs.exists;
+let readfile = _fs.readfile;
+```
+
+>下面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“编译时加载”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比CommonJS 模块的加载方式高。当然，这也导致了没法引用 ES6 模块本身，因为它不是对象。
+```js
+// ES6模块
+import { stat, exists, readFile } from 'fs';
+```
+
+### CommonJs 特点
+1. CommonJS模块是加载时执行，即脚本代码在require时就全部执行。
+
+2. require的模块第一次加载时候会被执行，导出执行结果module.exports。
+
+3. require函数是运行时执行的，所以require函数可以接收表达式，并且可以放在逻辑代码中执行。
+```js
+const name = 'Tom';
+const scriptName = 'tom.js';
+if (name === 'Tom') {
+    require('./' + scriptName);
+}
+```
+
+4. require的模块如果曾被加载过，再次加载时候模块内部代码不会再次被执行，直接导出首次执行的结果。
+
+5. 每个文件就是一个模块，有自己的作用域。每个模块内部，module变量代表当前模块，是一个对象，它的exports属性（即module.exports）是对外的接口。
+
+6. module.exports属性表示当前模块对外输出的接口，其他文件加载该模块，实际上就是读取module.exports变量。为了方便，Node为每个模块提供一个exports变量，指向module.exports。
+```js
+let exports = module.exports
+```
+
+### cjs的module是一个对象，require 是一个函数
+
+module 中的一些属性：
+* exports：这就是 module.exports 对应的值，由于还没有赋任何值给它，它目前是一个空对象。
+```
+loaded：表示当前的模块是否加载完成。
+paths：node 模块的加载路径
+```
+* require 函数中也有一些值得注意的属性：
+```
+main 指向当前当前引用自己的模块，所以类似 python 的 __name__ == '__main__', node 也可以用 require.main === module 来确定是否是以当前模块来启动程序的。
+
+extensions 表示目前 node 支持的几种加载模块的方式。
+
+cache 表示 node 中模块加载的缓存，也就是说，当一个模块加载一次后，之后 require 不会再加载一次，而是从缓存中读取。
+```
+
+### ES Module加载流程
+ESM 的加载细节，它其实和前面提到的 CommonJS 的 Module._load 函数做的事情有些类似：
+1. 检查缓存，如果缓存存在且已经加载，则直接从缓存模块中提取相应的值，不做下面的处理
+
+2. 如果缓存不存在，新建一个 Module 实例
+
+3. 将这个 Module 实例放到缓存中
+
+4. 通过这个 Module 实例来加载文件
+
+5. 加载文件后到全局执行上下文时，会有创建阶段和执行阶段，在创建阶段做函数和变量提升，接着执行代码。
+
+6. 返回这个 Module 实例的 exports
 
 当你在使用模块进行开发时，是在构建一张依赖关系图。不同模块之间的连线就代表了代码中的导入语句。
 
@@ -50,10 +162,10 @@ ESM 标准 规范了如何把文件解析为模块记录，如何实例化和如
 加载器也同时控制着如何加载模块。它会调用 ESM 的方法，包括 ParseModule、Module.Instantiate 和 Module.Evaluate 。它就像是控制着 JS 引擎的木偶。
 
 
-## 预编译
+## 预编译和esm
+### 先理解引擎是怎么解析js
 要理解es6中的import是“编译时加载”或者静态加载,先理解 JavaScript 引擎是怎么解析 js 的
 
-### 预编译
 在传统编译语言的流程中，程序中的一段源代码在执行之前会经历三个步骤，统称为“编译”。
 1. 分词/词法分析
 将由字符组成的字符串分解成（对编程语言来说）有意义的代码块，这些代码块被称为词法单元。 var a = 2; 这段程序通常会被分解成这些词法单元：var, a, =, 2, ;
@@ -77,7 +189,7 @@ export const readFile() // 方法上，注意这里只是做了指针指向，�
 当执行 readFile() 时，就会去找指针指向的代码并执行。
 
 
-### 对于 JavaScript 来说，大部分情况下编译发生在代码执行前的几微秒（甚至更短！）的时间内。
+### 大部分情况下编译发生在代码执行前的几微秒(甚至更短)的时间内
 
 简单地说，任何 JavaScript 代码片段在执行前都要进行编译（通常就在执行前）。因此，JavaScript 编译器会对 var a = 2; 这段程序进行编译，然后做好执行它的准备，并且通常马上就会执行它。
 
@@ -122,7 +234,8 @@ import { 'f' + 'oo' } from 'my_module' ，而 require是执行代码获取属性
 在编译期（翻译）时，JS 解析器识别到 import b from './b'，就会生成一个引用 b，到了执行的时候，直接使用引用 b 了。
 ```
 
-所谓的静态编译阶段，完全是区分于cjs的运行时建立引用，esm是标准的在转化成中间代码时就会发现是否正确(比如不能在条件判断里import)，而非在运行时才发现错误。
+### 静态编译阶段，不同cjs的运行时建立引用，esm是标准的在转化成中间代码时就会发现是否正确
+比如不能在条件判断里import，而非在运行时才发现错误。
 
 ```js
 import { readFile } from 'fs';
@@ -133,115 +246,6 @@ js 代码被 JavaScript 引擎编译时, 并将上面 fs 模块的属性 readFil
 export const readFile() 方法上，注意这里只是做了指针指向，而并不是执行 fs 模块。
 
 当执行 readFile() 时，就会去找指针指向的代码并执行。
-```
-
-
-### ESM 的加载细节
-ESM 的加载细节，它其实和前面提到的 CommonJS 的 Module._load 函数做的事情有些类似：
-1. 检查缓存，如果缓存存在且已经加载，则直接从缓存模块中提取相应的值，不做下面的处理
-
-2. 如果缓存不存在，新建一个 Module 实例
-
-3. 将这个 Module 实例放到缓存中
-
-4. 通过这个 Module 实例来加载文件
-
-5. 加载文件后到全局执行上下文时，会有创建阶段和执行阶段，在创建阶段做函数和变量提升，接着执行代码。
-
-6. 返回这个 Module 实例的 exports
-
-
-## es6 的动态加载
-import()函数接收与import相同的参数，返回一个Promise对象，加载获取到的值作为then方法的回调参数。
-```js
-const main = document.querySelector('main')
-
-import(`./section-modules/${someVariable}.js`)
-	.then(module => {
-  	module.loadPageInto(main);
-	})
-	.catch(err => {
-    main.textContext = err.message;
-})
-
-// 加载获得接口参数：
-import('./module1.js')
-.then(({default:defaultFn,foo,bar}) => {
-  console.log(defaultFn)
-})
-
-// 同时加载多个模块并应用于async函数中
-async function main() {
-  const myModule = await import('./myModule.js');
-  const {export1, export2} = await import('./myModule.js');
-  const [module1, module2, module3] = 
-        await Promise.all([
-          import('./module1,js'),
-          import('./module2.js'),
-          import('./module3.js')
-        ])
-}
-main();
-```
-
-
-## 预编译中的import 变量提升
-ESM 中存在变量提升和函数提升。
-demo1 - ES6
-```js
-// a.js
-console.log('I am a.js...')
-import { foo } from './b.js';
-console.log(foo);
-
-// b.js
-console.log('I am b.js...')
-export let foo = 1;
-
-// 运行 node -r esm a.js
-// I am b.js
-// I am a.js
-// 1
-```
-demo1 中因为 ES6 在语言标准层面上实现了模块功能，所以当对 a.js 预编译时发现关键词 import 后，会先去加载 b.js，所以先输出 'I am b.js'。a.js & b.js 预编译后的执行顺序如下，
-```
-整个流程是：预编译 a.js -> 发现关键词 import -> 预编译 b.js -> 执行 b.js -> 执行 a.js。
-```
-
-demo2 - CommonJS
-```js
-// a.js
-console.log('I am a.js...')
-var b = require('./b');
-console.log(b.foo);
-
-// b.js
-console.log('I am b.js...')
-let foo = 1;
-module.exports = {
-   foo: foo
-}
-
-// 运行 node a.js
-// I am a.js
-// I am b.js
-// 1
-```
-
-demo2 中，对 a.js 预编译时，只会把变量 b 的声明提前，a.js & b.js 预编译后的执行顺序如下：
-```js
-// a.js
-var b;
-console.log('I am a.js...')
-b = require('./b');
-console.log(b.foo);
-
-// b.js
-console.log('I am b.js...')
-let foo = 1;
-module.exports = {
-   foo: foo
-}
 ```
 
 ## 步骤1.构造阶段
@@ -429,7 +433,98 @@ JS 引擎通过执行顶层代码（函数之外的代码，此处可以理解�
 ![](../../assets/img-engine/esm例子5-过程总结.png)
 
 
-## import变量提升
+## es6 的动态加载
+import()函数接收与import相同的参数，返回一个Promise对象，加载获取到的值作为then方法的回调参数。
+```js
+const main = document.querySelector('main')
+
+import(`./section-modules/${someVariable}.js`)
+	.then(module => {
+  	module.loadPageInto(main);
+	})
+	.catch(err => {
+    main.textContext = err.message;
+})
+
+// 加载获得接口参数：
+import('./module1.js')
+.then(({default:defaultFn,foo,bar}) => {
+  console.log(defaultFn)
+})
+
+// 同时加载多个模块并应用于async函数中
+async function main() {
+  const myModule = await import('./myModule.js');
+  const {export1, export2} = await import('./myModule.js');
+  const [module1, module2, module3] = 
+        await Promise.all([
+          import('./module1,js'),
+          import('./module2.js'),
+          import('./module3.js')
+        ])
+}
+main();
+```
+
+## 预编译中的import 变量提升
+ESM 中存在变量提升和函数提升。
+demo1 - ES6
+```js
+// a.js
+console.log('I am a.js...')
+import { foo } from './b.js';
+console.log(foo);
+
+// b.js
+console.log('I am b.js...')
+export let foo = 1;
+
+// 运行 node -r esm a.js
+// I am b.js
+// I am a.js
+// 1
+```
+demo1 中因为 ES6 在语言标准层面上实现了模块功能，所以当对 a.js 预编译时发现关键词 import 后，会先去加载 b.js，所以先输出 'I am b.js'。a.js & b.js 预编译后的执行顺序如下，
+```
+整个流程是：预编译 a.js -> 发现关键词 import -> 预编译 b.js -> 执行 b.js -> 执行 a.js。
+```
+
+demo2 - CommonJS
+```js
+// a.js
+console.log('I am a.js...')
+var b = require('./b');
+console.log(b.foo);
+
+// b.js
+console.log('I am b.js...')
+let foo = 1;
+module.exports = {
+   foo: foo
+}
+
+// 运行 node a.js
+// I am a.js
+// I am b.js
+// 1
+```
+
+demo2 中，对 a.js 预编译时，只会把变量 b 的声明提前，a.js & b.js 预编译后的执行顺序如下：
+```js
+// a.js
+var b;
+console.log('I am a.js...')
+b = require('./b');
+console.log(b.foo);
+
+// b.js
+console.log('I am b.js...')
+let foo = 1;
+module.exports = {
+   foo: foo
+}
+```
+
 demo2 - ES6
 ```js
 // a.js

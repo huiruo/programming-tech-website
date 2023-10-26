@@ -1,15 +1,47 @@
 ---
-title: 步骤1-预解析-变量提升
+title: step1-预解析-变量提升
 sidebar_position: 2
 ---
 
-# 预解析：Pre-Parser语法分析器
-执行 ：从上到下执行，但有例外(setTimeout,setInterval,ajax中的回调函数，事件中的函数需要触发执行)
-## 定义
+## 预解析：Pre-Parser语法分析器
+
+优点
+1. 提高性能，提前为变量分配空间,预解析只会发生在通过var定义的变量和function，并在内存中安排好。剩下的语句需要等到执行阶段、等到执行到具体的某一句时才会生效。
+
+2. 提升容错率,识别语法错误
+
+## 定义:这是一种优化机制，有助于提高 JavaScript 代码的性能和执行速度
 在解析过程中，V8 并不会一次性将所有的 JavaScript 解析为中间代码, 使用惰性编译的策略。对于不是立即执行的函数，只进行预解析（Pre Parser），只有当函数调用时，才对函数进行全量解析,是为了保证 JavaScript 初始时的运行性能。
 
 Pre-Parser 解析器进行预解析时，只验证函数语法是否有效、解析函数声明、确定函数作用域，不生成 AST。
-1. 预编译期间会将函数声明,变量声明提升至其对应作用域的最顶端。对于函数中内容预解析：把所有的函数定义提前，所有的变量声明提前，变量的赋值不提前
+
+### 1.词法分析和令牌化
+在预解析阶段，V8 引擎对 JavaScript 代码进行词法分析，将代码拆分成令牌（tokens），这些令牌是代码的最小语法单元，如标识符、关键字、运算符等。这个过程有助于快速分析代码的结构。
+
+### 2.标识符和变量分析
+V8 预解析阶段会识别代码中的变量和标识符，并创建符号表（symbol table）或作用域链（scope chain）。这有助于后续代码的查找和引用解析。
+
+### 3.检查语法错误：V8 预解析会检查代码是否存在语法错误
+这包括验证括号是否匹配、语句是否以正确的方式结束等。
+
+`SyntaxError 最为特殊，因为它是 编译阶段 抛出来的错误，如果发生语法错误，JS 代码一行都不会执行。而其他类型的异常都是 执行阶段 的错误，就算报错，也会执行异常之前的脚本。`
+```js
+const token = "ABC";
+console.log(token);
+
+//语法错误: Uncaught SyntaxError: Unexpected token '%'
+const newToken = %((token);
+```
+* 在第一行：发现一个声明了的变量和定义。将这个变量保存在当前作用域中的token的变量中，当前作用域即全局作用域。
+* 在第二行：JavaScript引擎发现token变量被引用，引擎首先在当前作用域查找token的变量是否存在，如果存在，则为引用的token变量的声明。
+* 在第三行：引擎发现newToken变量被声明以及定义。引擎检查在当前作用域中是否有命名为newToken的变量，如果有，则抛出reference error;如果没有，则在当前作用域存储这个变量。
+* 在同一行，引擎也发现了需要引用变量%((token)，但是因为这个变量是以%开头的，变量命名不可以使用保留字，所以抛出syntax error（语法错误）。
+
+### 4.函数和变量声明提升
+预解析会识别代码中的函数和变量声明，并将它们注册到作用域。这有助于确保在代码执行时可以正确引用这些函数和变量。
+
+1. 预编译期间会将函数声明,变量声明提升至其对应作用域的最顶端。对于函数中内容预解析：通常不会预解析
+
 2. 函数声明和表达式之间的差别是:函数提升只会提升函数声明，而不会提升函数表达式;函数表达式创建的函数是在运行时进行赋值。
 ```
 见：
@@ -36,11 +68,97 @@ var cTest =function(){
 */
 ```
 
-优点
-1. 提高性能，提前为变量分配空间,预解析只会发生在通过var定义的变量和function，并在内存中安排好。剩下的语句需要等到执行阶段、等到执行到具体的某一句时才会生效。
-4. 提升容错率,识别语法错误
-### 例子2
+3. 忽略函数主体：在预解析阶段，函数的主体部分通常被忽略，不会被解析和编译。这意味着函数内部的代码不会被执行，从而加快了加载时间。
+
+
+例子来看看在解析阶段提升是怎么发生的，以及提升之后是怎么执行的：
 ```js
+doSomething();
+
+function doSomething(){
+	console.log("How you doing?");
+}
+```
+* 在第一行：JavaScript引擎遇到一个叫做doSomething的函数。引擎在当前作用域查找，看是否有doSomething,如果有，则引用这个函数，没有则抛出一个reference error。
+* 在解析的过程中引擎发现function doSomething位于当前作用域，这样，就在当前作用域添加对这个变量的引用，然后使整个程序都可以访问到这个变量。
+* 最终，doSomething函数打印出字符串How you doing?.
+
+在上述解释中，我们发现代码首先被解析成中介代码以确保变量或者函数（这里既是doSomething)可以在当前作用域被访问。
+
+1.能正常运行:预解析通过，没有语法错误
+```js
+// doSomething();
+
+function doSomething(){
+  var test = 1
+	console.log("How you doing?",b);
+}
+console.log('test:',test)
+```
+
+2.报错:编译错误
+```js
+doSomething();
+
+function doSomething(){
+  var test = 1
+	console.log("How you doing?",b); // Uncaught ReferenceError: b is not defined
+}
+console.log('test:',test)
+```
+
+3.报错:预解析识别语法报错
+```js
+function doSomething(){
+  var test = 1
+  const newToken = %bb; // Unexpected token '%'
+}
+console.log('test:',test)
+```
+
+### 变量提升例子2
+1.内部并不会被提升，访问test错误
+```js
+doSomething();
+
+function doSomething(){
+	console.log("How you doing?");
+  var test = 1
+}
+console.log('test:',test) // Uncaught ReferenceError: test is not defined
+```
+
+2.提升：test undefined：
+```js
+doSomething();
+
+function doSomething(){
+	console.log("How you doing?");
+}
+
+console.log('test:',test) // test: undefined
+
+var test = 1
+```
+
+3.正常输出test：
+```js
+doSomething();
+
+function doSomething(){
+	console.log("How you doing?");
+}
+
+var test = 1
+console.log('test:',test) // test: 1
+```
+
+### 例子-变量/函数提升
+```js
+/*
+foo1 的函数声明被提升到了顶部，
+并且变量 foo2 也被提升，但它的值为 undefined。
+*/
 console.log('1:',foo1); // [Function: foo1]
 foo1(); // foo1
 
@@ -55,7 +173,11 @@ var foo2 = function () {
     console.log('4: foo2');
 };
 ```
-### 通过作用域查看惰性编译:
+>解析：当执行 console.log('2:',foo2); 时，虽然 foo2 已被声明，但它是一个变量并且没有被赋予函数的值。因此，foo2 的值为 undefined，所以输出 undefined。但在尝试执行 foo2(); 时，会引发错误，因为 foo2 是一个变量，而不是一个函数，无法调用。
+
+>预解析（hoisting）将函数声明和变量声明提升到作用域的顶部，使它们在声明之前就可用。这是 JavaScript 中的一个重要概念，但需要注意函数表达式不会被提升，因此在声明之前访问会导致 undefined。函数声明则可以在声明之前访问，并且可以立即调用。
+
+### 通过作用域查看惰性编译
 我们要输出编译阶段的词法作用域内容，那么这个输出就与编译次数相关，而编译次数又与是否是惰性编译有关，因为惰性编译下，函数声明会在执行时编译；非惰性编译下，代码是一次性编译的。
 ```js
 function add (x, y) {
@@ -67,9 +189,12 @@ console.log(add(20, 30))
 ```
 
 --print-scopes 选项可以用来输出编译阶段的作用域情况。
-```js
+```bash
 # 开启惰性编译（默认开启）
 λ v8-debug --print-scopes test.js
+```
+
+```js
 Inner function scope:
 function add () { // (0000021602C762E0) (12, 102)
   // 2 heap slots
@@ -156,8 +281,8 @@ foo(1, 5)
 2. 然后继续往下解析，后续的代码都是顶层代码，所以 V8 会为它们生成抽象语法树。
 
 3. 代码解析完成之后，V8 便会按照顺序自上而下执行代码
-    * 首先会先执行 a=1 和 c=4 这两个赋值表达式
-    * 接下来执行 foo 函数的调用，过程是从 foo 函数对象中取出函数代码，V8 会先编译 foo 函数的代码，编译时同样需要先将其编译为抽象语法树和字节码，然后再解释执行。
+> 首先会先执行 a=1 和 c=4 这两个赋值表达式
+><p>接下来执行 foo 函数的调用，过程是从 foo 函数对象中取出函数代码，V8 会先编译 foo 函数的代码，编译时同样需要先将其编译为抽象语法树和字节码，然后再解释执行。</p>
 V8 在执行一段 JavaScript 代码时，不会一次将所有代码全部编译。而是将这段代码顶层部分编译，所有的函数声明，仅在执行到该函数时才进行编译。这样的编译策略被叫做惰性编译。
 ### 例子
 ```js
@@ -170,106 +295,10 @@ var a = 1;
 var c = 2;
 foo(1, 2);
 ```
+
 由于 Scanner 是按字节流从上往下一行行读取代码的，所以 V8 解析器也是从上往下解析代码。当 V8 解析器遇到函数声明 foo 时，发现它不是立即执行，所以会用 Pre-Parser 解析器对其预解析，过程中只会解析函数声明，不会解析函数内部代码，不会为函数内部代码生成 AST。
 
 然后 Ignition 解释器会把 AST 编译为字节码并执行，解释器会按照自上而下的顺序执行代码，先执行 var a = 1;  和 var a = 2; 两个赋值表达式，然后执行函数调用 foo(1, 2) ，这时 Parser 解析器才会继续解析函数内的代码、生成 AST，再交给 Ignition 解释器编译执行。
-
-## 预解析-识别语法错误
-`SyntaxError 最为特殊，因为它是 编译阶段 抛出来的错误，如果发生语法错误，JS 代码一行都不会执行。而其他类型的异常都是 执行阶段 的错误，就算报错，也会执行异常之前的脚本。`
-```js
-const token = "ABC";
-console.log(token);
-
-//语法错误: Uncaught SyntaxError: Unexpected token '%'
-const newToken = %((token);
-```
-* 在第一行：发现一个声明了的变量和定义。将这个变量保存在当前作用域中的token的变量中，当前作用域即全局作用域。
-* 在第二行：JavaScript引擎发现token变量被引用，引擎首先在当前作用域查找token的变量是否存在，如果存在，则为引用的token变量的声明。
-* 在第三行：引擎发现newToken变量被声明以及定义。引擎检查在当前作用域中是否有命名为newToken的变量，如果有，则抛出reference error;如果没有，则在当前作用域存储这个变量。
-* 在同一行，引擎也发现了需要引用变量%((token)，但是因为这个变量是以%开头的，变量命名不可以使用保留字，所以抛出syntax error（语法错误）。
-
-## 预解析-变量/函数提升
-例子来看看在解析阶段提升是怎么发生的，以及提升之后是怎么执行的：
-```js
-doSomething();
-
-function doSomething(){
-	console.log("How you doing?");
-}
-```
-* 在第一行：JavaScript引擎遇到一个叫做doSomething的函数。引擎在当前作用域查找，看是否有doSomething,如果有，则引用这个函数，没有则抛出一个reference error。
-* 在解析的过程中引擎发现function doSomething位于当前作用域，这样，就在当前作用域添加对这个变量的引用，然后使整个程序都可以访问到这个变量。
-* 最终，doSomething函数打印出字符串How you doing?.
-
-在上述解释中，我们发现代码首先被解析成中介代码以确保变量或者函数（这里既是doSomething)可以在当前作用域被访问。
-
-1.能正常运行:预解析通过，没有语法错误
-```js
-// doSomething();
-
-function doSomething(){
-  var test = 1
-	console.log("How you doing?",b);
-}
-console.log('test:',test)
-```
-
-2.报错:编译错误
-```js
-doSomething();
-
-function doSomething(){
-  var test = 1
-	console.log("How you doing?",b); // Uncaught ReferenceError: b is not defined
-}
-console.log('test:',test)
-```
-
-3.报错:预解析识别语法报错
-```js
-function doSomething(){
-  var test = 1
-  const newToken = %bb; // Unexpected token '%'
-}
-console.log('test:',test)
-```
-
-### 变量提升例子2
-1.内部并不会被提升，访问test错误
-```js
-doSomething();
-
-function doSomething(){
-	console.log("How you doing?");
-  var test = 1
-}
-console.log('test:',test) // Uncaught ReferenceError: test is not defined
-```
-
-2.提升：test undefined：
-```js
-doSomething();
-
-function doSomething(){
-	console.log("How you doing?");
-}
-
-console.log('test:',test) // test: undefined
-
-var test = 1
-```
-
-3.正常输出test：
-```js
-doSomething();
-
-function doSomething(){
-	console.log("How you doing?");
-}
-
-var test = 1
-console.log('test:',test) // test: 1
-```
 
 ## 预解析需要注意的情况
 等号右边的function不会进行预解析。
@@ -287,34 +316,3 @@ if(1==2){
 　　var a=12;
 }
 ```
-
-## 闭包和预解析
-闭包（closure）是一个函数以及其捆绑的周边环境状态（lexical environment，词法环境）的引用的组合。
-
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures
-
-```js
-function foo() {
-    var d = 20
-    return function inner(a, b) {
-        const c = a + b + d
-        return c
-    }
-}
-const f = foo()
-```
-上面这段代码的执行过程：
-1. 当调用 foo 函数时，foo 函数会将它的内部函数 inner 返回给全局变量 f；
-2. 然后 foo 函数执行结束，执行上下文被 V8 销毁；
-3. 虽然 foo 函数的执行上下文被销毁了，但是依然存活的 inner 函数引用了 foo 函数作用域中的变量 d。
-
-foo 函数的执行上下文虽然被销毁了，但是 inner 函数引用的 foo 函数中的变量却不能被销毁，那么 V8 就需要为这种情况做特殊处理，需要保证即便 foo 函数执行结束，但是 foo 函数中的 d 变量依然保持在内存中，不能随着 foo 函数的执行上下文被销毁掉。
-
-那么怎么处理呢？
-
-在执行 foo 函数的阶段，虽然采取了惰性解析，不会解析和执行 foo 函数中的 inner 函数，但是 V8 还是需要预解析器判断 inner 函数是否引用了 foo 函数中的变量。
-
-预解释不生成 ast，不生成作用域，只是快速查看内部函数是否引用了外部的变量，快速查看是否存在语法错误，这种执行速度非常快。
-
-### 预解析器如何解决闭包所带来的问题？
-当解析顶层代码的时候，遇到了一个函数，那么预解析器并不会直接跳过该函数，而是对该函数做一次快速的预解析，检查函数内部是否引用了外部变量，如果引用了外部的变量，预解析器会将栈中的变量复制到堆中，并追加一个闭包引用，这样当上层函数执行结束之后，只要闭包突然引用了该变量，那么V8也不会销毁改变量,在下次执行到该函数的时候，直接使用堆中的引用，这样就解决了闭包所带来的问题。

@@ -6,7 +6,7 @@ sidebar_position: 8
 ## this-->执行上下文所属的作用域
 JavaScript中this 指的是执行上下文所属的作用域。所以函数中的this是在运行时决定的而不是定义时。注意不是上下文，因为上下文还包括其他的
 
-参考：[执行上下文-函数调用栈-this](../parsing-interpretation-compilation/步骤3-执行上下文-函数调用栈-this)
+参考：[执行上下文-函数调用栈-this](../parsing-interpretation-compilation/step3-执行上下文-函数调用栈-this)
 
 ```js
 var a1 = 1

@@ -103,7 +103,7 @@ export const Resume = () => {
         <div className='flex'>
           体验:&nbsp;<div>
             <a target="_blank" href='https://dcode-editor.vercel.app/#/'>
-              Dcode商城设计器
+              Dcode商城设计器(部署在vercel,访问要梯子🤣)
             </a>
           </div>
         </div>
@@ -127,8 +127,8 @@ export const Resume = () => {
         chrome插件：一键识别网站文章并输出markdown
         <div>
           github:&nbsp;
-          <a target="_blank" href='https://github.com/huiruo/crawl-web-extension'>
-            crawl-web-extension
+          <a target="_blank" href='https://github.com/huiruo/web-clipper-extension'>
+            web-clipper-extension
           </a>
         </div>
       </li>

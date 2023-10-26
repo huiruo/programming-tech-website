@@ -7,12 +7,11 @@ sidebar_position: 6
 模块化就是将一个大文件拆分成相互依赖的小文件，再进行统一的拼装和加载。
 
 模块规范:
-在 ES6 之前，JavaScript 一直没有模块系统，这对开发大型复杂的前端工程造成了巨大的障碍。对此社区制定了一些模块加载方案，如 CommonJS、AMD 和 CMD 等
+在 ES6 之前，JavaScript 一直没有模块系统，对此社区制定了一些模块加载方案，如 CommonJS、AMD 和 CMD 等
 
 现在 ES6 已经在语言层面上规定了模块系统，完全可以取代现有的 CommonJS 和 AMD 规范，而且使用起来相当简洁，并且有静态加载的特性。
 
 规范确定了，然后就是模块的打包和加载问题：webpack
-
 
 ### 资源的模块化
 Webpack：将各种类型的资源，包括图片、css、js等，转译、组合、拼接、生成 JS 格式的 bundler 文件。
@@ -28,7 +27,11 @@ dest = webpack(src, config)
 ## AMD
 用于服务器,现在很少用了,Asynchronous Module Definition的缩写，采用异步方式加载模块，模块的加载不影响它后面语句的运行。所有依赖这个模块的语句，都定义在一个回调函数中，等到加载完成之后，这个回调函数才会运行。
 
-## cjs
+## CommonJS
+```js
+let { stat, exists, readFile } = require('fs');
+```
+其实上面代码是先执行 fs 模块，得到一份代码拷贝，再获取对应的属性或方法的。
 CommonJS用于浏览器,并不是 ECMAScript 标准的一部分，其中api:module和require,并不是JS的关键字，仅仅是对象或者函数。
 
 ```js
@@ -37,8 +40,10 @@ var clock = require('clock.js')
 clock.start();
 ```
 
-### 加载原理
+### CommonJS 加载原理
 CommonJS一个模块对应一个脚本文件，require 命令每次加载一个模块就会执行整个脚本，然后生成一个对象。
+
+>该规范的核心思想是： 允许模块通过require方法来同步加载所要依赖的其他模块，通过 exports 或 module.exports 来导出需要暴露的接口。
 
 这个对象一旦生成，以后再次执行相同的 require 命令都会直接到缓存中取值。也就是说：CommonJS 模块无论加载多少次，都只会在第一次加载时运行一次，以后再加载时就返回第一次运行的结果，除非手动清除系统缓存。
 ```js
@@ -55,8 +60,6 @@ CommonJS一个模块对应一个脚本文件，require 命令每次加载一个�
 
 ## CommonJS使用
 cjs规范下，每个.js文件都是一个模块，它们内部各自使用的变量名和函数名都互不冲突
-
-该规范的核心思想是： 允许模块通过require方法来同步加载所要依赖的其他模块，通过 exports 或 module.exports 来导出需要暴露的接口。
 ```js
 'use strict';
 
@@ -91,6 +94,7 @@ const fs = require('fs')
 
 // 导出
 exports.fs = fs
+
 /*
 导出方法2:
 我们建议使用: module.exports = xxx
@@ -119,8 +123,6 @@ module.exports = {
     greet: greet
 };
 ```
-
-
 
 方法二：直接使用exports：
 ```js
@@ -151,94 +153,13 @@ exports = {
 };
 ```
 
-## CommonJs 特点
-* 1.在导入模块时候，CommonJS是导出值的拷贝并缓存，而在ES6 Module中是值的动态引用。
-```
-CommonJS模块是动态引入的，模块依赖关系的确认发生在代码运行时；而ES6 Module模块是静态引入的，模块的依赖关系在编译时已经可以确立。
-
-CommonJS require函数可以在index.js任何地方使用，并且接受的路径参数也可以动态指定。因此，在CommonJS模块被执行前，是没有办法确定明确的依赖关系，模块的导入导出都发生在代码运行时(代码运行阶段)。
-```
-
-* 2.require的模块第一次加载时候会被执行，导出执行结果module.exports。
-
-* 3.require的模块如果曾被加载过，再次加载时候模块内部代码不会再次被执行，直接导出首次执行的结果。
-
-* 4.require函数是运行时执行的，所以require函数可以接收表达式，并且可以放在逻辑代码中执行。
-```js
-const name = 'Tom';
-const scriptName = 'tom.js';
-if (name === 'Tom') {
-    require('./' + scriptName);
-}
-```
-
-* 0. CommonJS模块是加载时执行，即脚本代码在require时就全部执行。
-
-* 1. 每个文件就是一个模块，有自己的作用域。每个模块内部，module变量代表当前模块，是一个对象，它的exports属性（即module.exports）是对外的接口。
-
-* 2. module.exports属性表示当前模块对外输出的接口，其他文件加载该模块，实际上就是读取module.exports变量。
-
-* 3. 为了方便，Node为每个模块提供一个exports变量，指向module.exports。
-```js
-let exports = module.exports
-```
-
-### module是一个对象，require 是一个函数
-
-module 中的一些属性：
-* exports：这就是 module.exports 对应的值，由于还没有赋任何值给它，它目前是一个空对象。
-```
-loaded：表示当前的模块是否加载完成。
-paths：node 模块的加载路径
-```
-* require 函数中也有一些值得注意的属性：
-```
-main 指向当前当前引用自己的模块，所以类似 python 的 __name__ == '__main__', node 也可以用 require.main === module 来确定是否是以当前模块来启动程序的。
-
-extensions 表示目前 node 支持的几种加载模块的方式。
-
-cache 表示 node 中模块加载的缓存，也就是说，当一个模块加载一次后，之后 require 不会再加载一次，而是从缓存中读取。
-
-```
-
-## 运行时加载
-因为只有运行时才能得到这个对象。如果要在浏览器中使用，如果想要使用对应的模块，需要提前加载。
-
-由于服务端所有的模块都存放在本地硬盘上，可以同步加载完成（硬盘读取时间很快），但是，对于浏览器，这却是一个大问题，因为模块都放在服务器端，等待时间取决于网速的快慢，可能要等很长时间，浏览器处于”假死”状态。
-
-例子：整体加载fs模块（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取 3 个方法。
-这种加载称为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”。
-```js
-// CommonJS模块
-let { stat, exists, readfile } = require('fs');
-
-// 等同于
-let _fs = require('fs');
-let stat = _fs.stat;
-let exists = _fs.exists;
-let readfile = _fs.readfile;
-```
-
-## 什么是编译时加载或静态加载呢？
-上面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“编译时加载”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比CommonJS 模块的加载方式高。当然，这也导致了没法引用 ES6 模块本身，因为它不是对象。
-```js
-// ES6模块
-import { stat, exists, readFile } from 'fs';
-```
-
-### CommonJS模块
-```js
-let { stat, exists, readFile } = require('fs');
-```
-其实上面代码是先执行 fs 模块，得到一份代码拷贝，再获取对应的属性或方法的。
-
 ## JavaScript模块编译
 在编译的过程中，Node对JavaScript文件的内容进行了头尾包装。
 在头部加上了(function(exports, require, module, __filename, __dirname) {，在尾部加上了})。就像下面这样：
 这样做还有一个好处，每个模块之间是相互独立的，不会引起变量污染。
 ```js
 (function(exports, require, module, __filename, __dirname) {
-//模块文件内容
+// 模块文件内容
 })
 ```
 

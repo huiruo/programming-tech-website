@@ -349,16 +349,16 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
-            'parsing-interpretation-compilation/模块化/模块化和闭包',
-            'parsing-interpretation-compilation/模块化/cjs',
             'parsing-interpretation-compilation/模块化/esm',
+            'parsing-interpretation-compilation/模块化/cjs',
+            'parsing-interpretation-compilation/模块化/模块化和闭包',
             'parsing-interpretation-compilation/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
           ]
         },
         'parsing-interpretation-compilation/Parser解析得到AST-Ignition解释得到字节码',
-        'parsing-interpretation-compilation/步骤1-预解析-变量提升',
-        'parsing-interpretation-compilation/步骤2-作用域-块级作用域原理',
-        'parsing-interpretation-compilation/步骤3-执行上下文-函数调用栈-this',
+        'parsing-interpretation-compilation/step1-预解析-变量提升',
+        'parsing-interpretation-compilation/step2-作用域-块级作用域原理',
+        'parsing-interpretation-compilation/step3-执行上下文-函数调用栈-this',
         'parsing-interpretation-compilation/闭包-内存生命周期',
         'parsing-interpretation-compilation/旧-变量对象',
       ]

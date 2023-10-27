@@ -1,6 +1,7 @@
 
-不同点：
-type 是 类型别名，给一些类型的组合起别名，这样能够更方便地在各个地方使用。
+### type 是 类型别名，给一些类型的组合起别名，这样能够更方便地在各个地方使用
+>type 声明的是类型别名，而 interface 声明的是新类型。
+一个不太重要但是值得说给面试官的区别
 
 语法：
 ```ts
@@ -15,8 +16,8 @@ type Point = {
 };
 ```
 
-
-interface 是 接口。有点像 type，可以用来代表一种类型组合，但它范围更小一些，只能描述对象结构。interface 只能表示对象结构的类型。
+### interface 是 接口,interface 只能表示对象结构的类型
+有点像 type，可以用来代表一种类型组合，但它范围更小一些，只能描述对象结构。
 ```js
 // 1、都可以描述一个对象或者函数
 interface User {
@@ -36,7 +37,9 @@ type User = {
 type SetUser = (name: string, age: number) => void
 ```
 
-1. type 可用于 string、number、bool、undefined、null，而 interface 只能描述对象（含数组、函数、包装对象、元组; type 后面有 =，interface 没有；
+## type 可用于 string、number、bool、undefined、null
+
+而 interface 只能描述对象（含数组、函数、包装对象、元组; type 后面有 =，interface 没有；
 ```js
 // id 可以为字符串或数字，那么我们可以定义这么一个名为 ID 的 type
 type ID = string | number;
@@ -50,30 +53,7 @@ type Circle = {
 }
 ```
 
-## 同名 interface 会合并，而同名 type 会报错
-```js
-interface Point {
-  x: number;
-}
-
-interface Point {
-  y: number;
-}
-
-const point: Point = { x: 10, y: 30 };
-```
-
-##  一个不太重要但是值得说给面试官的区别：type 声明的是类型别名，而 interface 声明的是新类型。
-
-### 声明函数像带有属性的函数可以这样写：
-```js
-interface Fn {
-  (): void; // 函数的描述
-  a: string; // 属性
-}
-```
-
-## type 可以 interface 不行,type 可以声明基本类别名，联合类型，元组类型
+### type 可以 interface 不行:type 可以声明基本类别名，联合类型，元组类型
 ```js
 type Name = string
 
@@ -97,7 +77,20 @@ let div = document.createElement('div')
 type B = typeof div
 ```
 
-## 相同点：
+## 同名 interface 会合并，而同名 type 会报错
+```js
+interface Point {
+  x: number;
+}
+
+interface Point {
+  y: number;
+}
+
+const point: Point = { x: 10, y: 30 };
+```
+
+## 相同点
 1. 都能描述对象（含数组、函数、包装对象）
 
 2. 都能用于扩展一个类型。type 用交叉类型做到这一点，interface 用 extends 做到这一点。

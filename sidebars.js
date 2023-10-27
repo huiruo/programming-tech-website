@@ -213,13 +213,13 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
-            'JavaScript/ts/TypeScript装饰器',
-            'JavaScript/ts/interface-type区别',
-            'JavaScript/ts/interface-限制函数',
             'JavaScript/ts/typeScript',
+            'JavaScript/ts/装饰器',
+            'JavaScript/ts/装饰器2',
+            'JavaScript/ts/interface-type区别',
+            'JavaScript/ts/实战',
             'JavaScript/ts/使用keyof解决对象ts限定',
             'JavaScript/ts/泛型参数',
-            'JavaScript/ts/装饰器',
           ]
         },
         'JavaScript/B1-深-浅-拷贝',

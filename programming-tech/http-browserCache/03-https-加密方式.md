@@ -3,25 +3,69 @@ title: https-加密方式
 sidebar_position: 3
 ---
 
-## HTTPS加密
-
-证书验证阶段：
-1. 浏览器发起 HTTPS 请求；
-2. 服务端返回 HTTPS 证书；
-3. 客户端验证证书是否合法，如果不合法则提示告警。
-
-数据传输阶段:服务器生成一对公钥和私钥；将公钥传给客户端,客户端用公钥加密随机数生成密文，(注意：在https是不会把私钥给浏览器的,这并不安全)
-1. 当证书验证合法后，在本地生成随机数；客户端通过公钥加密随机数，并生成密匙用来后续加密传输数据,并把加密后的随机数传输到服务端
-2. 服务端通过私钥对随机数进行解密；服务端通过客户端传入的随机数构造对称加密算法，对返回结果内容进行解密后。同样也可以用对称密匙加密数据给客户端。
-
-### 基础加密方法：非对称加密
+## 基础加密方法:非对称加密
+>非对称加密涉及一对不同的密钥，即公钥和私钥，其中公钥用于加密数据，私钥用于解密数据。
 非对称加密算法需要两个密钥：
 - 公开密钥（publicKey:简称公钥）,公钥用于对数据加密
 - 私有密钥（privateKey:简称私钥）,私钥用于对数据解密,如果用公钥对数据进行加密，只有用对应的私钥才能解密
 
 * 就算公钥被劫持，但客户端使用公钥加密的数据只能用私钥解密。因为加密和解密使用的是两个不同的密钥，所以这种算法叫作非对称加密算法。
 
-### https中单纯使用非对称加密造成的问题
+### 实现方式
+```js
+const crypto = require('crypto');
+
+// 生成密钥对
+function generateRSAKeyPair() {
+  return crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048, // 密钥长度
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem'
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem'
+    }
+  });
+}
+
+// 使用公钥加密数据
+function encryptWithPublicKey(publicKey, plainText) {
+  const encryptedBuffer = crypto.publicEncrypt(publicKey, Buffer.from(plainText));
+  return encryptedBuffer.toString('base64');
+}
+
+// 使用私钥解密数据
+function decryptWithPrivateKey(privateKey, encryptedText) {
+  const encryptedBuffer = Buffer.from(encryptedText, 'base64');
+  const decryptedBuffer = crypto.privateDecrypt(privateKey, encryptedBuffer);
+  return decryptedBuffer.toString();
+}
+
+// 例子：
+const { publicKey, privateKey } = generateRSAKeyPair();
+const plainText = 'Hello, World!';
+const encryptedText = encryptWithPublicKey(publicKey, plainText);
+const decryptedText = decryptWithPrivateKey(privateKey, encryptedText);
+
+console.log('Original Text: ', plainText);
+console.log('Encrypted Text: ', encryptedText);
+console.log('Decrypted Text: ', decryptedText);
+```
+
+## 1.HTTPS加密
+### 1-1.证书验证阶段：
+1. 浏览器发起 HTTPS 请求；
+2. 服务端返回 HTTPS 证书；
+3. 客户端验证证书是否合法，如果不合法则提示告警。
+
+### 1-2.数据传输阶段:
+服务器生成一对公钥和私钥；将公钥传给客户端,客户端用公钥加密随机数生成密文，(注意：在https是不会把私钥给浏览器的,这并不安全)
+1. 当证书验证合法后，在本地生成随机数；客户端通过公钥加密随机数，并生成密匙用来后续加密传输数据,并把加密后的随机数传输到服务端
+2. 服务端通过私钥对随机数进行解密；服务端通过客户端传入的随机数构造对称加密算法，对返回结果内容进行解密后。同样也可以用对称密匙加密数据给客户端。
+
+### 1-2-1.https中单纯使用非对称加密造成的问题
 问题所在：服务端给客户端发数据时就不能进行加密,只能加密：客户端-->服务端
 
 客户端可以使用公钥进行加密服务端使用私钥解密，但是服务端给客户端发数据时就不能进行加密了，因为客户端只有公钥，服务端只有私钥，如果要加密，服务端只能把私钥也传给客户端，客户端才能解密，这样肯定不安全。

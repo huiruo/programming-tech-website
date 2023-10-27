@@ -3,12 +3,31 @@ title: 重要的html-dom属性
 sidebar_position: 3
 ---
 
-# DOM对象的一些常用方法
+## DOM对象的一些常用方法
 
-createElement(Tag)：创建一个 HTML 标签对象
-getElementById(ID)：获得指定 id 的对象
-getElementsByName(Name)：获得之前 Name 的对象
-body.appendChild(oTag)：向 HTML 中插入元素对象
+### createElement(Tag)：创建一个 HTML 标签对象
+下面配合:getElementById(ID)：获得指定 id 的对象
+
+配合：body.appendChild(oTag)：向 HTML 中插入元素对象
+```js
+// For example, to create a new paragraph element:
+var newParagraph = document.createElement("p");
+
+// You can also set attributes for the newly created element, if needed.
+newElement.setAttribute("attributeName", "attributeValue");
+
+// For example, setting the class attribute for the paragraph:
+newParagraph.setAttribute("class", "my-paragraph");
+
+// You can also set the content of the element using text or HTML:
+newParagraph.textContent = "This is a new paragraph.";
+// or
+newParagraph.innerHTML = "<strong>This is a bold paragraph.</strong>";
+
+// Append the newly created element to an existing element in the DOM
+var parentElement = document.getElementById("parentElementId");
+parentElement.appendChild(newElement);
+```
 
 ## 1. document对象属性
 ```js
@@ -73,30 +92,24 @@ document.location.href="http://www.baidu.com"
 </html>
 ```
 
-### 2.创建和添加元素 Element
+### 1.创建和添加元素 Element
 * createElement
 * appendChild
 * append()
 * innerHTML
---------------------------
 + append()
-可以同时传入多个节点或字符串，没有返回值；
-据说 append 还是试用期的方法，有兼容问题，（但我用了暂时火狐，谷歌，iE都能使用）。
+>可以同时传入多个节点或字符串，没有返回值；append 还是试用期的方法，有兼容问题，（但我用了暂时火狐，谷歌，iE都能使用）。
 
-+ appendChild() 
-```
-1.只能传一个节点，且不直接支持传字符串【需要 appendChild(document.createTextElement('字符串'))代替】
-2.返回追加的 Node 节点；
+### 2.appendChild() 
+1. 只能传一个节点，且不直接支持传字符串需要`appendChild(document.createTextElement('字符串'))`代替
+2. 返回追加的 Node 节点；
 
-3.若 appendChild() 的参数是页面存在的一个元素，则执行后原来的元素会被移除；
-例如：document.getElement("a").appendChild(document.getElementByIdx("b"))，执行后，b 元素会先被移除，然后再添加到 a 中。
-```
+3. 若`appendChild()`的参数是页面存在的一个元素，则执行后原来的元素会被移除；
+例如：`document.getElement("a").appendChild(document.getElementByIdx("b"))`，执行后，b 元素会先被移除，然后再添加到 a 中。
 
 性能:
-```
 + innerHTML 比 appendChild 要方便，特别是创建的节点属性多，同时还包含文本的时候；
 + 但执行速度的比较上，使用 appendChild 比 innerHTML 要快，特别是内容包括 html 标记时，appendChild 明显要快于  innerHTML，这可能是因为 innerHTML 在铺到页面之前还要对内容进行解析才能铺到页面上，当包含 html 标记过多时， innerHTML速度会明显变慢。
-```
 
 
 ```html

@@ -12,22 +12,32 @@ Border(边框) - 围绕在内边距和内容外的边框。
 Margin(外边距) - 清除边框外的区域，外边距是透明的。
 ```
 
-## margin和padding区别
-margin 是用来隔开元素与元素的间距；
+### 1-1.margin和padding区别
+1. margin 用于控制元素与其周围元素之间的距离，影响元素的外部空白区域。
+2. padding 用于控制元素内容与元素边界之间的距离，影响元素的内部空白区域。
 
-padding 是用来隔开元素与内容的间隔，让内容（文字）与（包裹）元素之间有一段 呼吸距离。
+>padding 不能是负数，因为它不会减小元素的尺寸，只会增加元素内容区域的大小
 
-### dom元素的高度
-* offsetHeight：元素的完整高度:可见内容+边框+内边距+滚动条（如果存在的话）的高度。
+### 1-2.dom元素的高度
+1. offsetHeight:border + padding + 元素内部
+    * offsetHeight 衡量了一个元素在网页布局中的完整高度，包括其高度、边框（border）和内边距（padding），但不包括外边距（margin）。
+    * 如果元素有水平滚动条，它的 offsetHeight 包括水平滚动条的高度。
+    > 对于包含外边距的总高度，你应该考虑使用 offsetHeight 额外加上外边距的高度。
 
-* scrollHeight：元素的内容高度，包括因为溢出而无法看到的部分，不包括:边框+内边距+外边距或滚动条（如果存在的话）。
+2. clientHeight: 只包括padding和元素的内容
+    * clientHeight 衡量了一个元素的可见区域的高度，不包括边框（border）和外边距（margin），只包括内边距（padding）和元素的内容。
+    * 对于带有滚动条的容器元素，它表示可见区域的高度，而 scrollHeight 表示所有内容的高度。
+    * clientHeight 可用于确定元素内部内容的高度，以帮助在滚动时计算滚动位置。
 
-* clientHeight：元素的内部高度,包括:可见内容+内边距，不包括:边框+外边距+滚动条（如果存在的话）。
-```
-offsetHeight 和 scrollHeight 可以看做是元素实际高度的两个方面，分别考虑了内容和溢出的情况。
+3. scrollHeight: 溢出内容的高度 + padding + 元素内部
+    * scrollHeight 衡量了一个元素内容在不可见区域的高度，包括被隐藏的内容（例如，溢出内容）的高度。
+    * 如果元素的内容没有溢出并且在可见区域内，scrollHeight 等于元素的 clientHeight。
+    * scrollHeight 对于滚动元素（例如，带有滚动条的容器）非常有用，因为它可以告诉你隐藏内容的总高度。
 
-clientHeight 只考虑了元素内部的高度。
-```
+>offsetHeight 和 scrollHeight 可以看做是元素实际高度的两个方面，分别考虑了内容和溢出的情况。clientHeight 只考虑了元素内部的高度。
+
+
+> 一般来说，如果元素内部的内容溢出了可见区域，scrollHeight 会比 offsetHeight 或 clientHeight 大
 
 ```html
 <!DOCTYPE html>
@@ -60,8 +70,8 @@ clientHeight 只考虑了元素内部的高度。
 </html>
 ```
 
-## box-sizing
-### W3C的标准Box Model
+## 2.box-sizing
+### 2-1.W3C的标准Box Model
 ```
 width(宽度) + padding(内边距) + border(边框) = 元素实际宽度
 height(高度) + padding(内边距) + border(边框) = 元素实际高度
@@ -72,11 +82,8 @@ height(高度) + padding(内边距) + border(边框) = 元素实际高度
 默认值:	box-sizing: content-box;
 ```
 
-### box-sizing:border-box
-border-box：指定盒模型为IE模型
-```
-设置 border、padding 不会影响元素 width 与 height 的尺寸，即 border 与 padding 由元素已设空间转变。
-```
+### 2-2.box-sizing:border-box设置border和padding不会影响元素width与height
+box-sizing:border-box;指定盒模型为IE模型,即 border 与 padding 由元素已设空间转变。
 
 ```html
 <style type="text/css">
@@ -89,14 +96,14 @@ border-box：指定盒模型为IE模型
   box-sizing: border-box;
 }
 </style>
-
-此时的行高：line-height = height - border*2 - padding*2 = 200px - 10px*2 - 15px*2 = 150px;
-
-【因为此时，内容的其余空间被边框和填充占用，所以是元素的高减去边框和填充的空间，剩余即为内容空间】
 ```
 
-## 块级元素
-常见的块级元素有：
+>此时的行高：`line-height = height - border*2 - padding*2 = 200px - 10px*2 - 15px*2 = 150px;`
+
+因为此时，内容的其余空间被边框和填充占用，所以是元素的高减去边框和填充的空间，剩余即为内容空间
+
+## 3.块级元素
+### 3-1.常见的块级元素有：
 ```
 <h1>~<h6>,<p>,<div>,<ul>,<ol>,<li>
 
@@ -110,7 +117,7 @@ span/a/img/input/em/strong/font/br/select/textarea/i/label/
 abbr/acronym/b/big/cite/code/kbd/q/s/small/strike/sub/sup/tt/u
 ```
 
-### 元素互相转化
+### 3-2.元素互相转化
 1. 行内标签：块级标签转换为行内标签：display:inline;
   - 2.宽高:
   行内元素不可以设置宽高,宽度高度随文本内容的变化而变化,但是可以设置行高;
@@ -141,7 +148,7 @@ inline-block元素的宽度始终等于其内容宽度.
 }
 ```
 
-## css优先级
+## 4.css优先级
 比较规则
 
 1. 1000 > 0100，从左向右逐个比较，前一级相等才能往后比较
@@ -179,19 +186,24 @@ p{} 标签
 
 <br />
 
-## position定位与脱离文档流
+## 5.em和rem
+rem与em都是相对单位，我们使用它们的目的就是为了适应各种不同的移动端和pc端的屏幕。
+简单概括就是：
+* em相对于父元素，em是根据父级元素的字体计算的。 
+* rem相对于根元素。 rem是根据html根节点来计算的，
 
-### absolute  --->脱离文档流
+## 6.position定位与脱离文档流
+
+### 6-1.absolute  --->脱离文档流
 生成绝对定位的元素，相对于 static 定位以外的第一个父元素进行定位。
 元素的位置通过 "left", "top", "right" 以及 "bottom" 属性进行规定。
 当父级 position 为 static 时，absolute元素将以body坐标原点进行定位，可以通过z-index进行层次分级。
 
-### relative -->未脱离文档流
+### 6-2.relative -->未脱离文档流
 生成相对定位的元素，相对于其正常位置进行定位。
 因此，"left:20" 会向元素的 LEFT 位置添加 20 像素。
 ```
-该元素仍然会在原来的地方。
-top
+该元素仍然会在原来的地方为参考:top
 right
 bottom
 left
@@ -205,17 +217,13 @@ left
 - fixed:生成绝对定位的元素，相对于浏览器窗口进行定位。
 元素的位置通过 "left", "top", "right" 以及 "bottom" 属性进行规定。
 
-### 二者区别
-+ relative 不脱离文档流，,参照自己本身
+### 二者区别,relative 不脱离文档流,参照自己本身
+>relative定位参考自身静态位置通过 top,bottom,left,right 定位，并且可以通过z-index进行层次分级。
+
 absolute 脱离了文档流，其在文档流中的位置也不存在
-```
-relative定位参考自身静态位置通过 top,bottom,left,right 定位，并且可以通过z-index进行层次分级。
-```
 
 absolute元素:
-```
-规则：根据display:static 之外任意值的父级元素。如果没有这么一个定位祖先。那么就相对于文档的根元素定位。
-```
+>规则：根据display:static 之外任意值的父级元素。如果没有这么一个定位祖先。那么就相对于文档的根元素定位。
 
 ## 响应式
 ```css

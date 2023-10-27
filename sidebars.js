@@ -269,28 +269,17 @@ const sidebars = {
           collapsed: true,
           items: [
             'html-css/requestAnimationFrame/requestAnimationFrame-是宏任务吗',
-            'html-css/requestAnimationFrame/requestAnimationFrame动画',
           ]
         },
-        'html-css/css-1-块级元素-css',
-        'html-css/css-2-块级格式化上下文BFC',
-        'html-css/css-4-为什么需要清除浮动',
-        'html-css/less和scss的区别',
-        'html-css/em和rem',
-        'html-css/html5属性',
-        'html-css/重要的html-dom属性',
-        'html-css/flex',
-        'html-css/水平垂直-居中',
-        'html-css/浏览器兼容性',
         {
           label: 'css3动画',
           type: 'category',
           collapsed: true,
           items: [
-            'html-css/css3动画/过渡-transition/transition基础',
-            'html-css/css3动画/其他-vue动画/动画延伸：vue动画',
+            'html-css/css3动画/transition-过渡/transition基础',
             'html-css/css3动画/animation-不需要触发任何事件触发动画/animation基础',
-            'html-css/css3动画/transform-转化/transform-基础',
+            'html-css/css3动画/transform-转化/transform基础',
+            'html-css/css3动画/其他-vue动画/动画延伸-vue动画',
           ]
         },
         {
@@ -303,7 +292,16 @@ const sidebars = {
             'html-css/webgl3d/webgl入门',
             'html-css/webgl3d/webgl与canvas-性能-动画区别',
           ]
-        }
+        },
+        'html-css/css-1-块级元素-css',
+        'html-css/css-2-块级格式化上下文BFC',
+        'html-css/css-4-为什么需要清除浮动',
+        'html-css/less和scss的区别',
+        'html-css/html5属性',
+        'html-css/重要的html-dom属性',
+        'html-css/flex',
+        'html-css/水平垂直-居中',
+        'html-css/浏览器兼容性',
       ]
     },
     {
@@ -313,13 +311,13 @@ const sidebars = {
       items: [
         'http-browserCache/浏览器请求-渲染的流程',
         'http-browserCache/浏览器缓存',
+        'http-browserCache/service-worker',
         'http-browserCache/http1.1-报文',
         'http-browserCache/reflow-repaint',
         'http-browserCache/TCP-IP-握手',
         'http-browserCache/https-加密方式',
         'http-browserCache/跨域-反向代理-正向代理',
         'http-browserCache/辅-DNS查询过程-DNS污染-IP封锁',
-        'http-browserCache/状态码-请求报文之req header-响应报文res header',
         'http-browserCache/鉴权-Token和JWT-cookie-session',
         'http-browserCache/http-和js-stream',
         'http-browserCache/辅-vpn-vps-Proxy以及shadowsocks之间的联系和区别',
@@ -335,8 +333,7 @@ const sidebars = {
             'http-browserCache/WebSocket-Socks5-shadowsocks/Socks5和http代理区别',
             'http-browserCache/WebSocket-Socks5-shadowsocks/Socks协议-OSI参考模型-百度百科',
           ]
-        },
-        'http-browserCache/websocket/客户端',
+        }
       ]
     },
     {

@@ -115,6 +115,12 @@ private connectToServer() {
   this.webscoket.addEventListener('error', this.errorEvent);
 }
 ```
+
+### 常用方法
+* WebSocket.send() 发送会话
+* WebSocket.close() 关闭会话
+* WebSocket.onmessage() 接受会话
+
 ## WebSocket心跳及重连机制
 ```
 websocket是前后端交互的长连接，在使用的过程中，遇到弱网或者网络暂时断连的情况时，服务端并没有触发onclose的事件，客户端也无法得知当前连接是否已经断开，

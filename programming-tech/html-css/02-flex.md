@@ -3,25 +3,66 @@ title: flex
 sidebar_position: 7
 ---
 
-## flex实现左右浮动-justifyContent:space-between
-左边一个div，右边一个div，
-
-父元素只需要
-```
-display:flex;
-justify-content:space-between
-```
-
+## flex实现左右浮动
 ```html
-.cell-bottom {
+.container {
   display: flex;
   justify-content: space-between;
 }
 
-<div class="cellBottom">
-    <div>{{ cell.price }}</div>
-    <div class="cell-bottom">aa</div>
+<div class="container">
+  <div class="left-floated-element">Left Floated</div>
+  <div class="right-floated-element">Right Floated</div>
 </div>
+```
+
+## flex xy-center
+```html
+<style>
+.center-container {
+  display: flex;
+  justify-content: center; /* Center horizontally - 水平 */
+  align-items: center; /* Center vertically */
+  /* You can also use 'center' as a shorthand for both properties: 
+  justify-content: center;
+  align-items: center;
+  */
+  height: 100vh; /* Adjust the height as needed */
+}
+
+</style>
+<div class="center-container">
+  <div class="centered-element">
+    <!-- Content to be centered -->
+  </div>
+</div>
+```
+
+### align-items 和 align-content的区别
+>align-items是针对单行的，是把单行来当做一个整体进行对齐方式操作，而align-content是针对多行的，是把多行来当做一个整体进行对齐方式操作
+
+align-items：
+
+* 适用于：Flexbox 容器（父元素）。
+* 指定了如何在交叉轴上（与主轴垂直的轴）对齐伸缩项目。
+* align-items 的常见值包括 flex-start、flex-end、center、baseline 和 stretch。
+* align-items 对容器内的各个项目进行对齐。
+
+例子如上
+
+align-content：
+
+* 适用于：具有多行伸缩项目的 Flexbox 容器或 grid 容器（父元素）。
+* 指定了如何在伸缩或网格容器中的交叉轴上对齐多行伸缩项目。
+* 仅在存在多行伸缩项目时产生效果（例如，由于在 flex 容器中使用了 flex-wrap: wrap）。
+* align-content 用于对齐容器内的伸缩项目行，而不是对齐这些行内的各个项目。
+示例：
+```css
+.flex-container {
+  display: flex;
+  flex-wrap: wrap; /* 允许伸缩项目换行成多行。 */
+  align-content: space-between; /* 对齐伸缩项目行之间的空间。 */
+}
 ```
 
 ## flex-flow 属性是 flex-direction 和 flex-wrap 属性的复合属性

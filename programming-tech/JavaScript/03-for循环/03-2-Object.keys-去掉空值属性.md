@@ -1,27 +1,14 @@
+---
+title: Object.keys-去掉空值属性
+sidebar_position: 3
+---
 
-## 更高效地删除对象中的空字符串属性
-并且不希望遍历原型链，可以使用Object.keys()方法结合
+### 并且不希望遍历原型链，可以使用Object.keys()方法结合
+更高效地删除对象中的空字符串属性
 ```js
 function removeEmptyStringProperties(obj) {
   Object.keys(obj).forEach(function(key) {
     if (obj[key] === '') {
-      delete obj[key];
-    }
-  });
-}
-
-const removeEmptyStringProperties = (obj) => {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key] === '') {
-      delete obj[key];
-    }
-  });
-};
-
-function removeEmptyStringProperties<T>(obj: T): void {
-  Object.keys(obj).forEach((key) => {
-    const propertyValue = obj[key];
-    if (typeof propertyValue === 'string' && propertyValue === '') {
       delete obj[key];
     }
   });
@@ -41,7 +28,7 @@ console.log(obj);
 // 输出: { name: 'John', city: 'New York' }
 ```
 
-## for in
+### 单纯使用for in
 ```js
 function removeEmptyStringProperties(obj) {
   for (var key in obj) {

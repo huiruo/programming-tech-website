@@ -53,6 +53,46 @@ let clone = Object.assign({}, user);
 console.log('但是可以浅拷贝:',clone[id] );
 ```
 
+### 5、无论是 for...in 还是 for...of 都不能遍历出 Symbol 类型的值
+遍历 Symbol 类型的值需要用 Object.getOwnPropertySymbols() 方法
+```js
+{
+  let a = Symbol('a')
+  let b = Symbol('b')
+
+  let obj = {
+    [a]: 'hello',
+    [b]: 'world',
+    c: 'es6',
+    d: 'dom'
+  }
+
+  for (let key in obj) {
+    console.info(key + ' --> ' + obj[key])
+  }
+
+  /*
+    c --> es6
+    d --> dom
+  */
+
+  let objSymbols = Object.getOwnPropertySymbols(obj)
+  console.info(objSymbols)    //  [Symbol(a), Symbol(b)]
+  objSymbols.forEach(item => {
+    console.info(item.toString() + ' --> ' + obj[item])
+  })
+
+  /*
+    Symbol(a) --> hello
+    Symbol(b) --> world
+  */
+
+  // Reflect.ownKeys 方法可以返回所有类型的键名，包括常规键名和Symbol键名
+  let keyArray = Reflect.ownKeys(obj)
+  console.log(keyArray)      //  ["c", "d", Symbol(a), Symbol(b)]
+}
+```
+
 ## 用处1：symbol的值肯定是唯一的，可以用来解决命名冲突问题
 ```js
 let test1 = Symbol("ack");

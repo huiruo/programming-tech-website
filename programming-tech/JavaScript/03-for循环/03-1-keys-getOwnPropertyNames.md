@@ -1,3 +1,8 @@
+---
+title: keys-getOwnPropertyNames
+sidebar_position: 3
+---
+
 ## Object.keys()
 keys() 是 Object 的静态函数，专门用来遍历对象获取键名。Object.keys() 函数的参数是一个对象，
 

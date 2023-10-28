@@ -1,5 +1,5 @@
 ---
-title: es7-es8
+title: es6-es7-es8
 sidebar_position: 13
 ---
 

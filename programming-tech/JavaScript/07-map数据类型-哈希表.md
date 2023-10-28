@@ -25,8 +25,7 @@ HashMap是基于哈希表实现的，每一个元素是一个key-value键值对�
 对于 HashMap 而言，系统 key-value 当成一个整体进行处理，系统根据 Hash 算法来计算 key-value 的存储位置，这样可以保证能快速存、取 Map 的 key-value 对。
 
 ## js中Map
-js中只有Map，没有HashMap。
-从上面分析java中的HashMap可以发现，HashMap只是map的一种底层实现方式。所以在js里，用原生的map就够用了
+js中只有Map，没有HashMap。从上面分析java中的HashMap可以发现，HashMap只是map的一种底层实现方式。所以在js里，用原生的map就够用了
 
 在引入Map之前，js中保存键值对是通过对象的形式，而对象中，键的类型只能是字符串类型。而引入Map后，用Map来存储键值对，键的类型可以是数字类型，可以是字符串类型，可以是对象类型，函数类型等等
 

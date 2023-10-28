@@ -23,6 +23,9 @@ console.log(f.a); // ??
 console.log(f.b); // ??
 
 console.log('f', f)
+```
+
+```js
 /*
 *  1.探究构造出来的对象的 proto
 */
@@ -88,9 +91,7 @@ console.log(F.prototype.__proto__ === Object.prototype); // 返回值为true
 
 那么当我们调用 f.a 或者 f.b 时，首先 f 中没有 a 或者 b 这个属性， 于是，他就需要到他的__proto__中去找，也就是F.prototype，由于F.prototype中也没有 a 或者 b；
 
-那就去 f.__proto__.__proto__找，也就是Object.prototype中去找，于是就找到了a这个属性。
-说白了 这就是原型链的实现原理。
-最后，我个人认为，其实prototype只是一个假象，它在原型链实现中只是起到了一个辅助作用，换言之，它只是在new的时候有着一定的价值，而原型链的本质，其实在于__proto__.
+那就去 f.__proto__.__proto__找，也就是Object.prototype中去找，于是就找到了a这个属性。这就是原型链的实现原理。
 
 ### 题目解析2:
 1.在var F = function(){}时，构造函数F已经对Function.prototype实例化了；

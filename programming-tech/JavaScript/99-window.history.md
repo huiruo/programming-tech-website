@@ -3,7 +3,14 @@
 
 因为请求的链接都是ip地址:端口/#/xxxx，因此请求的资源路径永远为/，相当于index.html，而其他的后端API接口都可以正常请求，不会和/冲突，由于前后端不分离也不会产生跨域问题。
 
+### 3.  umijs默认采用hashHistory
+> UmiJS 默认采用 hashHistory 而不是 BrowserRouter，这意味着默认情况下 UmiJS 使用的是哈希路由（HashRouter）。哈希路由将路由信息存储在 URL 的片段标识符（hash）中，以 # 开头，例如 http://example.com/#/myroute。这种方式在单页面应用中很有用，因为它不会导致浏览器向服务器发送请求，而只是在客户端中进行路由切换
+
+所以如果如果是单页面需要配置hashHistort,否则跳转会报错
+
 ## BrowserRouter->history API
+使用 BrowserRouter 需要配置服务器端路由规则以处理不同的 URL 请求，以确保在刷新页面或直接访问某个 URL 时能够正确路由到应用的不同页面。如果你不配置服务器端路由规则，这可能导致在刷新页面时出现 404 错误。
+
 Browser进行组件跳转时可以传递任意参数实现组件间的通信而HashRouter不能(除非手动拼接URL字符串)，因此一般配合Redux使用，实现组件间的数据通信。
 
 因为BrowserRouter模式下请求的链接都是ip地址:端口/xxxx/xxxx，因此相当于每个URL都会访问一个不同的后端地址，如果后端没有覆盖到路由就会产生404错误。

@@ -3,33 +3,28 @@ title: patch-diff
 sidebar_position: -2
 ---
 
-## 为什么 Vue 不需要时间分片？
-1. Vue 通过响应式依赖跟踪，在默认的情况下可以做到只进行组件树级别的更新计算，而默认下 React 是做不到
+## 初始化:将数据与渲染函数建立响应式关系->patch
+初始化时候，Vue3 会先对数据进行响应式处理，将数据与渲染函数建立响应式关系，当数据发生变化时，会触发重新渲染视图的过程。
 
-2. 时间分片是为了解决 CPU 进行大量计算的问题,vue没有？
+最终会执行patch:在 patch 过程中，Vue3 会将新的虚拟 DOM 树与旧的虚拟 DOM 树进行比较，找到需要更新的节点，然后更新这些节点的内容。
 
-## 在 Vue3 中，当数据发生变化时，会触发更新流程
-在初始化模板编译阶段，Vue3 会将模板转换成渲染函数，并对模板进行静态分析，生成一些静态标记。
+## patch 过程主要包括以下几个步骤
 
-初始化时候，Vue3 会先对数据进行响应式处理，将数据与渲染函数建立响应式关系，当数据发生变化时，会触发重新渲染视图的过程。最终会执行patch:
-
-在 patch 过程中，Vue3 会将新的虚拟 DOM 树与旧的虚拟 DOM 树进行比较，找到需要更新的节点，然后更新这些节点的内容。patch 过程主要包括以下几个步骤：
-
-### 静态标记的比较：
+### 1.静态标记的比较：
 Vue3 会先比较新旧节点的静态标记是否相同，如果不同，则直接跳过比较子节点的步骤，提高性能。
 
-### 节点类型的比较：
+### 2.节点类型的比较：
 Vue3 会比较新旧节点的节点类型是否相同，如果不同，则直接删除旧节点，插入新节点。
 
-### 子节点的比较：
+### 3.子节点的比较：
 Vue3 会按顺序比较新旧节点的子节点，找到需要更新的节点进行更新。如果发现新节点中存在旧节点中没有的子节点，则会将这些新节点创建出来；如果发现旧节点中存在新节点中没有的子节点，则会将这些旧节点删除。
 
-### 属性的更新：
+### 4.属性的更新：
 当找到需要更新的节点后，Vue3 会对这些节点的属性进行更新。
 
-### 更新完成：会触发组件的 updated 钩子函数
+### 5.更新完成：会触发组件的 updated 钩子函数
 
-## patch()主要对新旧节点的对比
+## 1.patch()主要对新旧节点的对比
 diff算法从patch开始。结合render函数来看，旧的虚拟DOM存储在container._vnode上
 
 ### 新旧节点相同，直接返回
@@ -58,6 +53,7 @@ diff算法从patch开始。结合render函数来看，旧的虚拟DOM存储在co
 
 最后，调用了 setRef 函数来设置 ref 引用。
 
+## 2.patch()当type=ELEMENT类型:调用processElement处理DOM元素
 ```js
 const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = isHmrUpdating ? false : !!n2.dynamicChildren) => {
 
@@ -136,7 +132,8 @@ const patch = (n1, n2, container, anchor = null, parentComponent = null, parentS
 };
 ```
 
-## processElement-patchElement更新dom元素
+## 3.processElement-patchElement更新dom元素,patchElement相当重要
+### processElement
 ```js
 const processElement = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
   isSVG = isSVG || n2.type === 'svg';
@@ -151,7 +148,7 @@ const processElement = (n1, n2, container, anchor, parentComponent, parentSuspen
 };
 ```
 
-patchElement相当重要，当新旧元素节点都存在时，就会调用patchElement进行对比。可以看到顺序：
+### patchElement相当重要，当新旧元素节点都存在时，就会调用patchElement进行对比。
 
 在patchElement中，注意到当新节点具有动态子节点时，调用了patchBlockChildren来进行子节点的比较，而在没有动态子节点且不符合优化条件时，则使用patchChildren来比较。这与processFragment类似。
 而当patchFlag <= 0且没有设置优化时，对props进行全量diff。分别遍历新的props和旧的props，最后刷新value的值。
@@ -271,7 +268,7 @@ const patchElement = (n1, n2, parentComponent, parentSuspense, isSVG, slotScopeI
 };
 ```
 
-## patchElement-->patchBlockChildren
+## 4.patchElement-->patchBlockChildren
 在文档片段中的diff中，当符合优化条件时，则调用patchBlockChildren来进行优化的diff。这里主要以新节点的子节点长度为准，遍历新旧节点的子节点，更新了每个子节点的container然后进行patch。
 ```js
 const patchBlockChildren = (oldChildren, newChildren, fallbackContainer, parentComponent, parentSuspense, isSVG, slotScopeIds) => {
@@ -303,7 +300,7 @@ const patchBlockChildren = (oldChildren, newChildren, fallbackContainer, parentC
 };
 ```
 
-## patchBlockChildren再次进入patch:以更新文本节点为例:-->processText(n1, n2)
+## 5.patchBlockChildren再次进入patch:以更新文本节点为例:-->processText(n1, n2);当调用setText: (node, text) 页面dom就更新了
 ```js
 const patch = (n1, n2, container, anchor = null, parentComponent = null, parentSuspense = null, isSVG = false, slotScopeIds = null, optimized = isHmrUpdating ? false : !!n2.dynamicChildren) => {
   // 省略...

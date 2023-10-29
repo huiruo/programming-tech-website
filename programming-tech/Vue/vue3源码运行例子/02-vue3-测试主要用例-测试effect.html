@@ -32,6 +32,8 @@
       },
 
       setup(props) {
+        console.log('setup==>组件内函数执行',)
+
         const info = reactive({
           msg2: 'hello',
         });
@@ -40,9 +42,9 @@
           test: 1
         });
 
-        // effect(() => {
-        //   console.log(`effect函数: ${info.msg2}`)
-        // })
+        effect(() => {
+          console.log(`effect函数: ${info.msg2}`)
+        })
 
         return {
           info,

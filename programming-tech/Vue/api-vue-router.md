@@ -25,7 +25,84 @@ const router = createRouter({
 
 使用 history 模式的路由可以实现更加自然的 URL，但需要注意的是，在使用 history 模式时，必须确保服务器能够正确地响应路由路径，否则会出现 404 错误。
 
+
+## 路由方面vue3和vue2的不同,非重点
+
+1.需要安装 router4
+
+我们可以导入它并 Vue.use(router)，但这在 Vue3 中不一样。
+
+```js
+import router from "./router";
+
+const app = createApp(App);
+app.use(router);
+app.mount("#app");
+```
+
+vue2
+
+```js
+import Vue from "vue";
+import axios from "axios";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import { initMutual } from "./utils/PCmutual.js";
+import "./index.less";
+
+Vue.config.productionTip = false;
+Vue.prototype.axios = axios;
+initMutual();
+new Vue({
+  router,
+  store,
+  render: (h) => h(App),
+}).$mount("#app");
+```
+
+vue3 创建
+
+createWebHashHistory hash 路由
+
+createWebHistory history 路由
+
+createMemoryHistory 带缓存 history 路由
+
+```js
+const router = createRouter({
+  history: createWebHistory(),
+  // history: createWebHashHistory(),
+  routes,
+});
+export default router;
+```
+
+vue2
+
+```js
+import VueRouter from "vue-router";
+const router = new VueRouter({
+  // mode: 'history',
+  // base: process.env.BASE_URL,
+  routes,
+});
+
+export default router;
+```
+
 ## Router 和 Route 是 vue-router 中的两个核心组件
+
+### vue-router 有几种钩子函数?执行流程如何?
+
+钩子函数有三种：
+
+全局守卫
+
+路由守卫
+
+组件守卫
+
 ## Router
 Router 是路由器的核心组件，用于定义路由的基本配置和管理功能。一个应用程序中通常只需要一个 Router 实例，它包含了所有路由规则的集合，以及路由器的全局配置项。
 ```js

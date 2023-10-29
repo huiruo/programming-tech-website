@@ -14,6 +14,8 @@ flowchart LR
 template-->ast-->a1("render()")--执行render-->VNode-->A1("创建好vnode调用patch(prevTree,nextTree)进行渲染")
 ```
 
+>参考：[runtime-VNode构建之后-开始渲染](./Vue/runtime-VNode构建之后-开始渲染)
+
 1. Vue的template、script、style是分离的，可读性比较好,比较容易上手
 
 2. 提供了便捷的模板命令
@@ -26,11 +28,19 @@ react中用js，运算符去实现 v-if, array.map() 去实现 v-for
 
 3. 提供了computed,watch 副作用的钩子，在react 统一使用useEffect去实现这些功能
 
-4. 改变组件状态：
+4. Vue 通过响应式依赖跟踪，在默认的情况下可以做到只进行组件树级别的更新计算，而默认下 React 是做不到
+
+5. 在初始化模板编译阶段，Vue3 会将模板转换成渲染函数，并对模板进行静态分析，生成一些静态标记。
+>在执行patch的时候，当静态标记的比较的时候：
+Vue3 会先比较新旧节点的静态标记是否相同，如果不同，则直接跳过比较子节点的步骤，提高性。参考 [patch-diff](./Vue/patch-diff)
+
+6. 改变组件状态：创建回来的对象必须保持它的引用，不能重新赋值否则会失去响应式
 ```js
 vue: this.data = x;
 react: setState(x);
 ```
+
+7.  当父组件重新渲染时，其子组件依赖项没变化的话，子组件不会重新渲染。
 
 ## 宏观流程
 1. compiler: template-->AST抽象语法树-->code render函数
@@ -388,7 +398,7 @@ const componentUpdateFn = () => {
 <br />
 
 ## 响应时和data发生改变dom更新流程
-参考：[渲染时track-data发生改变trigger-dom更新流程](./Vue/渲染时track-data发生改变trigger-dom更新流程)
+参考：[首次渲染的track和data改变的trigger](./Vue/首次渲染的track和data改变的trigger)
 
 ## v-for的`:key`
 参考：[v-for的key](./Vue/v-for的key)

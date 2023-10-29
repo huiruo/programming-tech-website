@@ -2543,6 +2543,7 @@ var Vue = (function (exports) {
    * @private
    */
   const withScopeId = (_id) => withCtx;
+
   /**
    * Wrap a slot function to memoize current rendering instance
    * @private compiler helper
@@ -2615,7 +2616,7 @@ var Vue = (function (exports) {
         const proxyToUse = withProxy || proxy;
         console.log('%c=vnode-构建:start-->调用Ast生成的render函数', 'color:green', { render, instance })
         result = normalizeVNode(render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data, ctx));
-        console.log('%c=vnode-构建:end-->调用Ast生成的render函数返回vnode:', 'color:green', { result })
+        console.log('%c=vnode-构建:end-->调用Ast生成的render函数返回vnode:', 'color:green', result)
         fallthroughAttrs = attrs;
       }
       else {

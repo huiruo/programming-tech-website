@@ -4,7 +4,7 @@ sidebar_position: 9
 ---
 
 ## nextTick使用场景
-1. 有时需要根据数据动态的为页面某些dom元素添加事件，这就要求在dom元素渲染完毕时去设置，但是created与mounted函数执行时一般dom并没有渲染完毕，
+1. 有时需要根据数据动态的为页面某些dom元素添加事件，这就要求在dom元素渲染完毕时去设置，但是created与mounted函数执行时一般dom并没有渲染完毕，nextTick的回调函数是一个微任务,这意味着 nextTick 中的回调会在当前宏任务执行完毕后，但在浏览器进行下一轮 GUI 渲染之前执行。
 所以就会出现获取不到，添加不了事件的问题，这回就要用到nextTick处理,
 2. 数据改变后获取焦点
 3. 获取元素宽度
@@ -31,7 +31,9 @@ vue是依靠数据驱动视图更新的，该更新的过程是异步的。即�
 视图需要等队列中所有数据变化完成之后，再统一进行更新。
 
 ## 源码分析
-nextTick是一个微任务,基于promise实现,用于将回调延迟到下次DOM更新周期之后执行,这个API就是基于事件循环实现的,是微任务
+在 Vue 2.x 中，nextTick 的回调函数通常是微任务，因为它会使用 Promise
+
+nextTick的回调函数是一个微任务,基于promise实现,用于将回调延迟到下次DOM更新周期之后执行,这个API就是基于事件循环实现的,是微任务
 
 nextTick 接受一个函数为参数，同时会创建一个Promise微任务。所以，页面调用 nextTick 的时候，会把的参数 fn 赋值给 p.then(fn)，在队列currentFlushPromise || resolvedPromise的任务完成后，执行fn。
 

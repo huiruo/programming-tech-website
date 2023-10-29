@@ -1,13 +1,11 @@
 ### 通过 VNode描述真实 DOM,可以渲染出页面中真实的 DOM
 
-VNode 是通过组件的 render 函数创建出来的，我们平时在开发中，一般都是使用 template 字符串描述页面内容，这个模板字符串会被 Vue 的编译器编译成 render 函数(用于描述组件渲染内容的是 render 函数)，`在Vue的运行时，render函数会转化成vnode。`
-* 1. 跨平台
-* 2. 数据驱动视图提升开发效率
-* 对于频繁通过JavaScript操作DOM的场景，VNode性能更优，因为它会等收集到足够的改变时，再将这些变化一次性应用到真实的DOM上。
-```
-频繁的去操作dom，会导致页面卡顿，性能差，如何去减少dom操作是性能优化的一个关键点。
-```
-* 组件挂载和更新和vnode的关系,diff算法提升效率
+VNode 是通过组件的 render 函数创建出来的，我们平时在开发中使用 template 字符串描述页面内容，这个模板字符串会被 Vue 的编译器编译成 render 函数(用于描述组件渲染内容的是 render 函数)，`在Vue的运行时，render函数会转化成vnode。`
+1. 跨平台
+2. 数据驱动视图提升开发效率
+3. 对于频繁通过JavaScript操作DOM的场景，VNode性能更优，因为它会等收集到足够的改变时，再将这些变化一次性应用到真实的DOM上。
+>频繁的去操作dom，会导致页面卡顿，性能差，如何去减少dom操作是性能优化的一个关键点。
+4. 组件挂载和更新和vnode的关系,diff算法提升效率
 
 ## 组件挂载和更新和vnode的关系
 ### 组件第一次渲染时
@@ -18,7 +16,7 @@ VNode 是通过组件的 render 函数创建出来的，我们平时在开发中
 
 计算出哪些节点需要更新，然后到页面中去更新需要更新的节点，其他无需更新的节点则不需要做任何操作。通过这种方式，每次组件重新渲染的时候，都可以保证对真实 DOM 最小的操作量，以此来提高性能。
 
-## 第一步createApp()-->ensureRenderer()
+## 第一步:createApp()-->ensureRenderer()
 开发调用的是运行时包中的构建函数createApp开始:
 ### 1.创建app实例，并返回该实例
 ### 2.重写mount方法
@@ -33,13 +31,11 @@ VNode 是通过组件的 render 函数创建出来的，我们平时在开发中
 
 ensureRenderer 是一个单例模式的函数，会返回一个 renderer，如果无 renderer 则会调用createRenderer 进行获取 renderer ，获得了一个 app 实例。
 
-## 第二步：ensureRenderer()-->baseCreateRenderer(),这个函数非常长，定义了很多函数
+## 第二步:ensureRenderer()-->baseCreateRenderer(),这个函数非常长，定义了很多函数
 baseCreateRenderer包含了组件渲染的核心逻辑,主要实现了：
 * 实现了组件渲染的创建、更新、卸载等核心逻辑
 * 返回渲染函数，以及创建应用实例方法，当然还有 hydrate
-```
-ensureRenderer函数返回包含render、createApp和hydrate三个函数的单例对象，其中hydrate水合函数与ssr有关，createApp需要使用到render、createApp。所以在解析render之前，我们先简单看下createAppAPI。
-```
+>ensureRenderer函数返回包含render、createApp和hydrate三个函数的单例对象，其中hydrate水合函数与ssr有关，createApp需要使用到render、createApp。所以在解析render之前，我们先简单看下createAppAPI。
 
 ```js
 const createApp = ((...args) => {
@@ -865,10 +861,9 @@ template-->ast-->a1("render()")--执行render-->VNode
 renderComponentRoot函数，传参为instance对象
 
 renderComponentRoot函数内部首先通过render!.call(proxyToUse, ...)方法执行instance.render函数(本文开头已经展示了依本例模版解析后的render函数)，传参是proxyToUse(就是withProxy对象)和renderCache(空数组[])下面详细解析render函数的执行过程:
-```
-具体函数见
-### 例子2:生成由AST生成的code转化的render函数
-```
+
+具体函数见:
+[compiler-生成的code函数](./compiler-生成的code函数)
 
 参考：https://juejin.cn/post/7006988485949128741
 1. 整个函数体都在with(_ctx){}中，如果对with的用法不熟悉，可以了解下。简单来说就是在with花括号里面的属性不需要指定命名空间，会自动指向_ctx对象；with(Proxy){key}会触发Proxy代理的has钩子函数(_ctx对象就是withProxy对象，本文上面提到了withProxy就是instance.ctx对象通过Proxy代理后的对象)
@@ -1218,5 +1213,7 @@ export function closeBlock() {
 
 该方法内将blockStack数组中的最后一项移除。由本文上述解析可知，blockStack数组中只有一个元素，就是currentBlock数组，然后将currentBlock赋值为null。最后createBlock方法返回vnode对象，type为Symbol('Fragment')，children数组包含两个vnode对象，是type为Symbol('Text')的文本 和 type为'button'的元素。至此render函数的解析已经完全结束了。
 
-### 总结
-解析render函数的执行过程，首先解析动态数据message时触发get钩子函数，调用track方法进行依赖的收集(activeEffect变量收集到全局的targetMap对象中)；然后调用createTextVNode方法构建文本vnode对象；调用createVNode方法构建button元素的vnode对象；最后调用createBlock方法构建根vnode对象。后续将详细解析patch方法利用生成的vnode对象构建出真正的DOM元素
+## 总结:解析render函数的执行过程
+1. 首先解析动态数据message时触发get钩子函数，调用track方法进行依赖的收集(activeEffect变量收集到全局的targetMap对象中)；
+2. 然后调用createTextVNode方法构建文本vnode对象；调用createVNode方法构建button元素的vnode对象；
+3. 最后调用createBlock方法构建根vnode对象。后续将详细解析patch方法利用生成的vnode对象构建出真正的DOM元素

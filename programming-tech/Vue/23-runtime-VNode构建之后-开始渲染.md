@@ -1,5 +1,4 @@
-## 执行渲染逻辑
-前面分析，创建虚拟节点VNode后，现在执行渲染逻辑。
+## 创建虚拟节点VNode后，现在执行渲染逻辑
 
 * 若创建的VNode为null，则组件执行卸载，否则执行创建或者更新流程。
 
@@ -15,11 +14,13 @@ flowchart LR
 创建组件实例-->设置组件实例-->A1("执行带副作用的渲染函数，渲染组件子树")
 ```
 
-render函数可以说是vue重点中的重点，根据传参决定是否销毁、还是创建或者更新组件。
+### render函数是vue重点中的重点-patch算法在这里执行
+根据传参决定是否销毁、还是创建或者更新组件。
 
 因为vue的patch算法便是在这里执行，通过patch比较新旧虚拟节点的不同，有针对性的更新相关dom节点。
 
 从源码可以看出，当新旧虚拟节点不同，会先卸载旧节点。
+
 `查看：2-1. 下面展示了baseCreateRenderer定义的函数:patch render`
 ```js
 function baseCreateRenderer(options, createHydrationFns) {
@@ -51,14 +52,24 @@ function baseCreateRenderer(options, createHydrationFns) {
 }
 ```
 
-## 第二步
+## 第二步 根据不同的类型处理组件/节点
 较为重点的COMPONENT和ELEMENT类型,又由于COMPONENT是由ELEMENT组成的，根节点是COMPONENT，我们先从processComponent开始
 
-会根据 VNode 类型的不同使用不同的函数进行处理，如果当前的 VNode 表示的是组件的话，则会使用 processComponent 函数进行处理
+processComponent会根据 VNode 类型的不同使用不同的函数进行处理，如果当前的 VNode 表示的是组件的话，则会使用 processComponent 函数进行处理
 
 判断 oldVNode 是否存在，如果存在的话，则执行 updateComponent 函数进行组件的更新，如果不存在的话，则执行 mountComponent 函数进行组件的挂载，我们首先看组件的挂载。
 
-### 2-1. 例子1：processComponent
+### processComponent Vue渲染引擎中主要用于处理组件的渲染和更新
+主要作用包括以下几点：
+1. 创建组件的根虚拟节点：processComponent 根据组件的定义，包括组件的选项、属性、插槽等，创建一个表示组件的根虚拟节点。
+2. 设置组件的 props 和属性：它负责设置组件的 props 和其他属性，以确保组件能够正确地接受外部传递的数据，并将这些数据绑定到组件的内部状态。
+3. 处理组件的插槽内容：processComponent 还负责处理组件的插槽内容，包括默认插槽和具名插槽，以便将插槽内容正确地渲染到组件中。
+4. 管理组件的生命周期：它跟踪组件的生命周期钩子函数的调用，包括 beforeCreate、created、beforeUpdate、updated 等，在适当的时候调用这些钩子函数以触发组件的生命周期。
+5. 处理组件的更新：processComponent 还管理组件的更新，包括在组件内部数据变化时，触发重新渲染过程，以确保组件的虚拟节点正确地更新。
+
+总结，用于管理组件的生命周期、渲染和更新。
+
+### 2-1. 例子1:processComponent
 processComponent较为简单，考虑三种情况进行处理:
 * 组件激活
 * 全新组件挂载

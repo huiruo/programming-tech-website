@@ -3,31 +3,7 @@ title: Reflect用法
 sidebar_position: 7
 ---
 
-## 应用1：
-让 Object 操作都变成函数行为。某些 Object 操作是命令式，比如 `name in obj` 和 `delete obj[name]`，而 `Reflect.has(obj, name)`和 `Reflect.deleteProperty(obj, name)` 让它们变成了函数行为。
-```js
-let obj1 = { name: 1, test: 2 }
-Reflect.deleteProperty(obj1, 'name')
-console.log('test1', obj1)
-```
-
-## 应用2：
-因为 `Reflect.get()`、`Reflect.set()` 具有返回值，并且 Proxy 的 handler 的 get、set 也要求有返回值，所以这时使用 Reflect 再合适不过了
-
-```js
-const proxy = new Proxy(obj, {
-    get(target, key,) {
-        return Reflect.get(target, key)
-    },
-    set(target, key, value) {
-        return Reflect.set(target, key, value)
-    }
-})
-proxy.name = 'Tom'
-console.log('正常运行')
-```
-
-## Reflect是ECMAScript2015 Reflect 是一个内置的对象，它提供拦截 JavaScript 操作的方法，是 ES6 为了操作对象而提供的新 API。
+## Reflect 是一个内置的对象，它提供拦截js操作的方法，是 ES6 为了操作对象而提供的新 API
 ```js
 // es5 写法:Object.defineProperty
 const student = {}
@@ -57,7 +33,8 @@ console.log('普通写法:',obj.name) // 'test'
 console.log('Reflect.get的读取方式:',Reflect.get(obj, 'name')) // test
 ```
 
-## api
+
+### api
 ![](../assets/img-vue/Reflect-api.png)
 ```js
 Reflect.apply(target, thisArg, args)
@@ -90,6 +67,30 @@ Reflect.getOwnPropertyDescriptor(target, name)
 Reflect.getPrototypeOf(target)
 
 Reflect.setPrototypeOf(target, prototype)
+```
+
+## 应用1：
+让 Object 操作都变成函数行为。某些 Object 操作是命令式，比如 `name in obj` 和 `delete obj[name]`，而 `Reflect.has(obj, name)`和 `Reflect.deleteProperty(obj, name)` 让它们变成了函数行为。
+```js
+let obj1 = { name: 1, test: 2 }
+Reflect.deleteProperty(obj1, 'name')
+console.log('test1', obj1)
+```
+
+## 应用2：
+因为 `Reflect.get()`、`Reflect.set()` 具有返回值，并且 Proxy 的 handler 的 get、set 也要求有返回值，所以这时使用 Reflect 再合适不过了
+
+```js
+const proxy = new Proxy(obj, {
+    get(target, key,) {
+        return Reflect.get(target, key)
+    },
+    set(target, key, value) {
+        return Reflect.set(target, key, value)
+    }
+})
+proxy.name = 'Tom'
+console.log('正常运行')
 ```
 
 ## 应用3：

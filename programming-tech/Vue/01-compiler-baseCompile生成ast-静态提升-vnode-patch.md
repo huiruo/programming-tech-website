@@ -1,11 +1,13 @@
 ---
-title: baseCompile生成ast-静态提升-vnode-patch
+title: compiler-baseCompile生成ast-静态提升-vnode-patch
 sidebar_position: -3
 ---
 
 
 ## 应用入口
 流程图参考：[Vue概览](../Vue概览)
+
+[vue3-测试主要用例](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/Vue/vue3%E6%BA%90%E7%A0%81%E8%BF%90%E8%A1%8C%E4%BE%8B%E5%AD%90/02-vue3-%E6%B5%8B%E8%AF%95%E4%B8%BB%E8%A6%81%E7%94%A8%E4%BE%8B.html)
 ```js
 <script>
   const { ref, reactive, nextTick } = Vue
@@ -133,7 +135,8 @@ B2--开始构建传入模板字符串-->接下面流程图
   }
 ```
 
-## 流程图-编译AST-转换AST为render总结
+## 流程图-生成AST-转换AST为render总结
+### 生成AST-转换AST为render总览
 * 生成ast对象
 * 将ast对象作为参数传入transform函数，对 ast 节点进行转换操作
 * 将ast对象作为参数传入generate函数，返回编译结果
@@ -144,7 +147,7 @@ A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(
 其他--组件挂载和更新的逻辑-->A5("patch()用vnode对象构建的DOM元素")-->A6("根据VNode类型的不同使用不同的函数进行处理")
 ```
 
-### 接`初始化流程`,finishComponentSetup()开始执行
+### 1.接`初始化流程`,finishComponentSetup()开始执行
 接上面的finishComponentSetup()开始执行，去构建ast:
 ```mermaid
 flowchart TD
@@ -165,7 +168,14 @@ A7--解析案例2解析元素或组件-->b2("node = parseElement(context, ancest
 b4--循环调用-->b5("attr = parseAttribute(context, attributeNames)")
 ```
 
-### 第二步编译,根据ast-->生成code字符串
+### 2.第二步编译,根据ast-->生成code字符串
+编译终点-生成代码字符串,根据变换后的转换AST生成render()函数
+>代码生成阶段、会根据解析以及变换添加相应标记后的ast以及使用vue的环境，生成对应的用户生成虚拟节点的代码字符串。
+
+generate虽略长，但不复杂。主要是根据不同的环境，nodejs、浏览器、ssr生成对应的代码格式。genNode更是简单，switch判别不同的ast节点类型，根据不同类型插入相应的运行时用于创建虚拟节点的函数的代码字符串。
+
+参考：[编译AST-转换AST为render](./20-编译AST-转换AST为render.md)
+
 ```mermaid
 flowchart TD
 A1("baseCompile(template, options")--第二步编译_ast进行变换-->A2("transform(ast, extend({}, options")-->A3("traverseNode(root, context)")
@@ -177,8 +187,18 @@ A3--变换例子v_once-->b2("getBaseTransformPreset()")-->b3("transformOnce = (n
 A2--静态提升-->b1("hoistStatic(root, context)")
 ```
 
-### 初始化源码
-`patch`
+### 2-1. 静态提升发生在这一阶段:transform对ast进行转换,变换AST的结构
+因为只有拿到生成的 AST 我们才能遍历 AST 的节点进行 transform 转换操作，比如解析 v-if、v-for 等各种指令。
+
+也能对源码进行优化: vue3新特性：
+vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新
+
+transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
+
+由于是对AST的变换，所以不会有返回值，所以在baseCompile的transform函数，只会传入ast抽象语法树和相应的变换选项。
+
+## vue初始化源码
+### `patch`
 ```js
 else if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
   console.log(`%c运行时==>patch-->较为重点的2:COMPONENT:调用processComponent处理组件元素:`, 'color:red')
@@ -186,7 +206,7 @@ else if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 }
 ```
 
-`processComponent`
+### `processComponent`
 ```js
 const processComponent = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
   n2.slotScopeIds = slotScopeIds;
@@ -206,7 +226,7 @@ const processComponent = (n1, n2, container, anchor, parentComponent, parentSusp
 };
 ```
 
-`mountComponent = (initialVNode`
+### `mountComponent = (initialVNode`
 ```js
 const mountComponent = (initialVNode, container, anchor, parentComponent, parentSuspense, isSVG, optimized) => {
   const instance = (initialVNode.component = createComponentInstance(initialVNode, parentComponent, parentSuspense));
@@ -238,7 +258,7 @@ const mountComponent = (initialVNode, container, anchor, parentComponent, parent
   }
 ```
 
-`handleSetupResult`-->`finishComponentSetup`
+### `handleSetupResult`-->`finishComponentSetup`
 ```js
 function handleSetupResult(instance, setupResult, isSSR) {
   if (isFunction(setupResult)) {

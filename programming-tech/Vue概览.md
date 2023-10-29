@@ -4,14 +4,17 @@ sidebar_position: -2
 ---
 
 ## vue 特点
-重点：`render.call(proxyToUse,..)调用ast生成的render生成vnode`
+模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom,编译时+运行时都是找出差异修改
+
+重点：`render.call(proxyToUse,..)`调用ast生成的render生成vnode
+
 ```mermaid
 flowchart LR
 
 template-->ast-->a1("render()")--执行render-->VNode-->A1("创建好vnode调用patch(prevTree,nextTree)进行渲染")
 ```
 
-1. Vue的template、script、style是分离的，可读性和可维护性比较好
+1. Vue的template、script、style是分离的，可读性比较好,比较容易上手
 
 2. 提供了便捷的模板命令
 ```
@@ -22,25 +25,23 @@ react中用js，运算符去实现 v-if, array.map() 去实现 v-for
 ```
 
 3. 提供了computed,watch 副作用的钩子，在react 统一使用useEffect去实现这些功能
+
 4. 改变组件状态：
 ```js
 vue: this.data = x;
 react: setState(x);
 ```
 
-4. 模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom编译时+运行时 都是找出差异修改
-
-
 ## 宏观流程
-* compiler表示template-->AST抽象语法树
+1. compiler: template-->AST抽象语法树-->code render函数
 
-* reactivity表示响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
-```
-1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
+2. reactivity: 响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
+
+>1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
 2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
 3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
-```
-* runtime表示运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
+
+3. runtime: 运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
 
 ## 首次渲染流程
 renderComponentRoot 执行构建ast生成的render() 生成vnode

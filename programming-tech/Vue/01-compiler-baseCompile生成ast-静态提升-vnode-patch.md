@@ -174,7 +174,7 @@ b4--循环调用-->b5("attr = parseAttribute(context, attributeNames)")
 
 generate虽略长，但不复杂。主要是根据不同的环境，nodejs、浏览器、ssr生成对应的代码格式。genNode更是简单，switch判别不同的ast节点类型，根据不同类型插入相应的运行时用于创建虚拟节点的函数的代码字符串。
 
-参考：[编译AST-转换AST为render](./20-编译AST-转换AST为render.md)
+参考：[compiler-生成AST-转换AST为render](./compiler-生成AST-转换AST为render)
 
 ```mermaid
 flowchart TD

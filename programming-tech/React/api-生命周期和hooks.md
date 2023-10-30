@@ -1,4 +1,16 @@
 ## useEffect 模拟生命周期
+```js
+React.useEffect(() => {
+  console.log('Sub=副作用-useEffect-->运行');
+}, [])
+
+React.useEffect(() => {
+  console.log('Sub=useEffect不依赖-模拟组件更新-->运行');
+})
+```
+>第一个useEffect会在第二个useEffect之前执行。
+>第一个useEffect中的函数会在组件挂载时执行，因为它没有依赖项，所以只会执行一次。 
+第二个useEffect中的函数会在每次组件渲染时执行，包括挂载时，因为它没有依赖项，所以也会执行一次。
 
 - 第二个参数传递一个空数组, 模拟 componentDidMount
 
@@ -82,7 +94,7 @@ A1("constructor()")-->B2("componentWillMount()17废弃")-->C3("render()")-->D3("
 
 ```mermaid
 flowchart TD
-shouldComponentUpdate-->componentWillUpdate-->render-->A1("子组件的componentWillReceiveProps和子组件对应父组件这4个周期函数")-->componentDidUpdate
+componentWillReceiveProps-->shouldComponentUpdate-->componentWillUpdate-->render-->A1("子组件的componentWillReceiveProps和子组件对应父组件这4个周期函数")-->componentDidUpdate
 ```
 
 ### React 15 中的生命周期调用

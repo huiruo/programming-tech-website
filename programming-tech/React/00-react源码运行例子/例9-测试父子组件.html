@@ -26,11 +26,15 @@
       const [obj, setObj] = React.useState({ test: 1, test2: 2 })
 
       React.useEffect(() => {
-        console.log('=副作用-useEffect-->运行');
+        console.log('Test-super=副作用-useEffect-->运行');
         return () => {
           console.log('useEffect销毁时触发的回调');
         };
       }, [])
+
+      React.useEffect(() => {
+        console.log('Test-super=useEffect不依赖-模拟组件更新->运行');
+      })
 
       React.useLayoutEffect(() => {
         console.log('=副作用-useLayoutEffect-->运行');
@@ -50,6 +54,8 @@
       const onClickText2 = () => {
         console.log('=useState=onClick:', data);
       }
+
+      console.log('Test-render->运行');
 
       return (
         <div id='div1' className='c1'>
@@ -71,6 +77,16 @@
     function Sub(props) {
       const { obj } = props
       console.log('Sub-render', obj)
+
+      React.useEffect(() => {
+        console.log('Sub=副作用-useEffect-->运行');
+      }, [])
+
+      React.useEffect(() => {
+        console.log('Sub=useEffect不依赖-模拟组件更新-->运行');
+      })
+
+      console.log('sub-render->运行');
 
       return (
         <div id='div1' className='c1'>

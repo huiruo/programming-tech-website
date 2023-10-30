@@ -525,7 +525,7 @@ function createElement(type, config, children) {
 ## 流程图-构建fiber树流程
 只要返回的是一个对象且对象中有 render 方法，就认为是 ClassComponent，否则就是 FunctionComponent,从mountIndeterminateComponent开始,这里以函数组件为例:
 
-接[jsx-ast-render阶段:流程图的mountIndeterminateComponent函数](./jsx-ast-render阶段)
+接[render阶段总览:流程图的mountIndeterminateComponent函数](./render阶段总览)
 ```mermaid
 flowchart TD
 A1(mountIndeterminateComponent)

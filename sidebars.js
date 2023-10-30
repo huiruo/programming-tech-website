@@ -10,8 +10,9 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'React/jsx-ast-render阶段',
-        'React/render阶段-babel生成的code函数',
+        'React/编译阶段-jsx-ast',
+        'React/编译阶段-babel生成的code函数',
+        'React/render阶段总览',
         'React/render阶段1-beginWork',
         'React/beginWork第3步-Reconciliation-双缓存-diff',
         'React/render阶段2-completeWork',

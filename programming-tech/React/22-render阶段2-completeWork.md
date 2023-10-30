@@ -1,15 +1,4 @@
 ## render阶段2:completeWork
-completeWork阶段处在beginWork之后，commit之前，起到的是一个承上启下的作用。它接收到的是经过diff后的fiber节点，然后他自己要将DOM节点和effectList都准备好。因为commit阶段是不能被打断的，所以充分准备有利于commit阶段做更少的工作。
-
-每个fiber节点在更新/创建时都会经历两个阶段：beginWork和completeWork。
-
-workLoopSync 循环调用 performUnitOfWork 
-
-作用：
-1. 为新增的 fiber 节点生成对应的DOM节点。
-2. 更新DOM节点的属性。
-3. 进行事件绑定。
-4. 收集effectTag。
 
 ## render阶段2:completeWork
 complete阶段workInProgress节点都是经过diff算法调和过的，也就意味着对于某个节点来说它fiber的形态已经基本确定了，但除此之外还有两点：

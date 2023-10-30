@@ -1,5 +1,5 @@
 ---
-title: render阶段-babel生成的code函数
+title: 编译阶段-babel生成的code函数
 sidebar_position: 3
 ---
 

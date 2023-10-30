@@ -287,8 +287,8 @@ function transform(code, options) {
 </script>
 ```
 
-### mockData-babel返回.json
-[mockData-babel返回code函数](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/Vue/02-mockData-compile%E8%B0%83%E7%94%A8baseParse%E8%BF%94%E5%9B%9East.json)
+### render阶段-babel生成的AST.json
+[render阶段-babel生成的code函数](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/Vue/02-mockData-compile%E8%B0%83%E7%94%A8baseParse%E8%BF%94%E5%9B%9East.json)
 ```json
 {
 "metadata":"",

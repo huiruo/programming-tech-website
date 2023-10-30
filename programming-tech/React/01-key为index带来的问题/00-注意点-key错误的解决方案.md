@@ -97,5 +97,5 @@ export const ChildrenForm = (props: Props) => {
 }
 ```
 
-## 以上的问题会带来严重问题
+## 以上解决方法带来严重问题
 动态指定key会让react更新错乱

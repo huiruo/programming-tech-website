@@ -187,15 +187,8 @@ A3--变换例子v_once-->b2("getBaseTransformPreset()")-->b3("transformOnce = (n
 A2--静态提升-->b1("hoistStatic(root, context)")
 ```
 
-### 2-1. 静态提升发生在这一阶段:transform对ast进行转换,变换AST的结构
-因为只有拿到生成的 AST 我们才能遍历 AST 的节点进行 transform 转换操作，比如解析 v-if、v-for 等各种指令。
-
-也能对源码进行优化: vue3新特性：
-vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新
-
-transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
-
-由于是对AST的变换，所以不会有返回值，所以在baseCompile的transform函数，只会传入ast抽象语法树和相应的变换选项。
+### 2-1. 静态提升发生在transform对ast进行转换,变换AST的结构
+参考：[Vue概览](../Vue概览)
 
 ## vue初始化源码
 ### `patch`

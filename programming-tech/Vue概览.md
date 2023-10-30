@@ -9,10 +9,16 @@ sidebar_position: -2
 重点：`render.call(proxyToUse,..)`调用ast生成的render生成vnode
 
 ```mermaid
-flowchart LR
+flowchart TD
 
-template-->ast-->a1("render()")--执行render-->VNode-->A1("创建好vnode调用patch(prevTree,nextTree)进行渲染")
+template-->A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(generate根据变换后的ast生成code并返回)-->执行code-->VNode-->A5("创建好vnode调用patch(prevTree,nextTree)进行渲染")
 ```
+
+拿到生成的 AST 遍历 AST 的节点进行 transform 转换操作,由于是对AST的变换，所以不会有返回值，所以在baseCompile的transform函数，只会传入ast抽象语法树和相应的变换选项,作用:
+* 比如解析 v-if、v-for 等各种指令。
+* 对源码进行优化: hoistStatic(静态提升)
+>vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新;transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
+
 
 >参考：[runtime-VNode构建之后-开始渲染](./Vue/runtime-VNode构建之后-开始渲染)
 

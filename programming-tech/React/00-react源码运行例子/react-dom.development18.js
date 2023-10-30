@@ -17414,7 +17414,7 @@
       }
     }
 
-    debugger
+    // debugger
     console.log('=useState=app=dispatchSetState:', { fiber, queue, action })
 
     var lane = requestUpdateLane(fiber);
@@ -17907,7 +17907,7 @@
         var prevDispatcher = ReactCurrentDispatcher$1.current;
         ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnUpdateInDEV;
 
-        debugger
+        // debugger
 
         try {
           console.log('=updateState=4', { initialState })

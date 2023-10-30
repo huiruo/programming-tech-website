@@ -23,6 +23,31 @@ React.memo，React将跳过渲染组件的操作并直接复用最近一次渲�
 
 注意，React.memo 仅检查 props 的变更，React.memo包裹的组件其实现中拥有useState或useContext的 hook，当context/state变化时，它仍会重新渲染。
 
+例子:
+```js
+import React from "react";
+
+function Child({seconds}){
+    console.log('I am rendering');
+    return (
+        <div>I am update every {seconds} seconds</div>
+    )
+};
+
+function isEqual(prevProps, nextProps) {
+    if(prevProps.seconds===nextProps.seconds){
+        // isEqual 返回 true 时，不会触发 render
+        return true
+    }else {
+        // false render
+        return false
+    }
+
+}
+
+export default React.memo(Child,isEqual)
+```
+
 ### memo源码
 传入两个参数，第一个是 React 组件，第二个是一个比较函数，函数参数是旧的 props 和新的 props，返回值如果为 false 表示重新渲染该组件。
 ```js
@@ -67,15 +92,24 @@ return elementType;
 }
 ```
 
-初次渲染:updateMemoComponent或者 updateSimpleMemoComponent 进行处理
+### 在beginWork中, 通过updateMemoComponent对`REACT_MEMO_TYPE`类型的元素 进行处理
+初次渲染:updateMemoComponent 或者 updateSimpleMemoComponent 进行处理
 
 updateMemoComponent和updateSimpleMemoComponent内部根据`compare`或者`shallowEqual`对比 props, 来确定memo包裹的组件是否命中 bailoutOnAlreadyFinishedWork.
 
-### 在beginWork中, 通过updateMemoComponent对`REACT_MEMO_TYPE`类型的元素 进行处理
-* 如果compare === null 并且 isSimpleFunctionComponent===true(即sampleMemoComponent) <br/>
-则修改fiber.tag === SimpleMemoComponent,在更新阶段使用 updateSimpleMemoComponent 更新
+* 如果compare === null 并且 isSimpleFunctionComponent===true(即sampleMemoComponent) 
+> 则修改fiber.tag === SimpleMemoComponent,在更新阶段使用 updateSimpleMemoComponent 更新
 
-* 如果不满足上面的条件, 则使用createFiberFromTypeAndProps创建子fiber,继续向下调和子树
+* 如果不满足上面的条件, 则使用createFiberFromTypeAndProps创建子fiber,继续向下调和子树:
+
+可见在beginWork中，compare 为true 不执行更新:
+```js
+if (compare(prevProps, nextProps) && current.ref === workInProgress.ref) {
+    // 不用更新
+    return bailoutOnAlreadyFinishedWork(current, workInProgress, renderLanes);
+}
+```
+
 ```js
 function updateMemoComponent(current, workInProgress, Component, nextProps, renderLanes) {
 if (current === null) {
@@ -113,7 +147,7 @@ if (current === null) {
     }
     }
 
-    console.log('%c=updateMemoComponent调用createFiberFromTypeAndProps-->return', 'color:yellow', { child });
+    console.log('%c=updateMemoComponent 调用createFiberFromTypeAndProps-->return', 'color:yellow', { child });
     var child = createFiberFromTypeAndProps(Component.type, null, nextProps, workInProgress, workInProgress.mode, renderLanes);
     child.ref = workInProgress.ref;
     child.return = workInProgress;
@@ -160,27 +194,3 @@ return newChild;
 }
 ```
 
-### 例子
-```js
-import React from "react";
-
-function Child({seconds}){
-    console.log('I am rendering');
-    return (
-        <div>I am update every {seconds} seconds</div>
-    )
-};
-
-function isEqual(prevProps, nextProps) {
-    if(prevProps.seconds===nextProps.seconds){
-        // isEqual 返回 true 时，不会触发 render
-        return true
-    }else {
-        // false render
-        return false
-    }
-
-}
-
-export default React.memo(Child,isEqual)
-```

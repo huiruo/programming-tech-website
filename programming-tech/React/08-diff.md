@@ -3,6 +3,21 @@ title: diff
 sidebar_position: 8
 ---
 
+## Diff
+diff 比较，就是在构建 workInProgress fiber tree 的过程中，判断 current fiber tree 中的 fiber node 是否可以被 workInProgress fiber tree 复用。
+
+能被复用，意味在本次更新中，需要做: 组件的 update 以及 dom 节点的 move、update 等操作；
+
+不可复用，则意味着需要做: 组件的 mount、unmount 以及 dom 节点的 insert、delete 等操作。
+
+diff的过程，也就是effect的收集过程，此过程会找出所有节点的变更，如节点新增、删除、属性变更等，这些变更 react 统称为副作用（effect），随着所有的节点（工作单元）在帧空闲时间逐个执行完毕，最后产出的结果是effect list，从中可以知道哪些节点更新、哪些节点增加、哪些节点删除了。
+
+当更新完成以后，fiberRootNode 的 current 指针会指向 workInProgress fiber tree，作为下一次更新的 current fiber tree
+
+最后，深度调和子节点，渲染视图
+遍历fiber树，以workInProgress 作为最新的渲染树，即current Fiber 树。
+
+
 ## 图
 ```mermaid
 flowchart BR

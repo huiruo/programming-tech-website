@@ -1,39 +1,38 @@
 ---
-title: hooks的初始化和setState组件更新
+title: setState组件更新和hooks的初始化
 sidebar_position: 5
 ---
 
 ## 前言
 
-### 如果state和从父组件传过来的props都没变化，那他就一定不会发生重渲染吗？
+### setState()函数在任何情况下都会导致组件重渲染吗？如果setState中的state没有发生改变呢？
+比对是依赖项是否一致的时候，用的是Object.is：
 
-例9-测试父子组件.html
+Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
 
-子组件更新的条件是其 props 或 state 发生变化。如果父组件重新渲染时，传递给子组件的 props 没有发生变化，那么子组件不会更新。
+例5-主要测试实5-没有导致state的值发生变化的setState是否会导致重渲染.html
 
-1. 当父组件更新，props没改变，sub组件不会更新
-```js
-const [obj, setObj] = React.useState({ test: 1, test2: 2 })
+没有导致state的值发生变化的this.setState()是否会导致重渲染-->不会
 
-const changeSubData = () => {
-  console.log('changeSubData')
-  // 并不会更新子组件
-  obj.test1 = 5
-  // 重新生成对象，子组件更新
-  // setObj({ ...obj, test1: 3 })
-}
+### 如果state和从父组件传过来的props都没变化，那子组件就一定不会发生重渲染吗？
 
-return (
-  <Sub obj={obj} />
-)
-```
-2. 当父组件更新，props 引用地址改变，如上面的例子`setObj`,sub组件会更新
+### 对象和数组注意点
+1. 数组是引用，更新了数组，但是数组的引用地址没有变化，react就不会认为它有变化
+3. 对象是引用，没有被重新赋值(地址没有改变)，不更新视图。
+
+[例9-测试父子组件.html](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/00-react%E6%BA%90%E7%A0%81%E8%BF%90%E8%A1%8C%E4%BE%8B%E5%AD%90/%E4%BE%8B9-%E6%B5%8B%E8%AF%95%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6.html)
+
+>子组件更新的条件是其 props 或 state 发生变化。如果父组件重新渲染时，传递给子组件的 props 没有发生变化，那么子组件不会更新。
 
 React采用了基于值比较的浅比较（shallow comparison）策略，只有当props和state的引用发生变化时，React才会重新渲染组件。但如果props和state是复杂对象（如数组和对象），浅比较将只比较它们的引用，而不是它们的内容。如果父组件每次重新渲染时都会创建新的props对象，子组件也会被重新渲染，即使props的值没有改变。
 
 通过 Object.is() 进行比较，这是一种严格相等比较，比浅比较更加严格。具体来说，Object.is() 会比较两个值的类型和值，而浅比较只会比较引用是否相同。
 
-需要注意的是，如果 props 中包含对象或数组等引用类型的值，即使它们的内容没有发生变化，只要引用发生了变化，React 仍然会认为 props 发生了变化，因此会重新渲染组件。这是因为在 JavaScript 中，对象和数组是引用类型，其值在比较时是按照引用地址进行比较的。
+>需要注意的是，如果 props 中包含对象或数组等引用类型的值，即使它们的内容没有发生变化，只要引用发生了变化，React 仍然会认为 props 发生了变化，因此会重新渲染组件。这是因为在 JavaScript 中，对象和数组是引用类型，其值在比较时是按照引用地址进行比较的。
+
+1. 当父组件更新，props没改变，sub组件不会更新
+
+2. 当父组件更新，props 引用地址改变，如上面的例子`setObj`,sub组件会更新
 
 会渲染的场景：
 1. 比如传递方法`<Sub obj={obj} changeSubData={changeSubData} />`,方法每次都会生成新的，尽管props没变，但是方法每次都是新的会触发渲染
@@ -41,18 +40,10 @@ React采用了基于值比较的浅比较（shallow comparison）策略，只有
 3. 子组件的渲染函数不是一个纯函数。如果子组件的渲染函数中包含了对于外部变量的依赖，那么当外部变量改变时，子组件也会随之发生变化，即使prop没有改变。
 4. 子组件使用了非受控组件或是使用了ref。非受控组件和ref的变化不会被React所感知，这会导致子组件的重新渲染，即使prop的值没有改变。
 
-当React重新渲染时ParentComponent，它将自动重新渲染ChildComponent。要解决的唯一途径是实现shouldComponentUpdate
-```js
-shouldComponentUpdate(nextProps,nextState){
-    if(nextState.Number == this.state.Number){
-      return false
-    }
-}
-```
+### 要解决的唯一途径是使用shouldComponentUpdate/memo
+[api-memo和shouldComponentUpdate](./api-memo和shouldComponentUpdate.md)
 
-### 对象和数组注意点
-1. 数组是引用，更新了数组，但是数组的引用地址没有变化，react就不会认为它有变化
-3. 对象是引用，没有被重新赋值(地址没有改变)，不更新视图。
+[React.memo()使用实例](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/00-react%E6%BA%90%E7%A0%81%E8%BF%90%E8%A1%8C%E4%BE%8B%E5%AD%90/%E4%BE%8B9-%E6%B5%8B%E8%AF%95%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6.html)
 
 ### 重要的全局变量
 * currentlyRenderingFiber：正在处理的函数组件对应 fiber。在执行 useState 等 hook 时，需要通过它知道当前 hook 对应哪个 fiber。
@@ -70,7 +61,25 @@ HooksDispatcherOnMount：挂载阶段用。比如它的 useState 要将初始值
 HooksDispatcherOnUpdate：更新阶段用。比如它的 useState 会无视传入的初始值，而是从链表中取出值。
 ```
 
-## 例子
+## 复习渲染流程
+```mermaid
+flowchart TD
+d1("ReactDOMRoot.prototype.render")-->d2(updateContainer)-->d3(scheduleUpdateOnFiber)-->d4("ensureRootIsScheduled")-->d5
+
+d5("scheduleCallback$1(schedulerPriorityLevel,performConcurrentWorkOnRoot.bind(null, root))")--这个函数在render结束会开启commit阶段-->c2
+
+c2("performConcurrentWorkOnRoot")--1beginwork流程-->e1
+
+c2--2-->c3("flushPassiveEffects()")
+
+%% begin work
+e1(renderRootSync)-->e2("workLoopSync()")--循环-->e3("performUnitOfWork()")--1-->e4("beginWork$1()")
+e3--2-->e5("completeUnitOfWork")-->e6("completeWork")
+
+%% commit work
+c2--3commit-->c4("finishConcurrentRender")-->c5("commitRoot")
+```
+
 ### 编译前
 ```js
   console.log('=Babel:', Babel)
@@ -117,6 +126,7 @@ HooksDispatcherOnUpdate：更新阶段用。比如它的 useState 会无视传�
 ```
 
 ### 编译后的code
+关注编译后的hooks:useState
 ```js
 function Test() {
   console.log('test-render');
@@ -178,26 +188,6 @@ function Test() {
     )
   );
 }
-```
-
-
-## 复习渲染流程
-```mermaid
-flowchart TD
-d1("ReactDOMRoot.prototype.render")-->d2(updateContainer)-->d3(scheduleUpdateOnFiber)-->d4("ensureRootIsScheduled")-->d5
-
-d5("scheduleCallback$1(schedulerPriorityLevel,performConcurrentWorkOnRoot.bind(null, root))")--这个函数在render结束会开启commit阶段-->c2
-
-c2("performConcurrentWorkOnRoot")--1beginwork流程-->e1
-
-c2--2-->c3("flushPassiveEffects()")
-
-%% begin work
-e1(renderRootSync)-->e2("workLoopSync()")--循环-->e3("performUnitOfWork()")--1-->e4("beginWork$1()")
-e3--2-->e5("completeUnitOfWork")-->e6("completeWork")
-
-%% commit work
-c2--3commit-->c4("finishConcurrentRender")-->c5("commitRoot")
 ```
 
 ## 流程图-初始化hook-state-接上面beginWork
@@ -779,8 +769,8 @@ fiber: FiberNode {tag: 0, key: null, stateNode: null, elementType: ƒ, type: ƒ,
 queue: {pending: {…}, interleaved: null, lanes: 0, dispatch: ƒ, lastRenderedReducer: ƒ, …}
 action: "努力哦",
 ```
-* 1. 可见把要修改的值放到第三个参数action
-* 2. 创建一个 update 更新对象,把action赋值
+1. 可见把要修改的值放到第三个参数action
+2. 创建一个 update 更新对象,把action赋值
 ```js
 var update = {
   lane: lane,
@@ -790,12 +780,11 @@ var update = {
   next: null
 };
 ```
-* 3. currentState = queue.lastRenderedState;取旧值
-* 4. dispatchSetState对比新旧状态是否不同，相同直接return,比对是依赖项是否一致的时候，用的是Object.is：
-```
-Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
-```
-* 5. scheduleUpdateOnFiber(fiber, lane, eventTime) 走调度更新流程
+3. currentState = queue.lastRenderedState;取旧值
+4. dispatchSetState对比新旧状态是否不同，相同直接return,比对是依赖项是否一致的时候，用的是Object.is：
+>Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
+
+5. scheduleUpdateOnFiber(fiber, lane, eventTime) 走调度更新流程
 
 [dispatchSetState-hooks源码](./dispatchSetState-hooks源码)
 ```js
@@ -804,7 +793,7 @@ Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不�
  }
 ```
 
-* 6. 因为是调度更新，此时执行完setData还不会走beginWork,继续执行onClickText函数剩下的代码：
+6. 因为是调度更新，此时执行完setData还不会走beginWork,继续执行onClickText函数剩下的代码：
 ```js
 setShowDiv(!showDiv);
 ```
@@ -1200,12 +1189,3 @@ for (something) {
   const [state2] = useState(2)
 }
 ```
-
-### setState()函数在任何情况下都会导致组件重渲染吗？如果setState中的state没有发生改变呢？
-比对是依赖项是否一致的时候，用的是Object.is：
-
-Object.is() 与 === 不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
-
-例5-主要测试实5-没有导致state的值发生变化的setState是否会导致重渲染.html
-
-没有导致state的值发生变化的this.setState()是否会导致重渲染-->不会

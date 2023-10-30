@@ -111,10 +111,49 @@ A1(jsx的Fn组件)-->A2(ast tree)--转化-->A3(生成code函数)--beginWork开�
 
 render 阶段是在内存中构建一棵新的 fiber 树（称为 workInProgress 树）,构建过程是依照现有 fiber 树（current 树）从 root 开始深度优先遍历再回溯到 root 的过程，这个过程中每个 fiber 节点都会经历两个阶段：**beginWork 和 completeWork**。
 
-workLoopSync 循环调用performUnitOfWork。workLoopSync 负责以递归方式调用 performUnitOfWork，从根组件开始一直到叶子组件，然后再返回到根组件，直到整个组件树中没有工作单元需要处理
+workLoopSync 负责以递归方式调用 performUnitOfWork，从根组件开始一直到叶子组件，然后再返回到根组件，直到整个组件树中没有工作单元需要处理
 
-### 1-1. beginWork阶段:将ast树转换为fiber树
+
+### 基础1-构建fiber 遍历流程
+react把每个fiber当成生成fiber最小单元,只要迭代所有fiber则到顶级Fiber时生成整颗FiberTree。
+
+### 遍历流程
+Tree 构建的遍历顺序，它会以旧的fiber tree为蓝本，把每个fiber作为一个工作单元，自顶向下逐节点构造workInProgress tree（构建中的新fiber tree）:
+
+深度优先遍历
+1. 从顶点开始遍历
+2. 如果有子节点，先遍历子节点；
+3. 如果没有子节点，则看有没有兄弟节点，有则遍历兄弟节点，并把effect向上归并
+4. 如果没有兄弟节点，则看有没有父兄弟节点，有则遍历父兄弟节点
+5. 如果没有都没有了，那么遍历结束
+
+```mermaid
+flowchart TD
+
+  A0(workLoopSync)--异步-->A0Aif
+  A0A(workLoopConcurrent)--同步-->A0Aif{{workInProgress!==null}}
+  A0Aif-->A1
+  A0Aif--为null-->endW(结束当前循环)
+
+  A1(performUnitOfWork)-->A2(beginWork处理完返回next)-->A2if{{next=null?}}
+
+  A3A(将下一工作单元为当前工作单元:workInProgress=next)
+  A3A-->A0Aif
+  A2if--next为null-->A3B(completeUnitOfWork)
+  A2if--next不为null-->A3A
+
+  A3Bif{{节点是否空:completedWork!=null?}}
+  A3B-->A3Bif--为null-->A0Aif
+  A3Bif--非null-->A3Bif2{{是否存在兄弟节点:siblingFiber!=null?}}
+
+  A3Bif2--兄弟节点null-->A3C1(回溯到父节点:completedWork=returnFiber)-->A3Bif
+  A3Bif2--兄弟节点!null-->A3C2(将兄弟节点作为下一工作单元)-->A0Aif
+```
+
+### 1-1. beginWork阶段:将ast树(或则code函数webpack模式下)转换为fiber树
 >组件的状态计算、diff 的操作:通过 Diff 算法找出所有节点变更，例如节点新增、删除、属性变更等等, 获得需要更新的节点信息，以及 render 函数的执行，发生在 beginWork 阶段
+
+参考 重点 beginWork 流程：[render阶段-mountIndeterminateComponent构建fiber树](./React/render阶段-mountIndeterminateComponent构建fiber树)
 
 ### 1-2. completeWork阶段:生成实例
 completeWork阶段处在beginWork之后，commit之前，起到的是一个承上启下的作用。它接收到的是经过diff后的fiber节点，然后他自己要将DOM节点和effectList都准备好。因为commit阶段是不能被打断的，所以充分准备有利于commit阶段做更少的工作。
@@ -126,8 +165,6 @@ completeWork阶段处在beginWork之后，commit之前，起到的是一个承�
 4. 收集effectTag。
 
 参考 1：[render阶段总览](./React/render阶段总览)
-
-参考 2：重点 beginWork 流程：[mountIndeterminateComponent构建fiber树](./React/mountIndeterminateComponent构建fiber树)
 
 ### 1-3.render可调度
 
@@ -193,11 +230,11 @@ workInProgress 节点的 completeWork 阶段主要做的:
 
 ## 3.hooks 初始化
 
-参考：[hooks 的初始化和 setState 组件更新-流程图-初始化 hook-state-接上面 beginWork](./React/hooks的初始化和setState组件更新)
+参考：[hooks 的初始化和 setState 组件更新-流程图-初始化 hook-state-接上面 beginWork](./React/setState组件更新和hooks的初始化)
 
 ## 4. 执行 setState(xx)组件更新,重点在 dispatchSetState
 
-参考：[hooks 的初始化和 setState 组件更新-流程图-data 更新之后-获取 state-调度更新](./React/hooks的初始化和setState组件更新)
+参考：[hooks 的初始化和 setState 组件更新-流程图-data 更新之后-获取 state-调度更新](./React/setState组件更新和hooks的初始化)
 
 ## 5. 优化.useState 同步还是异步?
 

@@ -239,3 +239,20 @@ workInProgress 节点的 completeWork 阶段主要做的:
 ## 5. 优化.useState 同步还是异步?
 
 参考：[React/setState 的异步和同步问题](./React/setState异步-同步)
+
+## useEffect
+useEffect的执行是在commit之后，React的commit阶段简单来说，就是将DOM渲染到页面上。
+
+useEffect 需要先调度，在Layout 阶段完成后再异步执行。
+请记得 React 会等待浏览器完成画面渲染之后才会延迟调用 `useEffect`，因此会使得额外操作很方便
+
+### useEffect的执行顺序问题，如果父组件和子组件同时存在useEffect执行先后？
+
+子组件的useEffect先走
+
+解析：按照这个执行逻辑来看的话：
+* 父组件进入commit阶段，发现有子组件组件需要渲染。
+
+* 开始进行子组件的生命周期, 子组件进入commit阶段，执行子组件的useEffect，子组件渲染结束
+
+* 父组件进行commit阶段，渲染完成，执行useEffect

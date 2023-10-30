@@ -3,17 +3,11 @@ title: setState异步-同步
 sidebar_position: 5
 ---
 
-## 异步
-如果setState是同步的，意味着每执行一次setState时，都重新diff + dom修改，这对性能来说是极为不好的
+## setState什么时候是异步?
 
 由React控制内的事件处理函数(onChange、onClick等合成事件)，以及生命周期函数调用setState()为异步 。只要进入了 react 的调度流程，那就是异步的；
 
-代码没有进入react的调度流程，那就是同步的,这些都不会走 React 的调度流程。在这种情况下调用 setState ，那这次 setState 就是同步的:
-* setTimeout,setInterval
-* 直接在 DOM 上绑定原生事件
-* Promise 的回调等
-
-## 为什么是异步？
+### 为什么是异步？
 setState 里的逻辑其实是同步的，但是，调用 setState 时，react 会对这一系列的 setter 做合并处理，异步更新该函数式组件对应的 hooks 链表里面的值，然后触发重渲染（re-renders），从这个角度上来说，setState 确实是一个"异步"操作；
 
 + 多次执行setState 和 useState的set函数，组件只会重新渲染一次,<br/>
@@ -45,8 +39,14 @@ const onClick = useCallback(() => {
   setAge(21);
 }, []);
 ```
+代码没有进入react的调度流程，那就是同步的,这些都不会走 React 的调度流程。在这种情况下调用 setState ，那这次 setState 就是同步的:
+* setTimeout,setInterval
+* 直接在 DOM 上绑定原生事件
+* Promise 的回调等
 
-## 关于React17的性能优化:React17根据情况而采用不同的更新策略
+>这种情况setState是同步的，意味着每执行一次setState时，都重新diff + dom修改
+
+## React17的性能优化:React17根据情况而采用不同的更新策略
 React17 和 React18 批量更新的策略是不同的。
 * React18就统一的采用更新策略，可以不用考虑render渲染次数，带来的性能问题。
 * React17根据情况而采用不同的更新策略，<br/>

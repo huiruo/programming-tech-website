@@ -783,7 +783,7 @@ export const Deletion = /*                     */ 0b000000000001000;
 > React 的优先级 lane 模型中同样使用了二进制的方式来表示优先级。
 
 ## beginWork第3步-Reconciliation-双缓存-diff,这个代码很长 1k
-[beginWork第3步-Reconciliation-双缓存-diff](./beginWork第3步-Reconciliation-双缓存-diff)
+[render阶段-completeWork中的diff](./render阶段-completeWork中的diff)
 
 了解了遍历流程与任务调度方法之后，接下来就是就是我们熟知的Reconciliation阶段了（为了方便理解，这里不区分Diff和Reconciliation, 两者是同一个东西）。思路和 Fiber 重构之前差别不大，只不过这里不会再递归去比对、而且不会马上提交变更。
 

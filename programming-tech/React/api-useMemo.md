@@ -56,7 +56,6 @@ useMemo和useCallback都会在组件第一次渲染的时候执行，之后会�
 低频复杂组件：随意
 低频简单组件：随意
 
-```
 首先题主已经很明确了，useCallback，useMemo以及React.memo都是为了性能优化而存在的。这一点是正确的。稍微详细展开来讲，React.memo（和之前class API中提供的ShouldComponentUpdate基本一致）主要是为了在父组件渲染时防止对没有状态变化的子组件进行不必要的渲染，可以参考官方文档中的此例。
 
 useMemo则是为了缓存在渲染过程中比较繁重的计算过程，官方文档的例子中也用了computeExpensiveValue这个命名来隐喻这个用法。
@@ -64,4 +63,3 @@ useMemo则是为了缓存在渲染过程中比较繁重的计算过程，官方�
 useCallback稍微有点特殊，虽说这就是一个useMemo的语法糖，但是一般js上创建一个函数需要的时间并不至于要缓存的程度，那为什么要专门给缓存函数的创建做一个语法糖呢？这就跟React.memo有关系了。
 
 React.memo的默认第二参数是浅对比（shallow compare）上次渲染的props和这次渲染的props，如果你的组件的props中包含一个回调函数，并且这个函数是在父组件渲染的过程中创建的（见下例），那么每次父组件（下例中的MyComponent）渲染时，React是认为你的子组件（下例中的Button）props是有变化的，不管你是否对这个子组件用了React.memo，都无法阻止重复渲染。这时就只能用useCallback来缓存这个回调函数，才会让React（或者说js）认为这个prop和上次是相同的。
-```

@@ -24,6 +24,7 @@ const sidebars = {
         'React/fiber',
         'React/fiberNode-fiber结构-RequestIdleCallback',
         'React/库-redux-mobx',
+        'React/库-redux-connect-useSelector',
         'React/渲染到html-原生DOM事件代理',
         'React/类组件渲染流程-组件分类',
         'React/注意点-hook-setState的interval',

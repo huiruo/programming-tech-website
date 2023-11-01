@@ -53,7 +53,7 @@ let clone = Object.assign({}, user);
 console.log('但是可以浅拷贝:',clone[id] );
 ```
 
-### 5、无论是 for...in 还是 for...of 都不能遍历出 Symbol 类型的值
+### 无论是 for...in 还是 for...of 都不能遍历出 Symbol 类型的值
 遍历 Symbol 类型的值需要用 Object.getOwnPropertySymbols() 方法
 ```js
 {

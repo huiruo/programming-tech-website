@@ -60,7 +60,7 @@ b1-->d1("subscribeForReact")--订阅了更新-->d2("subscribeUpdates")-->d3("che
 ```
 
 ## 实例代码
-[redux实例](https://github.com/huiruo/programming-tech-website/blob/main/project-workplace/react18-test/src/index.tsx)
+[redux实例](https://github.com/huiruo/programming-tech-website/blob/main/project-workplace/redux-test/%E4%BE%8B1-%E6%B5%8B%E8%AF%95-redux.html)
 ```js
 import React from 'react';
 import ReactDOM from 'react-dom/client';

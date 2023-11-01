@@ -1,3 +1,6 @@
+## 定义
+requestAnimationFrame是一个对浏览器标准 API 的兼容实现，你可能已经熟悉它了。它接受一个函数作为唯一的参数，并且在下一次重绘之前调用此函数。一些基于 JavaScript 的动画库高度依赖于这一 API
+
 ## 1.requestAnimationFrame H5新标准-->会在微任务执行完之后，浏览器会有个渲染机制选择时机执行
 requestAnimationFrame的用法与setTimeout很相似，只是不需要设置时间间隔而已。requestAnimationFrame使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用。
 

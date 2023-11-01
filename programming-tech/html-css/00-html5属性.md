@@ -9,8 +9,16 @@ sidebar_position: 2
 + Drag 、Drop -- 用于拖放的 。
 + Geolocation -- 用于获取地理位置。
 + localStorage、sessionStorage -- 用于本地离线存储。
-+ webSQL、IndexDB -- 前端数据库操作，由于安全性极低，目前h5已放弃。
-+ web Worker -- 独立于其他脚本，不影响页面性能运行在后台的javascript。
+```
+如果一个站点容易受到 XSS 攻击，LocalStorage 是不安全的
+```
++ webSQL、IndexDB
+```
+LocalStorage的安全性比较低，因为它存储在本地浏览器，是一个全局对象，可以被所有脚本访问和修改，而且没有任何加密机制。如果攻击者获得了对LocalStorage的访问权限，那么他们可以随意读写其中的数据。
+
+相比之下，IndexedDB的安全性较高。IndexedDB的数据是存储在沙盒中的，每个域名都有自己独立的存储空间，不同的域名无法访问彼此的数据
+```
++ service Worker -- 独立于其他脚本，不影响页面性能运行在后台的javascript。
 + webSocket -- 单个TCP连接上进行全双工通讯的协议。
 + 新的特殊内容元素 -- 如：article、footer、header、nav、section。
 + 新的表单控件 -- 如：date、time、email、url、search。

@@ -223,7 +223,6 @@ const sidebars = {
         'JavaScript/判断是否是数组-判断对象-空对象',
         'JavaScript/数据类型symbol',
         'JavaScript/原型-原型链',
-        'JavaScript/题1-prototype能否取到值吗',
         'JavaScript/this-箭头函数',
         'JavaScript/bind-call-apply',
         'JavaScript/map数据类型-哈希表',
@@ -289,33 +288,64 @@ const sidebars = {
       ]
     },
     {
-      label: 'http-browserCache',
+      label: 'http-browser-promise',
       type: 'category',
       collapsed: true,
       items: [
-        'http-browserCache/浏览器请求-渲染的流程',
-        'http-browserCache/浏览器缓存',
-        'http-browserCache/service-worker',
-        'http-browserCache/http1.1-报文',
-        'http-browserCache/reflow-repaint',
-        'http-browserCache/TCP-IP-握手',
-        'http-browserCache/https-加密方式',
-        'http-browserCache/跨域-反向代理-正向代理',
-        'http-browserCache/辅-DNS查询过程-DNS污染-IP封锁',
-        'http-browserCache/鉴权-Token和JWT-cookie-session',
-        'http-browserCache/http-和js-stream',
-        'http-browserCache/辅-vpn-vps-Proxy以及shadowsocks之间的联系和区别',
+        {
+          label: 'promise',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'http-browser-promise/promise/promise基础',
+            'http-browser-promise/promise/promise实现原理',
+            'http-browser-promise/promise/promise具体实现',
+            'http-browser-promise/promise/async-await',
+            'http-browser-promise/promise/Generator',
+            'http-browser-promise/promise/题目',
+            'http-browser-promise/promise/axios',
+          ]
+        },
+        {
+          label: '防抖节流',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'http-browser-promise/防抖节流/防抖',
+            'http-browser-promise/防抖节流/节流',
+            'http-browser-promise/防抖节流/按钮更适合防抖-踩坑',
+            'http-browser-promise/防抖节流/04-2021-03-hooks防抖',
+          ]
+        },
+        'http-browser-promise/event-loop',
+        'http-browser-promise/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
+        'http-browser-promise/浏览器对事件的处理-1冒泡-2捕获',
+        'http-browser-promise/web安全漏洞-XSS和CSRF',
+        'http-browser-promise/辅-浏览器兼容性',
+        'http-browser-promise/题目',
+        'http-browser-promise/浏览器请求-渲染的流程',
+        'http-browser-promise/浏览器缓存',
+        'http-browser-promise/service-worker',
+        'http-browser-promise/http1.1-报文',
+        'http-browser-promise/reflow-repaint',
+        'http-browser-promise/TCP-IP-握手',
+        'http-browser-promise/https-加密方式',
+        'http-browser-promise/跨域-反向代理-正向代理',
+        'http-browser-promise/辅-DNS查询过程-DNS污染-IP封锁',
+        'http-browser-promise/鉴权-Token和JWT-cookie-session',
+        'http-browser-promise/http-和js-stream',
+        'http-browser-promise/辅-vpn-vps-Proxy以及shadowsocks之间的联系和区别',
         {
           label: 'WebSocket-Socks5-shadowsocks',
           type: 'category',
           collapsed: true,
           items: [
-            'http-browserCache/WebSocket-Socks5-shadowsocks/00-1-WebSocket和http异同',
-            'http-browserCache/WebSocket-Socks5-shadowsocks/00-2-HTTP-Socket区别',
-            'http-browserCache/WebSocket-Socks5-shadowsocks/shadowsocks',
-            'http-browserCache/WebSocket-Socks5-shadowsocks/Socks5',
-            'http-browserCache/WebSocket-Socks5-shadowsocks/Socks5和http代理区别',
-            'http-browserCache/WebSocket-Socks5-shadowsocks/Socks协议-OSI参考模型-百度百科',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/00-1-WebSocket和http异同',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/00-2-HTTP-Socket区别',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/shadowsocks',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/Socks5',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/Socks5和http代理区别',
+            'http-browser-promise/WebSocket-Socks5-shadowsocks/Socks协议-OSI参考模型-百度百科',
           ]
         }
       ]
@@ -342,47 +372,6 @@ const sidebars = {
         'parsing-interpretation-compilation/step3-执行上下文-函数调用栈-this',
         'parsing-interpretation-compilation/闭包-内存生命周期',
         'parsing-interpretation-compilation/旧-变量对象',
-      ]
-    },
-    {
-      label: 'promise-eventLoop-security',
-      type: 'category',
-      collapsed: true,
-      // link: {
-      //   type: 'generated-index',
-      // },
-      items: [
-        {
-          label: 'promise',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'promise-eventLoop-security/promise/promise基础',
-            'promise-eventLoop-security/promise/promise实现原理',
-            'promise-eventLoop-security/promise/promise具体实现',
-            'promise-eventLoop-security/promise/async-await',
-            'promise-eventLoop-security/promise/Generator',
-            'promise-eventLoop-security/promise/题目',
-            'promise-eventLoop-security/promise/axios',
-          ]
-        },
-        {
-          label: '防抖节流',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'promise-eventLoop-security/防抖节流/防抖',
-            'promise-eventLoop-security/防抖节流/节流',
-            'promise-eventLoop-security/防抖节流/按钮更适合防抖-踩坑',
-            'promise-eventLoop-security/防抖节流/04-2021-03-hooks防抖',
-          ]
-        },
-        'promise-eventLoop-security/event-loop',
-        'promise-eventLoop-security/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
-        'promise-eventLoop-security/浏览器对事件的处理-1冒泡-2捕获',
-        'promise-eventLoop-security/web安全漏洞-XSS和CSRF',
-        'promise-eventLoop-security/辅-浏览器兼容性',
-        'promise-eventLoop-security/题目',
       ]
     },
     {

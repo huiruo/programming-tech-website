@@ -8,8 +8,47 @@ https://webpack.docschina.org/configuration/resolve/
 
 https://webpack.docschina.org/concepts/module-resolution
 
+
+用于配置 webpack 去哪些目录下寻找第三方模块，默认是`['node_modules']`，但是，它会先去当前目录的./node_modules 查找，没有的话再去../node_modules 最后到根目录；
+
 默认情况下，Webpack 会从当前文件所在的目录开始，逐级向上查找 node_modules 文件夹，直到找到模块或达到文件系统的根目录。但有时候，你可能希望将一些额外的目录添加到模块解析的搜索路径中，以便轻松引用模块。
 
+用于配置 webpack 去哪些目录下寻找第三方模块，默认是['node_modules']，但是，它会先去当前目录的./node_modules 查找，没有的话再去../node_modules 最后到根目录；
+
+### resoleve配置例子1
+所以当安装的第三方模块都放在项目根目录时，就没有必要安默认的一层一层的查找，直接指明存放的绝对位置
+
+优化 resolve.extensions 配置
+1. 后缀尝试列表要尽可能的小，不要把项目中不可能存在的情况写到后缀尝试列表中。
+2. 频率出现最高的文件后缀要优先放在最前面，以做到尽快的退出寻找过程。
+3. 在源码中写导入语句时，要尽可能的带上后缀，从而可以避免寻找过程。
+```js
+// config/webpack.common.js
+// ...
+
+const commonConfig = {
+  // ...
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    mainFiles: ['index', 'list'],
+    alias: {
+        'com': resolve('src/components'),
+        'mod': resolve('src/modules'),
+        'util': resolve('src/util'),
+      '@': resolve('src')
+    },
+    modules: [
+      // 指定当前目录下的 node_modules 优先查找
+      path.resolve(__dirname, 'node_modules'), 
+      'node_modules', // 将默认写法放在后面
+    ]
+  },
+  // ...
+}
+// ...
+```
+
+### resolve优化配置2
 resolve.modules 配置选项允许你指定一个包含目录路径的数组，Webpack 会按照数组中的顺序依次查找模块。例如，你可以这样配置：
 ```js
 module.exports = {

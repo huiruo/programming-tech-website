@@ -257,3 +257,31 @@ absolute元素:
 和visibility:hidden一样，设置后该元素仍会占用页面空间，因此只会导致浏览器的重绘而不会引起重排。
 事件绑定：
 元素会触发绑定的事件，例如点击会触发click函数。
+
+## `@media`
+```js
+/* 默认样式 */
+body {
+  background-color: white;
+  color: black;
+  font-size: 16px;
+}
+
+/* 在小屏幕上应用不同样式 */
+@media screen and (max-width: 768px) {
+  body {
+    background-color: lightgray;
+    color: black;
+    font-size: 14px;
+  }
+}
+
+/* 在大屏幕上应用不同样式 */
+@media screen and (min-width: 1200px) {
+  body {
+    background-color: blue;
+    color: white;
+    font-size: 20px;
+  }
+}
+```

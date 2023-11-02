@@ -36,7 +36,7 @@ const sidebars = {
           collapsed: true,
           items: [
             'React/api-生命周期',
-            'React/api-forwardRef',
+            'React/api-forwardRef-useImperativeHandle',
             'React/api-memo和shouldComponentUpdate',
             'React/api-react-router',
             'React/api-useCallback',

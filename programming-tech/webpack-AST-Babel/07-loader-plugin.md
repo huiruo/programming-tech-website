@@ -3,6 +3,40 @@ title: loader-plugin
 sidebar_position: 1
 ---
 
+## 优化loader配置
+1. webpack 在启动时会从配置的 Entry 出发，解析出文件中的导入语句，再递归解析。
+2. 对于导入语句 Webpack 会做出以下操作：  
+   1. 根据导入语句寻找对应的要导入的文件；
+   2. 在根据要导入的文件后缀，使用配置中的 Loader 去处理文件（如使用 ES6 需要使用 babel-loader 处理）
+
+针对这两点可以优化查找途径
+3. Happypack 多线程打包，通过多线程并行处理，加快编译速度。
+
+### 1-1.Loader 处理文件的转换操作是很耗时的，需要让尽可能少的文件被Loader处理-include
+通过减少loader作用范围，大大缩短构建时间。
+
+例如Babel，由于Babel 会将代码转为字符串生成 AST，然后对 AST 继续进行转变最后再生成新的代码，项目越大，转换代码越多，效率就越低。<br/>
+
+因此我们直接指定哪些文件不通过loader处理,或者指定哪些文件通过loader处理：
+```js
+const path = require('path')
+module.exports = {
+  module: {
+    rules: [
+      {
+        // js 文件才使用 babel
+        test: /\.js$/,
+        use: ['babel-loader'],
+        // 只处理src文件夹下面的文件
+        include: path.resolve('src'),
+        // 不处理node_modules下面的文件，node_modules 中使用的代码都是编译过的，所以我们也完全没有必要再去处理一遍。
+        exclude: /node_modules/
+      }
+    ]
+  }
+}
+```
+
 ## Loader 配置处理模块的规则
 文档:
 https://www.webpackjs.com/concepts/loaders
@@ -253,37 +287,6 @@ module.exports = {
     ]
   }
 };
-```
-
-## 优化loader配置
-通过减少loader作用范围，大大缩短构建时间。
-
-例如Babel，由于Babel 会将代码转为字符串生成 AST，然后对 AST 继续进行转变最后再生成新的代码，项目越大，转换代码越多，效率就越低。<br/>
-因此我们直接指定哪些文件不通过loader处理,或者指定哪些文件通过loader处理：
-```js
-const path = require('path')
-module.exports = {
-  module: {
-    rules: [
-      {
-        // js 文件才使用 babel
-        test: /\.js$/,
-        use: ['babel-loader'],
-        // 只处理src文件夹下面的文件
-        include: path.resolve('src'),
-        // 不处理node_modules下面的文件，node_modules 中使用的代码都是编译过的，所以我们也完全没有必要再去处理一遍。
-        exclude: /node_modules/
-      }
-    ]
-  }
-}
-```
-
-另外，对于babel-loader，我们还可以将 Babel 编译过的文件缓存起来，下次只需要编译更改过的代码文件即可，这样可以大幅度加快打包时间。
-```js
-module.exports = {
-  loader: 'babel-loader?cacheDirectory=true'
-}
 ```
 
 ## Loader负责文件转换，Plugin负责功能扩展

@@ -373,64 +373,48 @@ const sidebars = {
       ]
     },
     {
-      label: 'webpack',
+      label: 'webpack-AST-Babel',
       type: 'category',
       collapsed: true,
       items: [
-        {
-          label: 'dynamic-import',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'build-webpack/dynamic-import/动态加载',
-            'build-webpack/dynamic-import/构建动态组件源码',
-            'build-webpack/dynamic-import/vue-react-懒加载',
-            'build-webpack/配置实例',
-            'build-webpack/配置实例2',
-          ]
-        },
-        'build-webpack/webpack基础原理',
-        'build-webpack/浏览器正常运行流程-静态-同步',
-        'build-webpack/dynamic-import-动态-异步',
-        'build-webpack/构建包大小优化',
-        'build-webpack/构建速度优化',
-        'build-webpack/webpack4-增量构建',
-        'build-webpack/06-1-webpack5新特性',
-        'build-webpack/06-2-webpack5-Persistent-Caching',
-        'build-webpack/loader-plugin',
-        'build-webpack/resolve-devServer-等参数',
-        'build-webpack/vite',
-      ]
-    },
-    {
-      label: 'AST-Babel',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'build-AST-Babel/AST',
-        'build-AST-Babel/babel',
-        'build-AST-Babel/babel-编译构建之preset属性值modules',
-        'build-AST-Babel/babel插件-transform-runtime',
-        'build-AST-Babel/babel-standalone-babel调试工具',
-        'build-AST-Babel/断点调试要领-调试开源库',
+        'webpack-AST-Babel/AST',
+        'webpack-AST-Babel/babel',
+        'webpack-AST-Babel/babel-编译构建之preset属性值modules',
+        'webpack-AST-Babel/babel插件-transform-runtime',
+        'webpack-AST-Babel/babel-standalone-babel调试工具',
+        'webpack-AST-Babel/断点调试要领-调试开源库',
         {
           label: '代码格式化',
           type: 'category',
           collapsed: true,
           items: [
-            'build-AST-Babel/eslint-Prettier配置',
-            'build-AST-Babel/配置代码格式化',
+            'webpack-AST-Babel/eslint-Prettier配置',
+            'webpack-AST-Babel/配置代码格式化',
           ]
         },
-      ]
-    },
-    {
-      label: 'monorepo-turbopack',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'build-monorepo-turbopack/monorepo',
-        'build-monorepo-turbopack/turbopack',
+        {
+          label: 'dynamic-import',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'webpack-AST-Babel/dynamic-import/动态加载',
+            'webpack-AST-Babel/dynamic-import/构建动态组件源码',
+            'webpack-AST-Babel/dynamic-import/vue-react-懒加载',
+            'webpack-AST-Babel/配置实例',
+            'webpack-AST-Babel/配置实例2',
+          ]
+        },
+        'webpack-AST-Babel/webpack基础原理',
+        'webpack-AST-Babel/浏览器正常运行流程-静态-同步',
+        'webpack-AST-Babel/dynamic-import-动态-异步',
+        'webpack-AST-Babel/构建包大小优化',
+        'webpack-AST-Babel/构建速度优化',
+        'webpack-AST-Babel/webpack4-增量构建',
+        'webpack-AST-Babel/06-1-webpack5新特性',
+        'webpack-AST-Babel/06-2-webpack5-Persistent-Caching',
+        'webpack-AST-Babel/loader-plugin',
+        'webpack-AST-Babel/resolve-devServer-等参数',
+        'webpack-AST-Babel/vite',
       ]
     },
     {
@@ -608,6 +592,15 @@ const sidebars = {
         'regular-string/例子-校验字符的正则表达式',
         'regular-string/例子-校验数字的正则表达式',
         'regular-string/例子-特殊需求正则表达',
+      ]
+    },
+    {
+      label: 'monorepo-turbopack',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'build-monorepo-turbopack/monorepo',
+        'build-monorepo-turbopack/turbopack',
       ]
     },
   ],

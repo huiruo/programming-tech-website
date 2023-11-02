@@ -77,7 +77,7 @@ function foo(x) {
 window 系统里怎么使用 jsvu 工具快速调试 v8？
 https://blog.csdn.net/kaimo313/article/details/125094742?spm=1001.2014.3001.5501
 ## 编译原理和AST
-[编译原理和AST](../build-AST-Babel/AST)
+[编译原理和AST](../webpack-AST-Babel/AST)
 
 ## 字节码
 * 字节码是平台无关的，机器码针对不同的平台都是不一样的

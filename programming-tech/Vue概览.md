@@ -4,8 +4,6 @@ sidebar_position: -2
 ---
 
 ## vue 特点
-模板引擎和生成虚拟dom方式不同;vue和react同样采用的是虚拟dom,编译时+运行时都是找出差异修改
-
 重点：`render.call(proxyToUse,..)`调用ast生成的render生成vnode
 
 ```mermaid

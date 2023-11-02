@@ -4,7 +4,13 @@ sidebar_position: 1
 ---
 
 ## 构建AST
-### jsx语法的html结构通过babel将结构解析转换为ast语法树结构
+### jsx语法的html结构通过babel解析转换为ast语法树结构
+```mermaid
+flowchart LR
+
+A1(jsx的Fn组件)-->A2(ast tree)--转化-->A3(生成code函数)--beginWork开始执行code-->A4(fiber tree)-->A5(DOM)
+```
+
 * react 18中：使用 babel将jsx代码转换为root.render()调用,此时得到转化后的Ast树结构
 * react17中 使用 babel将jsx代码转换为React.createElement()调用,此时得到转化后的Ast树结构
 
@@ -68,6 +74,10 @@ ReactDOM.render(element, container)
 ```
 
 ## 完整测试例子
+
+### 1.测试代码
+[react代码](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/00-react%E6%BA%90%E7%A0%81%E8%BF%90%E8%A1%8C%E4%BE%8B%E5%AD%90/%E4%BE%8B1-%E4%B8%BB%E8%A6%81%E6%B5%8B%E8%AF%95%E5%AE%9E%E4%BE%8B-render-commit-18.html)
+
 例子基于react18,先看babel 的执行函数
 ```js
 function transform(code, options) {
@@ -78,8 +88,6 @@ function transform(code, options) {
 }
 ```
 
-### 测试代码
-[react代码](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/00-react%E6%BA%90%E7%A0%81%E8%BF%90%E8%A1%8C%E4%BE%8B%E5%AD%90/%E4%BE%8B1-%E4%B8%BB%E8%A6%81%E6%B5%8B%E8%AF%95%E5%AE%9E%E4%BE%8B-render-commit-18.html)
 ```html
 <script type="text/babel">
   console.log('=Babel:', Babel)
@@ -124,7 +132,7 @@ function transform(code, options) {
 </script>
 ```
 
-### render阶段-babel生成的AST.json
+### 2.render阶段-babel生成的AST.json
 [render阶段-babel生成的AST.json](https://github.com/huiruo/programming-tech-website/blob/main/programming-tech/React/03-%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5-babel%E7%94%9F%E6%88%90%E7%9A%84AST.json)
 ```json
 {
@@ -137,7 +145,7 @@ function transform(code, options) {
 }
 ```
 
-### code函数
+### 3.code函数
 每个节点都调用createElement(),并且嵌套结构都是和html节点一样
 ```js
 'use strict';

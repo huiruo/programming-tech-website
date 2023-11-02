@@ -198,7 +198,6 @@ const sidebars = {
             'JavaScript/for循环/for-of-遍历对象-数组',
             'JavaScript/for循环/for-in-实现深拷贝',
             'JavaScript/for循环/keys-getOwnPropertyNames-defineProperty',
-            'JavaScript/for循环/forEach',
             'JavaScript/for循环/正向遍历-反向',
             'JavaScript/for循环/values-循环对象',
             'JavaScript/for循环/最基础的循环',
@@ -216,7 +215,6 @@ const sidebars = {
             'JavaScript/ts/实战',
             'JavaScript/ts/使用keyof解决对象ts限定',
             'JavaScript/ts/泛型参数',
-            'JavaScript/ts/react中的ts',
           ]
         },
         'JavaScript/数据类型-类型转换',

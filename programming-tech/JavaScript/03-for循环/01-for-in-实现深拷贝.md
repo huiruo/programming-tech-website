@@ -1,10 +1,20 @@
-## for in 会遍历数组所有的可枚举属性，包括原型
-
-for 和 for/in 语句都可以迭代数组。for 语句需要配合 length 属性和数组下标来实现，执行效率没有 for/in 语句高。
-
-另外，for/in 语句会跳过空元素。
-
-对于超长数组来说，建议使用 for/in 语句进行迭代。 
+## for in
+### forIn迭代对象属性的方式
+它用于遍历对象的可枚举属性，包括对象自身的属性和原型链上的属性。
+用法：
+* variable 是一个变量，用于迭代对象的属性名。
+* object 是要遍历的对象。
+```js
+for (variable in object) {
+  // 循环体
+}
+```
+注意事项：
+1. for...in 循环会遍历对象的可枚举属性，包括对象自身的属性和继承的属性（从原型链上继承的属性）。
+>遍历自身属性：使用 hasOwnProperty 方法可以过滤出对象自身的属性，而不包括继承的属性。
+2. 不适用于数组：虽然可以使用 for...in 遍历数组，但不推荐这么做。最好使用 for...of 循环或数组的 forEach 方法来遍历数组。
+3. 遍历顺序不保证：for...in 循环不保证属性的遍历顺序。属性的顺序可能会因不同 JavaScript 引擎的实现而异。
+4. 遍历可枚举属性：for...in 只遍历对象的可枚举属性。如果属性被设置为不可枚举（通过 Object.defineProperty 或 Object.create 的属性描述符），则不会被遍历。
 
 ### for of 区别for...in 循环不仅遍历数字键名，还会遍历手动添加的其它键， 也会遍历对象的整个原型链。
 
@@ -164,19 +174,34 @@ forinTest(order)
 ## 例子3:实现深拷贝
 参考：
 01-深-浅-拷贝.md
+
+实现深拷贝是将一个对象复制到一个新对象，同时确保复制的对象与原始对象完全独立，即使原始对象包含嵌套的对象也是如此。以下是一种实现深拷贝的方法：
+这个 deepCopy 函数可以复制对象，包括嵌套的对象和数组。它递归地遍历对象的属性，以确保深层嵌套的对象也被复制。
+
+>需要注意的是，这个方法仅适用于 JSON-serializable 对象，即不包括函数、循环引用等特殊情况。在复杂情况下，需要更复杂的深拷贝实现。
+
+>使用 JSON.parse(JSON.stringify(obj)) 也是一种实现深拷贝的简便方法，但它也有一些限制，例如不能复制特殊对象（例如正则表达式）和循环引用。
 ```js
 function deepCopy(obj) {
-  let result = Array.isArray(obj) ? [] : {};
-  // for in 会走原型链
-  for (let key in obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  
+  if (Array.isArray(obj)) {
+    const newArray = [];
+    for (let i = 0; i < obj.length; i++) {
+      newArray[i] = deepCopy(obj[i]);
+    }
+    return newArray;
+  }
+
+  const newObj = {};
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      if (typeof obj[key] === 'object') {
-        result[key] = deepCopy(obj[key]);   // 递归复制
-      } else {
-        result[key] = obj[key];
-      }
+      newObj[key] = deepCopy(obj[key]);
     }
   }
-  return result;
+
+  return newObj;
 }
 ```

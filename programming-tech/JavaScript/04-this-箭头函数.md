@@ -117,8 +117,15 @@ obj.f();
 ## this 指向
 
 ### 箭头函数的 this
+继承了它们所在上下文中的 this 值，而不是拥有自己的 this。
 
-会直接将当前运行环境的 this 作为自己的 this。注意: 箭头函数没有自己的上下文，没有 arguments，箭头函数就是赋值给变量的匿名函数,所以匿名函数不会提升
+1. **箭头函数表达式**的语法比函数表达式更简洁，并且没有自己的 this，arguments，super 或 new.target。箭头函数表达式更适用于那些本来需要匿名函数的地方，并且它不能用作构造函数。
+
+   > 没有 prototype 属性，没办法连接它的实例的原型链，所以箭头函数就无法作为构造函数。
+
+2. 箭头函数不创建上下文，因此箭头函数的内部 this 与外部的 this 相同。
+   > 在 JavaScript 中，函数会创建自己的作用域。这意味着 JavaScript 函数会创建自己的上下文 this.
+   > 箭头函数内部的 this 词法做用域由上下文肯定，因此，用 call()或 apply()调用箭头函数时，没法对 this 进行绑定，即传入的第一个参数被忽略。
 
 ```js
 const fn = (val) => {
@@ -148,58 +155,6 @@ console.log("a", a);
 fn(1);
 ```
 
-### 函数作为普通函数,在全局环境下进行调用时，this 指的时 window
-
-### 在事件中，this 指向触发这个事件的对象
-
-### 作为某个对象方法调用时，this 指向该对象。
-
-### 在调用函数时使用 new,this 指向 new 出来的实例对象。
-[new做了什么?原型-原型链](../JavaScript/原型-原型链)
-
-### 如果 apply、call 或 bind 方法
-
-用于调用、创建一个函数，函数内的 this 就是作为参数传入这些方法的对象。
-
-参考：[bind-call-apply](./bind-call-apply)
-
-## 箭头函数和函数种类
-
-### 三种函数
-
-```js
-function add3(){} // 1.这种写法叫做函数声明
-
-// 2-1.单独运行一个匿名函数，不符合语法要求，需要包裹
-function (){ }  // 2.这种是匿名函数
-(function (){
-    // 由于没有执行该匿名函数，所以不会执行匿名函数体内的语句。
-    console.log("匿名函数");
-})
-// 2-2.如果需要执行匿名函数
-(function (){
-    console.log("匿名函数");
-})()
-
-var add2 = function(){} // 3.这种写法叫做函数表达式
-const add = (a, b) => a + b // 箭头（同样也是表达式）
-```
-
-### 箭头函数
-
-- **箭头函数表达式**的语法比函数表达式更简洁，并且没有自己的 this，arguments，super 或 new.target。箭头函数表达式更适用于那些本来需要匿名函数的地方，并且它不能用作构造函数。
-
-```
-没有 prototype 属性，没办法连接它的实例的原型链，所以箭头函数就无法作为构造函数。
-```
-
-- 箭头函数的特征之一是它们不创建上下文，因此箭头函数的内部 this 与外部的 this 相同。
-
-```
-在JavaScript中，函数会创建自己的作用域。这意味着JavaScript函数会创建自己的上下文this，如果我们需要一个函数但是这个函数却没有自己的上下this，那么就可能会遇到问题。
-
-箭头函数内部的this词法做用域由上下文肯定，因此，用call()或apply()调用箭头函数时，没法对this进行绑定，即传入的第一个参数被忽略。
-```
 
 ```js
 /*
@@ -251,6 +206,64 @@ function add3(a, b) {
   return a + b;
 }
 ```
+
+### 函数作为普通函数,在全局环境下进行调用时，this 指的时 window
+
+### 在事件中，this 指向触发这个事件的对象
+
+### 作为某个对象方法调用时，this 指向该对象。
+
+### 在调用函数时使用 new,this 指向 new 出来的实例对象。
+
+[new 做了什么?原型-原型链](../JavaScript/原型-原型链)
+
+### 如果 apply、call 或 bind 方法
+
+用于调用、创建一个函数，函数内的 this 就是作为参数传入这些方法的对象。
+
+参考：[bind-call-apply](./bind-call-apply)
+
+## 箭头函数和函数种类
+
+### 三种函数
+
+```js
+function add3(){} // 1.这种写法叫做函数声明
+
+// 2-1.单独运行一个匿名函数，不符合语法要求，需要包裹
+function (){ }  // 2.这种是匿名函数
+(function (){
+    // 由于没有执行该匿名函数，所以不会执行匿名函数体内的语句。
+    console.log("匿名函数");
+})
+// 2-2.如果需要执行匿名函数
+(function (){
+    console.log("匿名函数");
+})()
+
+var add2 = function(){} // 3.这种写法叫做函数表达式
+const add = (a, b) => a + b // 箭头（同样也是表达式）
+```
+
+## 匿名函数的 this
+
+匿名函数（或普通函数）的 this 值取决于它是如何被调用的。在匿名函数内，this 通常会指向调用它的对象。
+
+```js
+const obj = {
+  name: "John",
+  greet: function () {
+    console.log("Hello, " + this.name);
+  },
+};
+
+obj.greet(); // 输出 "Hello, John"
+
+const greetFunction = obj.greet;
+greetFunction(); // 输出 "Hello, undefined"
+```
+
+在第一个例子中，this 指向了 obj，因此输出是正确的。但在第二个例子中，greetFunction 被解绑了，this 指向全局对象（在浏览器中通常是 window），因此输出是 undefined。
 
 ## this 题目
 

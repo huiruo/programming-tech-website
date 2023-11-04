@@ -1,5 +1,5 @@
 ---
-title: others
+title: http
 sidebar_position: 1
 ---
 
@@ -20,9 +20,6 @@ sidebar_position: 1
 1. 使用代理页面：可以创建一个中间代理页面，该页面和目标域名同源，然后在代理页面中通过脚本访问 localStorage 数据，然后将这些数据传递给原始页面。这可以通过浏览器中的iframe或window.postMessage等方式来实现。
 
 2. CORS（跨域资源共享）：如果目标域名支持CORS，你可以在发送请求时包含跨域请求头（如Access-Control-Allow-Origin），从而允许其他域名的页面访问 localStorage 数据。目标域名的服务器需要进行相应的CORS配置。
-
-### webpack的构建流程
-
 
 ### http缓存有哪些
 HTTP 缓存是一种通过在客户端和服务器之间存储响应的技术，以减少请求响应的加载时间和减轻服务器负担的方式。HTTP 缓存通常依赖于 HTTP 标头来定义缓存策略。以下是一些常见的 HTTP 缓存机制和相关的 HTTP 标头：
@@ -141,91 +138,6 @@ HTTP（Hypertext Transfer Protocol）和HTTPS（Hypertext Transfer Protocol Secu
 3. **默认端口为443**：HTTPS 默认使用端口443进行通信。
 
 4. **速度相对较慢**：由于加密和安全性验证的开销，HTTPS 的传输速度相对较慢。然而，现代的HTTPS协议已经优化，使速度降低的影响最小化。
-
-### 图片懒加载和预加载
-图片懒加载基本原理：
-
-* 将页面上的图片的 src 属性设置为一个占位图或者一个空字符串，而将实际的图片路径存储在自定义属性（如 data-src）中。
-* 使用 JavaScript 监听页面滚动事件，检测图片是否进入可视区域。
-* 当图片进入可视区域时，通过 JavaScript 将 data-src 中的路径设置为 src，从而触发图片加载。
-```html
-<img data-src="image-to-lazy-load.jpg" src="placeholder.jpg" class="lazy-load-img">
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  let lazyLoadImages = document.querySelectorAll('.lazy-load-img');
-  
-  function lazyLoad() {
-    lazyLoadImages.forEach(function (img) {
-      if (isInViewport(img)) {
-        img.src = img.getAttribute('data-src');
-        img.classList.remove('lazy-load-img');
-      }
-    });
-  }
-
-  function isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    return rect.top >= 0 && rect.left >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight);
-  }
-
-  window.addEventListener('scroll', lazyLoad);
-  window.addEventListener('resize', lazyLoad);
-  window.addEventListener('orientationchange', lazyLoad);
-
-  // 初始加载
-  lazyLoad();
-});
-</script>
-```
-
-图片预加载:
-图片预加载是在页面加载时预先加载所有或部分图片，以确保在用户请求时可以立即显示这些图片，提高用户体验。
-基本原理：
-1. 创建一个 JavaScript 函数，该函数接受图片路径数组作为参数。
-2. 在函数内部，使用 new Image() 创建新的图片对象，设置图片的 src 属性为要预加载的图片路径。
-3. 监听图片的 load 事件，以确保图片加载完成。
-4. 将加载完成的图片对象存储在一个数组中。
-5. 当需要显示图片时，可以直接使用预加载的图片对象。
-```js
-function preloadImages(imagePaths, callback) {
-  let loadedImages = [];
-  let totalImages = imagePaths.length;
-
-  function imageLoaded() {
-    loadedImages.push(this);
-    if (loadedImages.length === totalImages) {
-      callback(loadedImages);
-    }
-  }
-
-  for (let i = 0; i < totalImages; i++) {
-    const image = new Image();
-    image.src = imagePaths[i];
-    image.onload = imageLoaded;
-  }
-}
-
-// 用法
-const imagePathsToPreload = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
-
-preloadImages(imagePathsToPreload, function (loadedImages) {
-  // 所有图片都已预加载完成，可以在此处使用 loadedImages
-});
-```
-
-区别：
-图片懒加载和图片预加载是两种不同的前端优化技巧，它们的主要区别在于它们的目的和实现方式：
-
-**图片懒加载 (Lazy Loading)**:
-1. **目的**：图片懒加载的目的是推迟加载页面上的图片，只有当用户滚动到可见区域时才加载图片，以减少初始页面加载时间。
-2. **实现方式**：图片懒加载通过将图片的 `src` 属性设置为一个占位图或空字符串，而将实际的图片路径存储在自定义属性（如 `data-src`）中。然后，使用 JavaScript 监听滚动事件，当图片进入可视区域时，将 `data-src` 中的路径设置为 `src`，从而触发图片加载。
-
-**图片预加载 (Image Preloading)**:
-1. **目的**：图片预加载的目的是在页面加载时预先加载所有或部分图片，以确保在用户请求时可以立即显示这些图片，提高用户体验。
-2. **实现方式**：图片预加载通过 JavaScript 创建新的图片对象，设置图片的 `src` 属性为要预加载的图片路径，并监听图片的 `load` 事件以确保图片加载完成。加载完成的图片对象存储在一个数组中。当需要显示图片时，可以直接使用预加载的图片对象。
-
-总的来说，图片懒加载侧重于减少初始页面加载时间，特别适用于页面上包含大量图片的情况，以提高加载速度。图片预加载侧重于提前加载图片，以确保用户在请求图片时可以立即看到它们，提高用户体验。你可以根据项目需求和性能优化目标来选择使用其中一种或两种技巧。在某些情况下，两者也可以结合使用，以充分发挥它们的优势。
 
 ### 内存泄露是什么，怎么导致的
 前端页面内存泄漏指的是在 web 应用程序中，浏览器分配的内存无法被正确释放和回收，导致页面占用的内存持续增加，最终可能导致页面性能下降、响应变慢，甚至浏览器崩溃。前端页面内存泄漏通常是由以下原因导致的：

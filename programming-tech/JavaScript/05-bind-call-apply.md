@@ -5,6 +5,24 @@ sidebar_position: 9
 
 ## bind()
 bind方法和call很相似，第一参数也是this的指向，后面传入的也是一个参数列表(但是这个参数列表可以分多次传入，call则必须一次性传入所有参数)，但是它改变this指向后不会立即执行，而是返回一个永久改变this指向的函数。
+```js
+Function.prototype.myBind = function (context) {
+    // 判断调用对象是否为函数
+    if (typeof this !== "function") {
+        throw new TypeError("Error");
+    }
+
+    // 获取参数
+    const args = [...arguments].slice(1),
+          fn = this;
+
+    return function Fn() {
+
+        // 根据调用方式，传入不同绑定值
+        return fn.apply(this instanceof Fn ? new fn(...arguments) : context, args.concat(...arguments)); 
+    }
+}
+```
 
 
 ### bind() 第一个参数为null

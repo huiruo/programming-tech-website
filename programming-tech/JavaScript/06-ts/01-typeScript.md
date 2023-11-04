@@ -1,3 +1,27 @@
+## 为没有ts的npm库指定ts类型
+1. 在你的 TypeScript 项目中，创建一个自定义类型定义文件，通常命名为 typings.d.ts 或 custom.d.ts
+
+2. 在自定义类型定义文件中，使用 declare module 语法来为 lodash 添加类型定义。你可以使用泛型的方式，以便 TypeScript 能够正确推断 lodash 方法的参数和返回类型。以下是一个简单的示例
+```js
+declare module 'lodash' {
+  interface Lodash {
+    // 这里添加你想要支持的 lodash 方法的类型定义
+    // 例如，这是 map 方法的类型定义示例
+    map<T, TResult>(collection: List<T> | null | undefined, iteratee: ListIterator<T, TResult>): TResult[];
+  }
+}
+```
+
+3. 确保你已经安装了 lodash 包，在你的 TypeScript 项目中导入和使用 lodash，TypeScript 将能够正确识别和检查 lodash 的类型：
+```js
+import * as _ from 'lodash';
+
+const numbers = [1, 2, 3, 4, 5];
+const doubled = _.map(numbers, (num) => num * 2);
+
+console.log(doubled); // 输出 [2, 4, 6, 8, 10]
+```
+
 ## TypeScript静态类型有什么好处
 它的主要功能之一是为JavaScript变量提供类型支持。
 

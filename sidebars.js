@@ -36,6 +36,7 @@ const sidebars = {
           collapsed: true,
           items: [
             'React/api-生命周期',
+            'React/api-自定义hooks',
             'React/api-forwardRef-useImperativeHandle',
             'React/api-memo和shouldComponentUpdate',
             'React/api-react-router',
@@ -45,7 +46,6 @@ const sidebars = {
             'React/api-useReducer',
             'React/api-useRef',
             'React/基础-高阶组件',
-            'React/基础-自定义hooks',
           ],
         },
         {
@@ -439,6 +439,7 @@ const sidebars = {
         'web-optimization/Vue',
         'web-optimization/CDN-内容分发网络',
         'web-optimization/国际化',
+        'web-optimization/Catalog',
       ]
     },
     {

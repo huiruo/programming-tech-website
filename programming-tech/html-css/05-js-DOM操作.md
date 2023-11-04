@@ -25,6 +25,7 @@ openCallBck() {
 公式：
 ```
 元素距离顶部高度（elOffsetTop） >= dom 滚动高度（docScrollTop）
+
 并且元素距离顶部高度（elOffsetTop） < （dom 滚动高度 + 视窗高度）
 ```
 

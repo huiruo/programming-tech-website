@@ -234,7 +234,7 @@ const sidebars = {
         'JavaScript/深-浅-拷贝',
         'JavaScript/window.history',
         'JavaScript/js错误处理',
-        'JavaScript/js-get参数处理URLSearchParams',
+        'JavaScript/URLSearchParams-URLSearchParams',
         'JavaScript/api-eval',
       ]
     },

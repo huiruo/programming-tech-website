@@ -1,3 +1,62 @@
+
+## redux 中 createStore 代码的简化版:
+通过闭包创建 state，同时对外暴露更新 state 数据( dispatch 方法)和获取 state 数据( getState 方法 ) 的实现。
+```js
+function createStore (reducer, preloadedState, enhancer) {
+  let currentReducer = reducer                // 存放 reducer
+  let currentState = preloadedState           // 闭包，存放 state
+  let currentListeners = []
+  let nextListeners = currentListeners        // 存放所有的 listener
+  let isDispatching = false
+
+  function getState () {
+    return currentState                       // 返回闭包中 state 的结果
+  }
+
+  function subscribe (listener) {
+    nextListeners.push(listener)              // 新增 listener
+
+    return function unsubscribe () {
+      const index = nextListeners.indexOf(listener)
+      nextListeners.splice(index, 1)          // 移除 listener
+    }
+  }
+
+  function dispatch (action) {
+    if (isDispatching) {
+      // 防止在 reducer 中再次执行 dispatch
+      throw new Error('Reducers may not dispatch actions.')
+    }
+    try {
+      // 执行 dispatch 时，dispatch 为 true
+      // 相当于锁住了该状态，比如，防止在 reducer 中再次执行 dispatch
+      isDispatching = true
+      // 将闭包的 state, 和 action 进行计算，从而更新 state
+      currentState = currentReducer(currentState, action)
+    } finally {
+      isDispatching = false
+    }
+
+    // 在 dispatch 之后，通知所有的 listener
+    const listeners = (currentListeners = nextListeners)
+    for (let i = 0; i < listeners.length; i++) {
+      const listener = listeners[i]
+      listener()
+    }
+
+    return action
+  }
+
+  dispatch({ type: `@@redux/INIT+随机数` })
+
+  return {
+    dispatch,
+    subscribe,
+    getState
+  }
+}
+```
+
 ## redux 和 context
 App根节点组件提供的`Context`对象可以看成是App级的全局作用域，所以，我们利用App根节点组件提供的`Context`对象创建一些App级的全局数据。现成的例子可以参考react-redux，以下是`<Provider />`组件源码的核心实现：
 

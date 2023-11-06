@@ -4,22 +4,109 @@ sidebar_position: -2
 ---
 
 ## vue 特点
-重点：`render.call(proxyToUse,..)`调用ast生成的render生成vnode
 
+### 宏观流程
+1. compiler: template-->AST抽象语法树-->code render函数
+
+2. reactivity: 响应式,effect 副作用函数
+	* 1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
+	* 2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
+	* 3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
+
+3. runtime: 运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
+
+重点：`render.call(proxyToUse,..)`调用ast生成的render生成vnode
 ```mermaid
 flowchart TD
 
-template-->A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(generate根据变换后的ast生成code并返回)-->执行code-->VNode-->A5("创建好vnode调用patch(prevTree,nextTree)进行渲染")
+template-->A1(baseCompile)-->A2(baseParse生成ast)-->A3(transform对ast进行转换)-->A4(generate根据变换后的ast生成code并返回)-->A41("render.call(proxyToUse,..)调用ast生成的render生成vnode")-->VNode-->A5("创建好vnode调用patch(prevTree,nextTree)进行渲染")
 ```
 
 拿到生成的 AST 遍历 AST 的节点进行 transform 转换操作,由于是对AST的变换，所以不会有返回值，所以在baseCompile的transform函数，只会传入ast抽象语法树和相应的变换选项,作用:
 * 比如解析 v-if、v-for 等各种指令。
 * 对源码进行优化: hoistStatic(静态提升)
->vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新;transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
+>vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新;transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。
+
+### transform中的hoistStatic发生静态提升
+hoistStatic其会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。
+
+hoistStatic只调用了一个walk函数，这个函数是对其子节点的遍历检查，而非本节点。
+```js
+function hoistStatic(root, context) {
+walk(root, context,
+  // Root node is unfortunately non-hoistable due to potential parent
+  // fallthrough attributes.
+  isSingleElementRoot(root, root.children[0]));
+}
+```
+
+walk函数很长，在阅读walk之前，我们需要先铺垫一些规则。
+```js
+/**
+ * 静态类型有几种级别。
+ * 高级别兼容低级别.例如 如果一个几点可以被序列化成字符串，
+ * 那也一定可以被静态提升和跳过补丁。
+ */
+export const enum ConstantTypes {
+NOT_CONSTANT = 0,
+CAN_SKIP_PATCH,
+CAN_HOIST,
+CAN_STRINGIFY
+}
+
+function walk(node, context, doNotHoistNode = false) {
+const { children } = node;
+// 用于记录该子元素的数量
+const originalCount = children.length;
+// 被静态提升的子元素数量
+let hoistedCount = 0;
+// 遍历整个直接子元素
+for (let i = 0; i < children.length; i++) {
+
+// ...
+... 
+// ...
+
+// 对静态节点进行变换，变换为字符串
+if (hoistedCount && context.transformHoist) {
+  context.transformHoist(children, context, node);
+}
+// all children were hoisted - the entire children array is hoistable.
+// 如果静态提升的子元素个数等于原本子元素个数，则直接提升整个children数组
+if (hoistedCount &&
+  hoistedCount === originalCount &&
+  node.type === 1 /* NodeTypes.ELEMENT */ &&
+  node.tagType === 0 /* ElementTypes.ELEMENT */ &&
+  node.codegenNode &&
+  node.codegenNode.type === 13 /* NodeTypes.VNODE_CALL */ &&
+  isArray(node.codegenNode.children)) {
+  node.codegenNode.children = context.hoist(createArrayExpression(node.codegenNode.children));
+}
+}
+```
+只有纯元素与纯文本可以被静态提升
+
+因为只有静态的内容才可以被静态提升，所以只有原生DOM元素和纯文本可以被静态提升。
+
+至于getConstantType，主要是通过节点类型来判断是否可被提升，除了元素、文本、表达式以外其他都不是静态类型，而这三种还要似具体情况辨别其静态的类型。比如元素类型，需要检查其属性，子节点以及bind指令表达式是否静态，元素类型需要将其静态类型降到最低的属性、子节点、表达式的静态类型。
+
+### 扩展:hoistStatic(静态提升)为什么能提升性能？
+在 Vue 3 中，"静态提升"（Hoist Static）是一项优化技术，用于提高渲染性能。这个技术的核心思想是将模板中的静态部分提前处理，以减少渲染函数的执行时间和生成的 JavaScript 代码的大小。这带来了以下几个性能优势：
+
+1. **减少渲染函数的执行时间**：通过将静态部分提前处理，Vue 可以减少在每次重新渲染组件时需要执行的代码量。这减少了渲染函数的执行时间，提高了性能。
+
+2. **减小生成的 JavaScript 代码的体积**：将静态部分提升到作用域外，使得这些静态内容不需要在每次渲染时重新生成，从而减小了生成的 JavaScript 代码的大小。这有助于加快首次加载时间和减少网络传输的开销。
+
+3. **更好的缓存和复用**：Vue 可以更好地缓存和复用静态内容，这意味着在相同的组件多次渲染时，静态内容只需生成一次，然后可以重复使用，进一步提高性能。
+
+4. **提高可维护性**：静态提升还可以使渲染函数更易于理解和维护，因为它将模板分为静态部分和动态部分，使代码更具结构。
+
+总之，静态提升是 Vue 3 中的一项重要性能优化技术，通过将静态部分从渲染函数中提取出来，减少了不必要的计算和生成代码的开销，提高了渲染性能和可维护性。这是 Vue 3 引入的一项重要变革，使其在大型应用中更具竞争力。
 
 
 >参考：[runtime-VNode构建之后-开始渲染](./Vue/runtime-VNode构建之后-开始渲染)
 
+### 继续特点
 1. Vue的template、script、style是分离的，可读性比较好,比较容易上手
 
 2. 提供了便捷的模板命令
@@ -34,28 +121,13 @@ react中用js，运算符去实现 v-if, array.map() 去实现 v-for
 
 4. Vue 通过响应式依赖跟踪，在默认的情况下可以做到只进行组件树级别的更新计算，而默认下 React 是做不到
 
-5. 在初始化模板编译阶段，Vue3 会将模板转换成渲染函数，并对模板进行静态分析，生成一些静态标记。
->在执行patch的时候，当静态标记的比较的时候：
-Vue3 会先比较新旧节点的静态标记是否相同，如果不同，则直接跳过比较子节点的步骤，提高性。参考 [patch-diff](./Vue/patch-diff)
-
-6. 改变组件状态：创建回来的对象必须保持它的引用，不能重新赋值否则会失去响应式
+5. 改变组件状态：创建回来的对象必须保持它的引用，不能重新赋值否则会失去响应式
 ```js
 vue: this.data = x;
 react: setState(x);
 ```
 
-7.  当父组件重新渲染时，其子组件依赖项没变化的话，子组件不会重新渲染。
-
-## 宏观流程
-1. compiler: template-->AST抽象语法树-->code render函数
-
-2. reactivity: 响应式,effect 副作用函数（Vue3中已经没有了watcher概念,由effect取而代之）
-
->1. Vue3 用 ES6的Proxy 重构了响应式，new Proxy(target, handler)
-2. Proxy 的 get handle 里 执行track() 用来收集依赖(收集 activeEffect，也就是 effect )
-3. Proxy 的 set handle 里执行 trigger() 用来触发响应(执行收集的 effect)
-
-3. runtime: 运行时相关功能，虚拟DOM(即：VNode)、diff算法、真实DOM操作等
+6.  当父组件重新渲染时，其子组件依赖项没变化的话，子组件不会重新渲染。
 
 ## 首次渲染流程
 renderComponentRoot 执行构建ast生成的render() 生成vnode

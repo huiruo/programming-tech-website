@@ -16,6 +16,13 @@ flowchart LR
 A1(jsx的Fn组件)-->A2(ast tree)--转化-->A3(生成code函数)--beginWork开始执行code-->A4(fiber tree)-->A5(DOM)
 ```
 
+completeWork阶段处在beginWork之后，commit之前，起到的是一个承上启下的作用。它接收到的是经过diff后的fiber节点,将DOM节点和effectList都准备好。
+作用：
+1. 为新增的 fiber 节点生成对应的DOM节点。
+2. 更新DOM节点的属性。
+3. 进行事件绑定。
+4. 收集effectTag。
+
 ### 其他
 
 1. 配合 ts 比较友好,函数式编程是用函数的组合来进行编程,组件化开发
@@ -99,7 +106,7 @@ flowchart TD
 参考 重点 beginWork 流程：[render阶段-mountIndeterminateComponent构建fiber树](./React/render阶段-mountIndeterminateComponent构建fiber树)
 
 ### 1-2. completeWork阶段:生成实例
-completeWork阶段处在beginWork之后，commit之前，起到的是一个承上启下的作用。它接收到的是经过diff后的fiber节点，然后他自己要将DOM节点和effectList都准备好。因为commit阶段是不能被打断的，所以充分准备有利于commit阶段做更少的工作。
+completeWork阶段处在beginWork之后，commit之前，起到的是一个承上启下的作用。它接收到的是经过diff后的fiber节点，然后要将DOM节点和effectList都准备好。
 
 作用：
 1. 为新增的 fiber 节点生成对应的DOM节点。

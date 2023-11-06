@@ -33,7 +33,7 @@ code抽象语法树AST,对源代码的结构抽象。因此我们对该树进行
 ```
 vue3新特性：transform中的hoistStatic发生静态提升
 
-hoistStatic其会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
+hoistStatic其会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。
 ```
 
 1. 将compileToFunction()注册到 runtime,然后调用compileToFunction()
@@ -820,7 +820,7 @@ vue3新特性：
 
 vue3 在模板的compile-time做了的优化:比如提升不变的vNode(静态提升)，以及blockTree配合patchFlag靶向更新
 
-transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
+transform中的hoistStatic发生静态提升,hoistStatic会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。
 
 由于是对AST的变换，所以不会有返回值，所以在baseCompile的transform函数，只会传入ast抽象语法树和相应的变换选项。
 
@@ -954,70 +954,6 @@ if (node.type === 1 /* NodeTypes.ELEMENT */ && findDir(node, 'once', true)) {
 }
 };
 ```
-
-### vue3新特性：transform中的hoistStatic发生静态提升
-hoistStatic其会递归ast并发现一些不会变的节点与属性，给他们打上可以静态提升的标记。在生成代码字符串阶段，将其序列化成字符串、以减少编译和渲染成本。
-
-hoistStatic只调用了一个walk函数，这个函数是对其子节点的遍历检查，而非本节点。
-```js
-function hoistStatic(root, context) {
-walk(root, context,
-  // Root node is unfortunately non-hoistable due to potential parent
-  // fallthrough attributes.
-  isSingleElementRoot(root, root.children[0]));
-}
-```
-
-walk函数很长，在阅读walk之前，我们需要先铺垫一些规则。
-```js
-/**
- * 静态类型有几种级别。
- * 高级别兼容低级别.例如 如果一个几点可以被序列化成字符串，
- * 那也一定可以被静态提升和跳过补丁。
- */
-export const enum ConstantTypes {
-NOT_CONSTANT = 0,
-CAN_SKIP_PATCH,
-CAN_HOIST,
-CAN_STRINGIFY
-}
-
-function walk(node, context, doNotHoistNode = false) {
-const { children } = node;
-// 用于记录该子元素的数量
-const originalCount = children.length;
-// 被静态提升的子元素数量
-let hoistedCount = 0;
-// 遍历整个直接子元素
-for (let i = 0; i < children.length; i++) {
-
-// ...
-... 
-// ...
-
-// 对静态节点进行变换，变换为字符串
-if (hoistedCount && context.transformHoist) {
-  context.transformHoist(children, context, node);
-}
-// all children were hoisted - the entire children array is hoistable.
-// 如果静态提升的子元素个数等于原本子元素个数，则直接提升整个children数组
-if (hoistedCount &&
-  hoistedCount === originalCount &&
-  node.type === 1 /* NodeTypes.ELEMENT */ &&
-  node.tagType === 0 /* ElementTypes.ELEMENT */ &&
-  node.codegenNode &&
-  node.codegenNode.type === 13 /* NodeTypes.VNODE_CALL */ &&
-  isArray(node.codegenNode.children)) {
-  node.codegenNode.children = context.hoist(createArrayExpression(node.codegenNode.children));
-}
-}
-```
-只有纯元素与纯文本可以被静态提升
-
-因为只有静态的内容才可以被静态提升，所以只有原生DOM元素和纯文本可以被静态提升。
-
-至于getConstantType，主要是通过节点类型来判断是否可被提升，除了元素、文本、表达式以外其他都不是静态类型，而这三种还要似具体情况辨别其静态的类型。比如元素类型，需要检查其属性，子节点以及bind指令表达式是否静态，元素类型需要将其静态类型降到最低的属性、子节点、表达式的静态类型。
-
 
 ## 编译终点-生成代码字符串
 根据变换后的转换AST生成render()函数

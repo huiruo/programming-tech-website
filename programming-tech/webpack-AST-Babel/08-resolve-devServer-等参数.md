@@ -8,6 +8,30 @@ https://webpack.docschina.org/configuration/resolve/
 
 https://webpack.docschina.org/concepts/module-resolution
 
+### 优化实例
+1. 优化 resolve.modules 配置，减少模块搜索层级
+2. 优化 resolve.mainFields 配置
+3. 优化 resolve.extensions 配置
+4. 使用 alias
+```js
+module.exports = {
+    resolve: {
+        alias: {
+            // 让 import react 的时候，直接查找到该目录
+            react: path.resolve(__dirname, './node_modules/react/dist/react.min.js')
+            ...
+        },
+        // 只在当前的 node_modules 查找，不继续往父级查找
+        modules: [path.resolve(__dirname, 'node_modules')],
+        // 设置只查找什么后缀的文件
+        extensions: ['.js'],
+        // 默认 webpack 会查找 package.json 中的 main 字段
+        // 之后会查找 index.js 文件等
+        // 设置 mainFields 之后，只找 package.json 中的main 字段
+        mainFields: ["main"]
+    }
+}
+```
 
 用于配置 webpack 去哪些目录下寻找第三方模块，默认是`['node_modules']`，但是，它会先去当前目录的./node_modules 查找，没有的话再去../node_modules 最后到根目录；
 

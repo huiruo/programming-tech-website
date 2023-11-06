@@ -225,40 +225,6 @@ var age = urlParams.get('age'); // "25"
 
 8. **安全性**：考虑文件上传的安全性，确保只有授权用户可以上传文件，并验证文件类型和内容。
 
-
-### ajax原理是什么
-Async Javascript and XML,通过XmlHttpRequest对象来向服务器发异步请求，从服务器获得数据，然后用JavaScript来操作DOM而更新页面
-
-实现 Ajax异步交互需要服务器逻辑进行配合，需要完成以下步骤：
-
-1. 创建 Ajax的核心对象 XMLHttpRequest对象
-
-2. 通过 XMLHttpRequest 对象的 open() 方法与服务端建立连接
-
-3. 构建请求所需的数据内容，并通过XMLHttpRequest 对象的 send() 方法发送给服务器端
-
-4. 通过 XMLHttpRequest 对象提供的 onreadystatechange 事件监听服务器端你的通信状态
-
-5. 接受并处理服务端向客户端响应的数据结果
-
-6. 将处理结果更新到 HTML页面中
-```js
-const request = new XMLHttpRequest()
-request.onreadystatechange = function(e){
-    if(request.readyState === 4){ // 整个请求过程完毕
-        if(request.status >= 200 && request.status <= 300){
-            console.log(request.responseText) // 服务端返回的结果
-        }else if(request.status >=400){
-            console.log("错误信息：" + request.status)
-        }
-    }
-}
-
-request.open('POST','http://xxxx')
-request.send()
-```
-
-
 ## 优化
 ### 图片懒加载和预加载
 图片懒加载基本原理：

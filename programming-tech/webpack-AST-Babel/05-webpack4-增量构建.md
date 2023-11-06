@@ -2,6 +2,24 @@
 title: webpack4-增量构建
 sidebar_position: 1
 ---
+## webpack 4特性
+Webpack 4 是一个在我所知截止日期（2022年1月）之前发布的版本，它引入了一些重要的特性和改进，以提高性能、构建速度和开发体验。以下是一些 Webpack 4 的主要特性：
+
+1. **模式（Mode）**：
+   Webpack 4 引入了构建模式的概念，包括 `development` 和 `production` 模式。不同的模式会自动配置一组默认选项，以便在开发和生产环境中获得最佳性能。开发模式下，Webpack 会启用有用的工具，如更详细的错误消息和源映射。生产模式下，Webpack 会进行代码压缩和其他优化。
+
+2. **Tree Shaking**：
+   Webpack 4 引入了多种优化，包括模块树的Tree Shaking以减小 bundle 大小，以及对异步块的自动代码拆分以减少初始加载时间。
+
+3. **配置文件简化**：
+   Webpack 4 简化了配置文件的编写，不再需要 `CommonsChunkPlugin` 和 `ModuleConcatenationPlugin` 等插件，许多功能都被整合到配置中，使得配置更简洁。
+>Webpack 4对块图进行了巨大改进，并使用了新的块拆分技术。在新的改进过程中，诞生了新的插件---SplitChunksPlugin。这个插件能够自动识别哪些模块需要拆分为启发式的(heuristics)，哪些需要拆分为块。
+
+4. **webpack-cli**：
+    Webpack 4 引入了 `webpack-cli` 命令行工具，以提供更多的 CLI 功能，使得在终端中更容易运行 Webpack。
+
+5. **模块热替换（Hot Module Replacement）**：
+   Webpack 4 改进了模块热替换的支持，使得在开发模式下更容易进行热替换以提高开发效率。
 
 ## 为什么我只改了一行代码，却需要花 5 分钟才能构建完成？
 

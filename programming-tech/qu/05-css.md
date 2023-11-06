@@ -1,52 +1,3 @@
-
-### 如何判断一个元素是否在可视区域中
-实现一些常用的功能，例如：
-
-图片的懒加载
-列表的无限滚动
-计算广告元素的曝光情况
-可点击链接的预加载
-
-一个元素是否在可视区域，我们常用的有三种办法：
-1. offsetTop、scrollTop
-
-* offsetTop 属性是用于获取一个元素相对于其最近的有定位属性（position: relative, position: absolute, position: fixed 或 position: sticky）的父元素的上边缘的距离，通常是以像素为单位的整数值。
-
-* scrollTop 属性用于获取或设置元素的垂直滚动条位置，即滚动条在垂直方向上滚动的距离。
-clientWidth、clientHeight,这里可以看到client元素都不包括外边距：
-* clientWidth：元素内容区宽度加上左右内边距宽度，即clientWidth = content + padding
-* clientHeight：元素内容区高度加上上下内边距高度，即clientHeight = content + padding
-
-关于scroll系列的属性如下：
-```
-scrollWidth 和 scrollHeight 主要用于确定元素内容的实际大小
-
-scrollLeft 和 scrollTop 属性既可以确定元素当前滚动的状态，也可以设置元素的滚动位置
-
-垂直滚动 scrollTop > 0
-水平滚动 scrollLeft > 0
-
-将元素的 scrollLeft 和 scrollTop 设置为 0，可以重置元素的滚动位置
-```
-
-```js
-//el.offsetTop - document.documentElement.scrollTop <= viewPortHeight
- 
-function isInViewPortOfOne (el) {
-    // viewPortHeight 兼容所有浏览器写法
-    const viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight 
-    const offsetTop = el.offsetTop
-    const scrollTop = document.documentElement.scrollTop
-    const top = offsetTop - scrollTop
-    return top <= viewPortHeight
-}
-```
-
-2. getBoundingClientRect
-
-3. Intersection Observer
-
-
 ### 选择器
 css属性选择器常用的有：
 
@@ -543,7 +494,7 @@ grid(不定高，不定宽)，兼容性相对比较差
 ```
 
 
-### 上拉加载的本质是页面触底
+## 上拉加载的本质是页面触底
 ```
 scrollTop + clientHeight >= scrollHeight
 ```
@@ -566,7 +517,7 @@ if ((scrollTop + clientHeight) >= (scrollHeight - distance)) {
 
 3. scrollHeight：页面不能滚动时也是存在的,此时scrollHeight等于clientHeight。scrollHeight表示body所有元素的总长度(包括body元素自身的padding)
 
-### 下拉刷新
+## 下拉刷新
 下拉刷新的本质是页面本身置于顶部时，用户下拉时需要触发的动作
 关于下拉刷新的原生实现，主要分成三步：
 
@@ -631,3 +582,85 @@ _element.addEventListener('touchend', function(e) {
 
 </script>
 ```
+
+## 如何判断一个元素是否在可视区域中
+实现一些常用的功能，例如：
+
+图片的懒加载
+列表的无限滚动
+计算广告元素的曝光情况
+可点击链接的预加载
+
+一个元素是否在可视区域，我们常用的有三种办法：
+### 1. offsetTop、scrollTop
+1. scrollTop：滚动视窗的高度距离window顶部的距离，它会随着往上滚动而不断增加，初始值是0，它是一个变化的值
+> scrollTop 属性用于获取或设置元素的垂直滚动条位置，即滚动条在垂直方向上滚动的距离。
+
+2. clientHeight:它是一个定值，表示屏幕可视区域的高度；clientWidth、clientHeight,这里可以看到client元素都不包括外边距：
+>clientWidth：元素内容区宽度加上左右内边距宽度，即clientWidth = content + padding
+
+3. scrollHeight：页面不能滚动时也是存在的,此时scrollHeight等于clientHeight。scrollHeight表示body所有元素的总长度(包括body元素自身的padding)
+>scrollWidth 和 scrollHeight 主要用于确定元素内容的实际大小
+scrollLeft 和 scrollTop 属性既可以确定元素当前滚动的状态，也可以设置元素的滚动位置
+
+### 是否滚动到底部公式:
+```
+scrollTop + clientHeight >= scrollHeight
+```
+
+```js
+const el = document.getElementById("mContentId");
+// 获取距离顶部的距离:网页被卷去的高
+const scrollTop = el.scrollTop;
+// 获取可视区的高度
+const clientHeight = el.clientHeight;
+// 获取滚动条的总高度:网页正文全文高
+const scrollHeight = el.scrollHeight;
+
+if (clientHeight + scrollTop - scrollHeight >= 0) {
+  this.showMore = false;
+  this.unRead = 0;
+  console.log("手动滚动---->1.到达底部");
+  if (this.atMessage.length > 0) {
+    // this.cleanAtMessage();
+  }
+} else {
+  console.log("手动滚动---->2.没到达底部");
+}
+```
+
+### 判断 div 是否在视窗
+```
+元素距离顶部高度（elOffsetTop） >= dom 滚动高度（docScrollTop）
+
+并且元素距离顶部高度（elOffsetTop） < （dom 滚动高度 + 视窗高度）
+```
+
+```js
+const el = document.getElementById("mContentId");
+// 获取可视区的高度
+const clientHeight = el.clientHeight;
+const elOffsetTop = document.getElementById("meId" + index).offsetTop;
+
+if (elOffsetTop < clientHeight + scrollTop) {
+  console.log("===============>显示了");
+}
+```
+
+```js
+//el.offsetTop - document.documentElement.scrollTop <= viewPortHeight
+ 
+function isInViewPortOfOne (el) {
+    // viewPortHeight 兼容所有浏览器写法
+    const viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight 
+    const offsetTop = el.offsetTop
+    const scrollTop = document.documentElement.scrollTop
+    const top = offsetTop - scrollTop
+    return top <= viewPortHeight
+}
+```
+
+2. getBoundingClientRect
+
+3. Intersection Observer
+

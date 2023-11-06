@@ -13,7 +13,8 @@ sidebar_position: 1
 3. Happypack 多线程打包，通过多线程并行处理，加快编译速度。
 
 ### 1-1.Loader 处理文件的转换操作是很耗时的，需要让尽可能少的文件被Loader处理-include
-通过减少loader作用范围，大大缩短构建时间。
+1. 减少 loader 数量
+2. 通过减少loader作用范围，大大缩短构建时间。
 
 例如Babel，由于Babel 会将代码转为字符串生成 AST，然后对 AST 继续进行转变最后再生成新的代码，项目越大，转换代码越多，效率就越低。<br/>
 
@@ -290,6 +291,11 @@ module.exports = {
 ```
 
 ## Loader负责文件转换，Plugin负责功能扩展
+
+### 优化1.减少插件数量：同样地，每个插件都会增加构建时间。
+因此，尽可能减少使用插件的数量，或者只在必要时使用插件，可以减少构建时间。
+
+### plugin
 webpack基于发布订阅模式，在运行的生命周期中会广播出许多事件，插件通过监听这些事件，就可以在特定的阶段执行自己的插件任务，从而实现自己想要的功能。
 
 compiler和compilation是Webpack两个非常核心的对象，其中compiler暴露了和 Webpack整个生命周期相关的钩子（compiler-hooks），而compilation则暴露了与模块和依赖有关的粒度更小的事件钩子（Compilation Hooks）。
@@ -380,7 +386,7 @@ module.exports = {
 };
 ```
 
-Webpack 内置的插件，如下所示：
+### Webpack 内置的插件，如下所示：
 ```
 webpack.DefinePlugin：定义全局常量插件；
 webpack.EnvironmentPlugin：定义环境变量插件；

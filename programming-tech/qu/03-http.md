@@ -212,3 +212,79 @@ server {
 ```
 
 这只是 Nginx 重定向的一些示例，你可以根据具体需求来设置不同类型的重定向规则。配置文件的位置和结构取决于你的服务器设置，所以确保根据实际情况进行配置。在修改 Nginx 配置文件后，需要重新加载或重启 Nginx 以使更改生效。
+
+
+## 视频流
+例子：声网
+
+视频流大致分为三种：HLS,RTMP,RTSP:
+
+1. HLS主要以点播的技术实现了直播的体验的（由于基于点播技术，所以在传输的性能跟稳定性上比前两个弱点）
+
+2. RTMP是目前主流的流媒体传输协议，广泛用于直播领域，可以说市面上绝大多数的直播都采用了这个协议。（优点是主流CDN厂商都支持。缺点是价格相对昂贵，不支持浏览器推送，对网速要求较高等）。
+
+3. WebRTC主要应用于视频会议和连麦中。（优点是速度快，对网速要求相对宽容，支持浏览器推送，缺点是不支持某些传统CDN的服务）。
+
+### 现在直播应用，采用RTMP协议居多，也有部分使用HLS协议
+>采用RTMP协议，就要看下它与流媒体服务器交互的过程，RTMP协议的默认端口是1935，采用TCP协议。并且需要了解FLV的封装格式。
+
+>采用HLS协议，因为涉及到切片，延时会比较大，需要了解TS流。
+
+### HLS（Http Live Streaming) 
+是一个由苹果公司提出的基于HTTP的流媒体网络传输协议，直接把流媒体切片成一段段，信息保存到m3u列表文件中， 可以将不同速率的版本切成相应的片；播放器可以直接使用http协议请求流数据。
+优势：
+*  可以在不同速率的版本间自由切换，实现无缝播放
+*  省去使用其他协议的烦恼
+劣势:
+*  延迟大小受切片大小影响，不适合直播，适合视频点播。
+*  文件碎片。特性的双刃剑，ts 切片较小，会造成海量小文件，对存储和缓存都有一定的挑战
+*  实时性差，延迟高。HLS 的延迟基本在 10s+ 以上
+
+### RTMP
+RTMP（Real Time Message Protocol）由 Adobe 公司提出流媒体协议，并且是私有协议，未完全公开，用来解决多媒体数据传输流的多路复用（Multiplexing）和分包（packetizing）的问题，RTMP协议一般传输的是 flv，f4v 格式流。一般在 TCP 1个通道上传输命令和数据。
+优势：
+*  在于低延迟，稳定性高，支持所有摄像头格式
+*  专为流媒体开发的协议，对底层的优化比其它协议更加优秀
+劣势：
+*  浏览器需要加载 flash插件才能播放。
+*  RTMP 为 Adobe 私有协议，很多设备无法播放，特别是在 iOS 端，需要使用第三方解码器才能播放
+*  基于 TCP 传输，非公共端口，可能会被防火墙阻拦
+
+### RTSP
+RTSP（Real-Time Stream Protocol）由Real Networks 和Netscape共同提出的流媒体协议，RTSP协议是共有协议，并有专门机构做维护。是TCP/IP协议体系中的一个应用层协议. RTSP协议一般传输的是 ts、mp4 格式的流，RTSP传输一般需要 2-3 个通道，命令和数据通道分离。基于文本的多媒体播放控制协议. RTSP定义流格式，流数据经由RTP传输；
+优势:
+1. RTSP实时效果非常好，适合视频聊天，视频监控等方向。
+劣势：
+2. 浏览器不能直接播放，只能通过插件或者转码
+
+## ajax原理是什么
+Async Javascript and XML,通过XmlHttpRequest对象来向服务器发异步请求，从服务器获得数据，然后用JavaScript来操作DOM而更新页面
+
+实现 Ajax异步交互需要服务器逻辑进行配合，需要完成以下步骤：
+
+1. 创建 Ajax的核心对象 XMLHttpRequest对象
+
+2. 通过 XMLHttpRequest 对象的 open() 方法与服务端建立连接
+
+3. 构建请求所需的数据内容，并通过XMLHttpRequest 对象的 send() 方法发送给服务器端
+
+4. 通过 XMLHttpRequest 对象提供的 onreadystatechange 事件监听服务器端你的通信状态
+
+5. 接受并处理服务端向客户端响应的数据结果
+
+6. 将处理结果更新到 HTML页面中
+```js
+const request = new XMLHttpRequest()
+request.onreadystatechange = function(e){
+    if(request.readyState === 4){ // 整个请求过程完毕
+        if(request.status >= 200 && request.status <= 300){
+            console.log(request.responseText) // 服务端返回的结果
+        }else if(request.status >=400){
+            console.log("错误信息：" + request.status)
+        }
+    }
+}
+
+request.open('POST','http://xxxx')
+request.send()
+```

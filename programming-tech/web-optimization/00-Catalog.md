@@ -8,6 +8,8 @@
 
 [webpack](../qu/web)
 
+[CSS](../qu/css)
+
 ## algorithm
 [algorithm](../qu/alg)
 

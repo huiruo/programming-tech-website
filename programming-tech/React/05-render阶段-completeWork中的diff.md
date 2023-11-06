@@ -6,7 +6,10 @@ sidebar_position: 8
 ## Diff
 
 ### diff比较发生在什么时候？
-发生在render阶段的第二个阶段，completeWork阶段:生成实例
+diff 算法发生在:beginWork 和 completeWork:
+```js
+reconcileChildFibers是React Diff真正的入口函数
+```
 
 [参考:render阶段-mountIndeterminateComponent构建fiber树](./render阶段-mountIndeterminateComponent构建fiber树)
 ```
@@ -18,6 +21,56 @@ sidebar_position: 8
 ## beginWork第3步-Reconciliation-双缓存-diff
 ```
 
+### 相关概念
+React 17 diff 算法（协调算法）进行了优化，这个新的算法被称为"Concurrent Mode"（并发模式）。Concurrent Mode 使得 React 更具响应性，可以更好地处理大型应用程序，并改善了用户体验
+
+1. **Concurrent Mode（并发模式）**:
+   Concurrent Mode 是 React 17 中引入的新模式，它允许 React 在渲染和协调工作中更好地分配时间，从而提高应用程序的响应性。在 Concurrent Mode 中，React 会将工作分为多个优先级，以便更好地响应用户输入并在不阻塞主线程的情况下执行工作。这有助于防止页面卡死，即使在执行耗时操作时也能够保持用户界面的流畅性。
+
+2. **Fiber架构**:
+   在 Concurrent Mode 中，React 使用了 Fiber 架构。Fiber 是一种数据结构，用于表示组件树，并且允许 React 在执行渲染和协调工作时更好地控制任务的中断和继续。这允许 React 在不同优先级之间切换工作，以便及时响应用户操作。
+
+3. **增量更新**:
+   在 React 17 中，Diff 算法的一个重要变化是引入了增量更新。传统的 Diff 算法是一次性遍历整个虚拟 DOM 树，找到需要更新的节点，然后一次性更新它们。这在大型应用中可能会导致性能问题。在增量更新中，React 可以中断渲染和协调工作，以响应更高优先级的任务。这使得 React 能够更好地将工作分散到多个帧中，从而提高了用户界面的响应性。
+
+4. **Batching（批处理）**:
+   在 Concurrent Mode 中，React 会将多个状态更新合并为一个批处理，然后一次性更新虚拟 DOM。这可以减少渲染的次数，提高性能。React 会根据浏览器的空闲时间来安排批处理的执行。
+
+5. **中断和继续**:
+   Fiber 架构允许 React 在执行渲染和协调工作时中断当前任务，并在稍后继续。这有助于确保及时响应用户输入。React 可以根据任务的优先级来中断工作，以执行更高优先级的任务，然后在空闲时继续低优先级任务的执行。
+
+## React Diff三大策略
+1. tree diff;
+2. component diff;
+3. element diff;
+
+PS: 之前H5开发遇到的State 更新但视图未更新的Bug就是element diff检测导致。解决方案：
+1. 两种业务场景下的DOM节点尽量避免雷同； 
+2. 两种业务场景下的DOM节点样式避免雷同；
+
+
+当前存在一个DOM节点，触发了一次更新，那么在协调的过程中，会有四种节点和该节点相关联：
+1. 该DOM节点本身
+2. workInProgress fiber，更新过程中产生的workInProgress Tree中的fiber节点（即current fiber.alternate）
+3. current fiber，在页面中已经渲染了的DOM节点对应的fiber节点（即workInProgress fiber.alternate，也就是上
+   一次更新中产生的workInProgress fiber）
+4. ReactElement，更新过程中，ClassComponent的render方法或FunctionComponent的调用结果。 ReactElement中包含描述DOM节点的信息。
+
+### effectTag
+用于保存要执行DOM操作的具体类型的。 effectTag通过二进制表示：
+```js
+//...
+// 意味着该Fiber节点对应的DOM节点需要插入到页面中。
+export const Placement = /*                    */ 0b000000000000010;
+//意味着该Fiber节点需要更新。
+export const Update = /*                       */ 0b000000000000100;
+export const PlacementAndUpdate = /*           */ 0b000000000000110;
+//意味着该Fiber节点对应的DOM节点需要从页面中删除。
+export const Deletion = /*                     */ 0b000000000001000;
+//...
+```
+
+## diff具体
 diff 比较，在构建 workInProgress fiber tree 的过程中，判断 current fiber tree 中的 fiber node 是否可以被 workInProgress fiber tree 复用。
 
 * 能被复用，意味在本次更新中，需要做: 组件的 update 以及 dom 节点的 move、update 等操作；
@@ -29,6 +82,68 @@ diff的过程，也就是effect的收集过程，此过程会找出所有节点�
 
 最后，深度调和子节点，渲染视图
 遍历fiber树，以workInProgress 作为最新的渲染树，即current Fiber 树。
+
+diff逻辑
+```
+判断当前节点的更新属于哪种情况
+如果是新增，执行新增逻辑
+如果是删除，执行删除逻辑
+如果是更新，执行更新逻辑
+```
+
+为了降低算法复杂度，React 的 diff 会预设三个限制：
+1. 只进行同层比较。
+```
+tree 层级
+component 层级
+element 层级
+```
+2. 新、旧节点的 type 不同，直接删除旧节点，创建新节点。如：元素由 div 变为 p，React会销毁div及其子孙节点，并新建p` 及其子孙节点。
+3. 通过 key 来复用节点。
+
+## 单节点和多节点
+从 Diff 的入口函数 reconcileChildFibers 出发，判断子元素的类型，若不是数组进入单节点diff，否则进入多节点diff
+
+### 单节点先判断 key 是否相同
+1. 如果 key 相同，再看 type
+  * type 相同，复用；
+  *  type 不同，全部删掉（包括它和它的兄弟元素，因为既然 key 一样，唯一的可能性都不能复用，则剩下的 fiber 都没有机会了）；
+
+2. 如果 key 不同，只删除该child，再找到它的兄弟节点（child.silbing）的 key，直到找到key相同的节点，再同上操作
+
+### 多节点diff
+归纳只有 3 种情况，更新节点、增减节点、位置变化，由于是单向的链表（newChildren[0]与fiber比较，newChildren[1]与fiber.sibling比较），所以不能像 vue 一样用双指针遍历，所以这里逻辑要经过两轮遍历：
+1. 第一轮遍历：比较 key，
+  * 可复用，继续遍历 (新节点 i++，老节点child.silbing)，
+  * 不可复用，就停止第一轮遍历，进入第二轮遍历，有 2 种不可复用的情况
+```
+key 不同，直接停止
+key 相同，type 不同，标记删除，停止
+```
+
+2. 第二轮遍历：
+* 老节点遍历完了，新节点还有，则将剩下的新节点插入
+* 新节点遍历完了，老节点还有，则将剩下的老节点删除
+* 新老节点都还有，则移动顺序，这是 diff 算法最精髓也是最难懂的部分，规则：遍历新节点，每个新节点有 2 个 index，一个 index 表示它在旧节点的位置，另一个 index 表示遍历中遇到的最大旧节点的位置，用 oldIndex 和 maxIndex 表示
+```
+当 oldIndex>maxIndex 时，将 oldIndex 的值赋值给 maxIndex
+当 oldIndex=maxIndex 时，不操作
+当 oldIndex<maxIndex 时，将当前节点移动到 index 的位置
+```
+
+## 图
+```mermaid
+flowchart BR
+A1(reconcileChildren)
+A1-->A1if{{workInProgress!==null}}
+A1if--为null初始化-->A2A(mountChildFibers)--true-->A3
+A1if--不为null更新-->A2B(reconcileChildFibers)--false-->A3
+
+%% 参考：06_辅3_ChildReconciler完整函数.js
+%% reconcileChildFibers内部会根据newChild（即新生成的ReactElement）的类型
+%% 和$$typeof属性调用不同的处理函数
+A3(ChildReconciler)--调用内部函数-->A4(reconcileChildFibers)
+```
 
 ### workInProgress Fiber(内存中构建的树)和current Fiber-->双缓存
 1. **workInProgress Fiber tree**:内存中构建的树
@@ -173,20 +288,6 @@ current Fiber 树有一个 alternate 属性指向 workInProgress Fiber 树，wor
   } // Used to reuse a Fiber for a second pass.
 ```
 
-## 图
-```mermaid
-flowchart BR
-A1(reconcileChildren)
-A1-->A1if{{workInProgress!==null}}
-A1if--为null初始化-->A2A(mountChildFibers)--true-->A3
-A1if--不为null更新-->A2B(reconcileChildFibers)--false-->A3
-
-%% 参考：06_辅3_ChildReconciler完整函数.js
-%% reconcileChildFibers内部会根据newChild（即新生成的ReactElement）的类型
-%% 和$$typeof属性调用不同的处理函数
-A3(ChildReconciler)--调用内部函数-->A4(reconcileChildFibers)
-```
-
 ## diff算法:比较两颗DOM树的差异
 生成将一棵树转换成另一棵树的最小操作次数。即使使用最优的算法，该算法的复杂程度仍为 O(n^3 )，其中 n 是树中元素的数量。
 
@@ -201,18 +302,7 @@ React 在以下三个假设的基础之上提出了一套 O(n) :
 diff算法复杂度达到 O(n),必须保持Virtual DOM 只会对同一个层级的元素进行对比：
 ![](../assets/img-react/diff比较例子.png)
 
-例子中：div只会和同一层级的div对比，第二层级的只会跟第二层级对比。
-
-假设现在可以英文字母唯一地标识每一个子节点：
-旧的节点顺序：a b c d e f g h i
-```
-现在对节点进行了删除、插入、移动的操作。新增j节点，删除e节点，移动h节点：
-新的节点顺序：a b c h d f g i j
-```
-
-现在知道了新旧的顺序，求最小的插入、删除操作（移动可以看成是删除和插入操作的结合）。
-这个问题抽象出来其实是字符串的最小编辑距离问题（Edition Distance），最常见的解决算法是 Levenshtein Distance，通过动态规划求解，时间复杂度为 O(M * N)。
-但是我们并不需要真的达到最小的操作，我们只需要优化一些比较常见的移动情况，牺牲一定DOM操作，让算法时间复杂度达到线性的（O(max(M, N))。
+例子中：**div只会和同一层级的div对比，第二层级的只会跟第二层级对比。**
 
 但是要注意的是，因为tagName是可重复的，不能用这个来进行对比。
 所以需要给子节点加上唯一标识key，列表对比的时候，使用key进行对比，这样才能复用老的 DOM 树上的节点。
@@ -387,37 +477,6 @@ function applyPatches (node, currentPatches) {
     }
   })
 }
-```
-
-## React Diff三大策略
-1. tree diff;
-2. component diff;
-3. element diff;
-
-PS: 之前H5开发遇到的State 中变量更新但视图未更新的Bug就是element diff检测导致。解决方案：
-1. 两种业务场景下的DOM节点尽量避免雷同； 
-2. 两种业务场景下的DOM节点样式避免雷同；
-
-
-当前存在一个DOM节点，触发了一次更新，那么在协调的过程中，会有四种节点和该节点相关联：
-1. 该DOM节点本身
-2. workInProgress fiber，更新过程中产生的workInProgress Tree中的fiber节点（即current fiber.alternate）
-3. current fiber，在页面中已经渲染了的DOM节点对应的fiber节点（即workInProgress fiber.alternate，也就是上
-   一次更新中产生的workInProgress fiber）
-4. ReactElement，更新过程中，ClassComponent的render方法或FunctionComponent的调用结果。 ReactElement中包含描述DOM节点的信息。
-
-### effectTag
-用于保存要执行DOM操作的具体类型的。 effectTag通过二进制表示：
-```js
-//...
-// 意味着该Fiber节点对应的DOM节点需要插入到页面中。
-export const Placement = /*                    */ 0b000000000000010;
-//意味着该Fiber节点需要更新。
-export const Update = /*                       */ 0b000000000000100;
-export const PlacementAndUpdate = /*           */ 0b000000000000110;
-//意味着该Fiber节点对应的DOM节点需要从页面中删除。
-export const Deletion = /*                     */ 0b000000000001000;
-//...
 ```
 
 ## Diff的入口函数为 reconcileChildren

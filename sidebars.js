@@ -215,7 +215,7 @@ const sidebars = {
             'JavaScript/ts/interface-type区别',
             'JavaScript/ts/实战',
             'JavaScript/ts/使用keyof解决对象ts限定',
-            'JavaScript/ts/泛型参数',
+            'JavaScript/ts/泛型-record',
           ]
         },
         'JavaScript/数据类型-类型转换',
@@ -268,6 +268,7 @@ const sidebars = {
           type: 'category',
           collapsed: true,
           items: [
+            'html-css/webgl3d/readme',
             'html-css/webgl3d/readme_webgl入门',
             'html-css/webgl3d/webgl_变换矩阵',
             'html-css/webgl3d/webgl入门',
@@ -554,6 +555,7 @@ const sidebars = {
         'docker/dockerSwarm',
         'docker/dockerignore作用',
         'docker/docker中的nginx配置',
+        'docker/理解微服务',
       ]
     },
     {

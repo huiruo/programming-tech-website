@@ -280,10 +280,9 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'webGL/readme',
-        'webGL/readme_webgl入门',
-        'webGL/webgl_变换矩阵',
         'webGL/webgl与canvas-性能-动画区别',
+        'webGL/webgl怎么学',
+        'webGL/webgl_变换矩阵',
       ]
     },
     {

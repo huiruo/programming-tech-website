@@ -22,7 +22,7 @@ var VSHADER_SOURCE =
   var u_Translation = gl.getUniformLocation(gl.program, 'u_Translation');
 ```
 
-###### 2.旋转
+### 2.旋转
 1.旋转轴
 2.旋转方向
 3.旋转角度

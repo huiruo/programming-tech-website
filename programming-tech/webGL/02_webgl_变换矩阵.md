@@ -29,8 +29,10 @@ var VSHADER_SOURCE =
 ```
 假如p(x,y,z) 旋转a角度后--> _p(_x,_y,_z),这里规则是绕Z轴进行，所以z坐标不会变，可以忽略，当时Y和X坐标比较复杂。
 ```
-![](./旋转1.png)
-![](./旋转2.png)
+
+![](../assets/img-webGl/旋转1.png)
+
+![](../assets/img-webGl/旋转2.png)
 
 实例：
 RotatedTriangle.html

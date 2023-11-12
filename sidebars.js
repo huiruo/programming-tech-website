@@ -263,18 +263,6 @@ const sidebars = {
             'html-css/css3动画/其他-vue动画/动画延伸-vue动画',
           ]
         },
-        {
-          label: 'webgl3d',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'html-css/webgl3d/readme',
-            'html-css/webgl3d/readme_webgl入门',
-            'html-css/webgl3d/webgl_变换矩阵',
-            'html-css/webgl3d/webgl入门',
-            'html-css/webgl3d/webgl与canvas-性能-动画区别',
-          ]
-        },
         'html-css/css-1-块级元素-css',
         'html-css/css-2-块级格式化上下文BFC',
         'html-css/css-4-为什么需要清除浮动',
@@ -285,6 +273,17 @@ const sidebars = {
         'html-css/flex',
         'html-css/水平垂直-居中',
         'html-css/浏览器兼容性',
+      ]
+    },
+    {
+      label: 'webGL',
+      type: 'category',
+      collapsed: true,
+      items: [
+        'webGL/readme',
+        'webGL/readme_webgl入门',
+        'webGL/webgl_变换矩阵',
+        'webGL/webgl与canvas-性能-动画区别',
       ]
     },
     {

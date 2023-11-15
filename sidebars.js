@@ -283,6 +283,21 @@ const sidebars = {
         'webGL/webgl与canvas-性能-动画区别',
         'webGL/webgl怎么学',
         'webGL/webgl_变换矩阵',
+        {
+          label: 'react-three-fiber',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'webGL/threejs/react-three-fiber/react-three-fiber',
+            'webGL/threejs/react-three-fiber/firstScene',
+            'webGL/threejs/react-three-fiber/Canvas',
+            'webGL/threejs/react-three-fiber/对象属性与传参',
+            'webGL/threejs/react-three-fiber/Hooks',
+            'webGL/threejs/react-three-fiber/Events',
+            'webGL/threejs/react-three-fiber/事件与交互',
+            'webGL/threejs/react-three-fiber/Loading-Models',
+          ]
+        },
       ]
     },
     {

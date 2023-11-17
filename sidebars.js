@@ -244,25 +244,6 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        {
-          label: 'requestAnimationFrame',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'html-css/requestAnimationFrame/requestAnimationFrame-是宏任务吗',
-          ]
-        },
-        {
-          label: 'css3动画',
-          type: 'category',
-          collapsed: true,
-          items: [
-            'html-css/css3动画/transition-过渡/transition基础',
-            'html-css/css3动画/animation-不需要触发任何事件触发动画/animation基础',
-            'html-css/css3动画/transform-转化/transform基础',
-            'html-css/css3动画/其他-vue动画/动画延伸-vue动画',
-          ]
-        },
         'html-css/css-1-块级元素-css',
         'html-css/css-2-块级格式化上下文BFC',
         'html-css/css-4-为什么需要清除浮动',
@@ -298,6 +279,25 @@ const sidebars = {
             'webGL/threejs/react-three-fiber/Loading-Models',
           ]
         },
+      ]
+    },
+    {
+      label: 'animation',
+      type: 'category',
+      collapsed: true,
+      items: [
+        {
+          label: 'requestAnimationFrame',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'animation/requestAnimationFrame/requestAnimationFrame-是宏任务吗',
+          ]
+        },
+        'animation/transition-过渡/transition基础',
+        'animation/animation-不需要触发任何事件触发动画/animation基础',
+        'animation/transform-转化/transform基础',
+        'animation/其他-vue动画/动画延伸-vue动画',
       ]
     },
     {

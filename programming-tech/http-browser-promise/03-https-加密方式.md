@@ -239,7 +239,7 @@ client_key_exchange+change_cipher_spec+encrypted_handshake_message
 2. change_cipher_spec，客户端通知服务器后续的通信都采用协商的通信密钥和加密算法进行加密通信
 3. encrypted_handshake_message，主要是用来测试密钥的有效性和一致性
 
-![](../assets/img-http/抓包/07-抓包.png)
+<!-- ![](../assets/img-http/抓包/07-抓包.png) -->
 
 ### 0-8.服务端发送New Session Ticket
 

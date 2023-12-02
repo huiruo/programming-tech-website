@@ -230,6 +230,7 @@ const sidebars = {
         'JavaScript/es6-es7-es8',
         'JavaScript/Reflect',
         'JavaScript/class-super',
+        'JavaScript/super',
         'JavaScript/立即执行函数',
         'JavaScript/高阶函数-函数式编程-纯函数-柯里化实现就是return fn',
         'JavaScript/深-浅-拷贝',
@@ -384,6 +385,7 @@ const sidebars = {
         'parsing-interpretation-compilation/step2-作用域-块级作用域原理',
         'parsing-interpretation-compilation/step3-执行上下文-函数调用栈-this',
         'parsing-interpretation-compilation/闭包-内存生命周期',
+        'parsing-interpretation-compilation/verdaccio私有库搭建',
         'parsing-interpretation-compilation/旧-变量对象',
       ]
     },

@@ -1,3 +1,7 @@
+### 同域下多窗口间localStorage/seccionStorage是否可以共享
+- localStorage可以在同域下多窗口间共享数据
+- sessionStorage不可以。是浏览器会话级别的存储机制，它只在单个浏览器标签页（tab）或窗口之间共享数据。每当用户打开一个新的标签页或窗口时，会话存储会被重新初始化，每个标签页或窗口都会有自己的独立的sessionStorage。
+
 ### BOM对象
 Browser Object Model浏览器对象模型，提供了独立于内容与浏览器窗口进行交互的对象
 

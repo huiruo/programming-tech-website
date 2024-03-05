@@ -14,8 +14,7 @@ const sidebars = {
         'React/render阶段总览',
         'React/setState组件更新和hooks的初始化',
         'React/render阶段-mountIndeterminateComponent构建fiber树',
-        'React/render阶段1-beginWork',
-        'React/render阶段2-completeWork',
+        'React/render阶段1-beginWork', 'React/render阶段2-completeWork',
         'React/render阶段-completeWork中的diff',
         'React/render阶段结束后-进入commit阶段',
         'React/hooks和闭包-useLayoutEffect-useEffect',
@@ -378,6 +377,20 @@ const sidebars = {
             'parsing-interpretation-compilation/模块化/cjs',
             'parsing-interpretation-compilation/模块化/模块化和闭包',
             'parsing-interpretation-compilation/模块化/nodejs为什么require不能引入图片而vue_require可以引入图片',
+          ]
+        },
+        {
+          label: '单元测试',
+          type: 'category',
+          collapsed: true,
+          items: [
+            'parsing-interpretation-compilation/单元测试/mocha',
+            'parsing-interpretation-compilation/单元测试/mocha测试智能合约',
+            'parsing-interpretation-compilation/单元测试/钩子',
+            'parsing-interpretation-compilation/单元测试/only独家测试',
+            'parsing-interpretation-compilation/单元测试/skip包容性测试',
+            'parsing-interpretation-compilation/单元测试/其他api',
+            'parsing-interpretation-compilation/单元测试/时间',
           ]
         },
         'parsing-interpretation-compilation/Parser解析得到AST-Ignition解释得到字节码',

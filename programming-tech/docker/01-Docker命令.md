@@ -9,6 +9,48 @@ e4edc18a2b87   node-client:latest   "docker-entrypoint.s…"   About a minute ag
 docker cp ./package.json competent_elion:/usr/share
 ```
 
+## 容器和宿主机文件拷贝
+
+### 例子： 部署nextjs 网站
+```bash
+docker cp /Users/ruo/company-workspace/haixing-company/oss-next-i18next-ssg/out/. mynginx:/usr/share/nginx/html
+
+rm *
+# 删除子文件夹
+rm -r *
+docker cp /Users/ruo/company-workspace/haixing-company/weekly-star/out/. mynginx:/usr/share/nginx/html
+```
+
+### 容器内文件-->宿主机
+```bash
+docker cp 容器ID:容器内路径 目的主机路径
+
+// 从容器拷贝到本地目录
+docker cp nginx:/etc/nginx/nginx.conf /usr/nginx/nginx.conf
+```
+
+### 宿主机文件-->容器中
+```bash
+docker cp 主机路径 容器ID:容器内路径
+
+// 从本地目录拷贝到容器
+docker cp /usr/nginx/nginx.conf nginx:/etc/nginx/nginx.conf
+
+docker cp /usr/nginx/html/main.html nginx:/usr/share/nginx/html
+```
+
+例子：
+```
+docker cp nextjs-test:/server.js /home/ruo/work-space/temp-space
+
+docker cp jolly_visvesvaraya:/server.js /home/ruo/work-space/temp-space
+
+docker cp 2916feb30290:/server.js /home/ruo/work-space/temp-space
+
+docker cp jolly_visvesvaraya:/app /home/ruo/work-space/temp-space
+
+docker cp 2916feb3029:/app /home/ruo/work-space/temp-space
+```
 
 ## 镜像
 ### 查看镜像
@@ -169,38 +211,6 @@ docker rm -f 容器ID或容器名
 
 ### 查看容器日志
 docker logs 容器ID或容器名
-
-## 容器和宿主机文件拷贝
-### 容器内文件-->宿主机
-```bash
-docker cp 容器ID:容器内路径 目的主机路径
-
-// 从容器拷贝到本地目录
-docker cp nginx:/etc/nginx/nginx.conf /usr/nginx/nginx.conf
-```
-
-### 宿主机文件-->容器中
-```bash
-docker cp 主机路径 容器ID:容器内路径
-
-// 从本地目录拷贝到容器
-docker cp /usr/nginx/nginx.conf nginx:/etc/nginx/nginx.conf
-
-docker cp /usr/nginx/html/main.html nginx:/usr/share/nginx/html
-```
-
-例子：
-```
-docker cp nextjs-test:/server.js /home/ruo/work-space/temp-space
-
-docker cp jolly_visvesvaraya:/server.js /home/ruo/work-space/temp-space
-
-docker cp 2916feb30290:/server.js /home/ruo/work-space/temp-space
-
-docker cp jolly_visvesvaraya:/app /home/ruo/work-space/temp-space
-
-docker cp 2916feb3029:/app /home/ruo/work-space/temp-space
-```
 
 ## 其他命令
 * docker -v

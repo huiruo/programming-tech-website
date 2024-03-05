@@ -3,8 +3,7 @@
 registry=http://localhost:4873/
 ```
 
-## Verdaccio 安装
-官方文档：
+### 官方文档：
 https://verdaccio.org/zh-cn/docs/docker/
 
 参考文档：
@@ -25,7 +24,7 @@ https://juejin.cn/post/7140193996147523621
 https://zhaomenghuan.js.org/blog/npm-private-repository-verdaccio.html#docker-%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85
 ```
 
-## 使用
+## Verdaccio 安装
 ```bash
 docker pull verdaccio/verdaccio
 
@@ -35,7 +34,6 @@ docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 # http://0.0.0.0:4873
 ```
 
-### 运行
 ```
 修改了配置文件后，可运行以下命令使配置生效
 

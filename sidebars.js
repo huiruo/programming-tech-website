@@ -454,6 +454,7 @@ const sidebars = {
         'SSR-Nodejs/react-ssr渲染',
         'SSR-Nodejs/react-ssr-demo/react18-ssr',
         'SSR-Nodejs/nodejs事件循环',
+        'SSR-Nodejs/worker_threads',
         'SSR-Nodejs/TypeORM和Prisma',
       ]
     },

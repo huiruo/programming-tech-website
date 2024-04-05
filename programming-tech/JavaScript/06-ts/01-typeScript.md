@@ -22,6 +22,16 @@ const doubled = _.map(numbers, (num) => num * 2);
 console.log(doubled); // 输出 [2, 4, 6, 8, 10]
 ```
 
+## type的作用
+```
+export type { MultiEditorIProps as MultiEditorProps } from 'react-monaco-editor-lite'; 
+```
+
+`export type`是用于导出 TypeScript 的类型定义的关键字。在 TypeScript 中，可以使用 type 关键字定义各种类型，包括接口、类型别名、联合类型、交叉类型等等。而 export 关键字用于将这些类型定义导出，以便其他文件可以引用并使用这些类型。
+
+这行代码导出了从`react-monaco-editor-lite`模块中导入的 MultiEditorIProps 类型，并将其重新命名为 MultiEditorProps，以便在其他文件中使用。
+
+
 ## TypeScript静态类型有什么好处
 它的主要功能之一是为JavaScript变量提供类型支持。
 

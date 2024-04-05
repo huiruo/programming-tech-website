@@ -29,6 +29,9 @@ const sidebars = {
         'React/注意点-hook-setState的interval',
         'React/key为index带来的问题/注意点-不要把index当成list-key',
         'React/key为index带来的问题/注意点-key错误的解决方案',
+        'React/为什么React的组件定义要大写',
+        'React/create-react-app开发的时候useEffect会执行2次',
+        'React/如何部署BrowserRouter-使用ngnix',
         {
           label: 'react-api',
           type: 'category',

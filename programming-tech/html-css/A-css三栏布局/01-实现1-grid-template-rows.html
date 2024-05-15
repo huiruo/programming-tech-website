@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>三栏布局</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        /* 法一 */
+        .box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, calc((100% - 16px) / 3));
+            /* 这里重复多少次是一个变量，要显示的数length/3 */
+            grid-template-rows: repeat(4, 100px); 
+            /* grid-row-gap: 8px;
+            grid-gap: 8px; */
+            gap: 8px;
+            width: 100%;
+        }
+        .test {
+            border: 2px solid blue;
+            background-color: #e5e5e5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+        <div class="test"></div>
+
+    </div>
+</body>
+
+</html>

@@ -23,7 +23,7 @@ const tpImgs: Img[] = [
 const skills: string[] = [
   '熟悉JavaScript',
   '熟悉React,Vue,理解Vue和React框架原理',
-  '熟悉TypeScirpt,熟练使用ESLint和 Husky工具，确保代码质量和一致的代码格式',
+  '熟悉TypeScirpt,可以编写第三方包的tsd文件',
   '熟悉uni-app，掌握android开发',
   '熟悉小程序开发',
   '熟悉服务端渲染nextjs框架',

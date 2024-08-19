@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fabric.js Platform Game</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game-canvas" width="800" height="600"></canvas>
+
+  <script>
+    // 创建canvas实例
+    const canvas = new fabric.Canvas('game-canvas');
+
+    // 创建游戏角色
+    const player = new fabric.Rect({
+      width: 50,
+      height: 100,
+      fill: 'blue',
+      left: 50,
+      top: canvas.height - 100
+    });
+    canvas.add(player);
+
+    // 创建平台
+    const platform = new fabric.Rect({
+      width: 200,
+      height: 50,
+      fill: 'brown',
+      left: 300,
+      top: canvas.height - 75
+    });
+    canvas.add(platform);
+
+    // 处理玩家的跳跃
+    let isJumping = false;
+    const jumpSpeed = 20;
+    let jumpHeight = 0;
+
+    canvas.on('mouse:down', () => {
+      if (!isJumping) {
+        isJumping = true;
+      }
+    });
+
+    function animate() {
+      if (isJumping) {
+        player.top -= jumpSpeed;
+        jumpHeight += jumpSpeed;
+
+        if (jumpHeight >= 200) {
+          isJumping = false;
+          jumpHeight = 0;
+        }
+      } else {
+        player.top += 10;
+        if (player.top + player.height >= canvas.height - platform.height && 
+            player.left + player.width >= platform.left &&
+            player.left <= platform.left + platform.width) {
+          player.top = canvas.height - 100;
+        }
+      }
+
+      canvas.renderAll();
+      window.requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

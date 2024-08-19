@@ -3,6 +3,15 @@ title: html5属性
 sidebar_position: 2
 ---
 
+## 隐藏dom
+* display:none；视觉上消失，也不占位置，但Dom节点还在。
+```
+v-show： 调用display:none 来控制元素是否展示。
+```
+* visibility：hidden；视觉上消失，但是还占着位置。 
+
+* v-if ：让Dom节点直接消失。（即：视觉上看不到，也没有位置，dom节点也不在。）
+
 ## HTML5 新增特性有哪些
 + Canvas、SVG -- 用于绘画的元素，canvas绘制的图片会失真而SVG绘制的不会失真。
 + video、audio -- 用于播放视频和音频的媒体。

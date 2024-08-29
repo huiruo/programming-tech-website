@@ -21,15 +21,16 @@ const tpImgs: Img[] = [
 ]
 
 const skills: string[] = [
-  '熟悉JavaScript',
+  '熟悉JavaScript,熟悉nodejs,熟悉TypeScirpt,可以编写第三方包的tsd文件',
   '熟悉React,Vue,理解Vue和React框架原理',
-  '熟悉TypeScirpt,可以编写第三方包的tsd文件',
-  '熟悉uni-app，掌握android开发',
-  '熟悉小程序开发',
-  '熟悉服务端渲染nextjs框架',
+  '熟悉nextjs框架',
+  '熟悉nestjs',
+  '熟悉私有组件库的搭建和部署，能从0到1基于verdaccio构建的内部公共组件',
+  '具备一定的JS架构能力,能从0到1设计并开发出符合标准的系统架构，如:monorepo(turbo)架构，知道该架构的应用场景、部署标准等',
+  '熟悉使用前端包管理工具npm、yarn、pnpm等熟悉webpack、yarn等的配置，懂得如何快速的解决使用和编译中出现的异常',
+  '熟悉小程序开发,熟悉uni-app，掌握android开发',
   '熟悉浏览器插件开发，熟悉Electron桌面开发',
-  '熟悉服务端渲染nextjs框架',
-  '掌握后端开发nestjs，Spring Boot，golang'
+  '掌握Spring Boot，golang',
 ]
 
 export const Resume = () => {

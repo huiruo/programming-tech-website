@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Programming tech',
   tagline: 'Hello World',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.svg',
   /**
    * https://programming-tech-website.vercel.app/sitmap.xml
    * https://huiruo.github.io
@@ -67,7 +67,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/logo.svg',
       navbar: {
         title: 'programming-tech',
         logo: {

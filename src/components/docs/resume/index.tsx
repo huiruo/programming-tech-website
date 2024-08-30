@@ -23,14 +23,15 @@ const tpImgs: Img[] = [
 const skills: string[] = [
   '熟悉JavaScript,熟悉nodejs,熟悉TypeScirpt,可以编写第三方包的tsd文件',
   '熟悉React,Vue,理解Vue和React框架原理',
-  '熟悉nextjs框架',
-  '熟悉nestjs',
+  '熟悉nextjs',
+  '熟悉 NestJS,并且有使用 NestJS,Prisma 和 Socket.IO 开发即时通讯(IM)应用的工作经验。',
   '熟悉私有组件库的搭建和部署，能从0到1基于verdaccio构建的内部公共组件',
   '具备一定的JS架构能力,能从0到1设计并开发出符合标准的系统架构，如:monorepo(turbo)架构，知道该架构的应用场景、部署标准等',
   '熟悉使用前端包管理工具npm、yarn、pnpm等熟悉webpack、yarn等的配置，懂得如何快速的解决使用和编译中出现的异常',
   '熟悉小程序开发,熟悉uni-app，掌握android开发',
   '熟悉浏览器插件开发，熟悉Electron桌面开发',
   '掌握Spring Boot，golang',
+  '掌握Web3前端开发，具备基本的Solidity语言开发能力,能够编写和部署简单的智能合约。'
 ]
 
 export const Resume = () => {
@@ -65,13 +66,19 @@ export const Resume = () => {
     <div className='skill-title title-font mg2-bottom'>常用框架/技术：</div>
     <ul>
       <li>
-        <a target="_blank" href='https://nextjs.org/'>基于React的服务端渲染框架：nextjs</a>
+        <a target="_blank" href='https://nextjs.org/'>Nextjs</a>
+      </li>
+      <li>
+        <a target="_blank" href='https://nestjs.com/'>Nestjs</a>
+      </li>
+      <li>
+        <a target="_blank" href='https://wagmi.sh/'>Web3: wagmi</a>
+      </li>
+      <li>
+        <a target="_blank" href='https://socket.io'>socket.io</a>
       </li>
       <li>
         <a target="_blank" href='https://nextjs.org/'>React框架:umijs</a>
-      </li>
-      <li>
-        <a target="_blank" href='https://nestjs.com/'>nodejs框架:nestjs</a>
       </li>
       <li>
         <a target="_blank" href='https://developers.weixin.qq.com/miniprogram/dev/framework/'>微信小程序</a>
@@ -90,6 +97,24 @@ export const Resume = () => {
     <div className='skill-title title-font mg2-bottom'>参与项目：</div>
 
     <ul>
+      <li className='mg1-bottom'>
+        阿语社交应用
+        <div>
+          介绍:&nbsp;阿语社交应用。
+        </div>
+        体验:&nbsp;<div>
+          <a target="_blank" href='https://sada.mobi/'>
+            Sada
+          </a>
+
+          <br/>
+
+          <a target="_blank" href='https://domi.chat/'>
+            Domi chat
+          </a>
+        </div>
+      </li>
+
       <li className='mg1-bottom'>
         泰山啤酒小程序
         <div>

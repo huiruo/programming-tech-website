@@ -31,7 +31,6 @@ const sidebars = {
         'React/key为index带来的问题/注意点-key错误的解决方案',
         'React/为什么React的组件定义要大写',
         'React/create-react-app开发的时候useEffect会执行2次',
-        'React/如何部署BrowserRouter-使用ngnix',
         {
           label: 'react-api',
           type: 'category',
@@ -243,23 +242,6 @@ const sidebars = {
       ]
     },
     {
-      label: 'html-css',
-      type: 'category',
-      collapsed: true,
-      items: [
-        'html-css/css-1-块级元素-css',
-        'html-css/css-2-块级格式化上下文BFC',
-        'html-css/css-4-为什么需要清除浮动',
-        'html-css/less和scss的区别',
-        'html-css/html5属性',
-        'html-css/js-DOM',
-        'html-css/js-DOM操作',
-        'html-css/flex',
-        'html-css/水平垂直-居中',
-        'html-css/浏览器兼容性',
-      ]
-    },
-    {
       label: 'webGL',
       type: 'category',
       collapsed: true,
@@ -333,7 +315,6 @@ const sidebars = {
             'http-browser-promise/防抖节流/04-2021-03-hooks防抖',
           ]
         },
-        'http-browser-promise/event-loop',
         'http-browser-promise/浏览器4个进程之渲染进程-浏览器内核之渲染引擎和JS引擎-V8引擎执行JS',
         'http-browser-promise/浏览器对事件的处理-1冒泡-2捕获',
         'http-browser-promise/web安全漏洞-XSS和CSRF',
@@ -454,8 +435,6 @@ const sidebars = {
       type: 'category',
       collapsed: true,
       items: [
-        'SSR-Nodejs/react-ssr渲染',
-        'SSR-Nodejs/react-ssr-demo/react18-ssr',
         'SSR-Nodejs/nodejs事件循环',
         'SSR-Nodejs/worker_threads',
         'SSR-Nodejs/TypeORM和Prisma',
